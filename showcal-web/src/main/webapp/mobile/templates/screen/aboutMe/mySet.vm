@@ -1,0 +1,92 @@
+$page.setTitle("我的设置")
+<div class="discover discover-detail  #*chooseShowcal*# aboutme" >
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="index?passportid=$!passport.id" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+        <h5 class="am-header-title">我的设置</h5>
+
+        <div class="am-header-right am-header-nav">
+            <a href="#right-link" class="info-ico ">
+
+            </a>
+        </div>
+    </header>
+
+    <!--列表 -->
+    <div class="am-g am-cf " >
+        <ul class="am-padding-left-sm clearfix aboutmeul am-text-sm  top-border bottom-border am-margin-top-sm  whitebg" id="info">
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border" #*onclick="window.location.href='aboutShowcal.vm'"*# >
+                <a href="clearcache">
+                    <span>清除缓存</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+
+                </a>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border"  onclick="window.location.href='law.vm'">
+                <a >
+                    <span>法律条款</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+
+                </a>
+            </li>
+        </ul>
+
+        <ul class="am-padding-left-sm clearfix aboutmeul am-text-sm  top-border bottom-border am-margin-top-sm  whitebg" id="info1">
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border" onclick="window.location.href='gotoevaluate'" >
+                <a >
+                    <span>给APP评价</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+                </a>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border"  onclick="window.location.href='aboutShowcal.vm'">
+                <a >
+                    <span>关于我们</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="fix-bottom am-cf top-border am-g am-g-collapse am-text-sm">
+        <span class="am-u-sm-12 border-right" id="loginout">退出登录</span>
+    </div>
+
+    <div class="am-modal am-modal-alert #*am-modal-dialog-1*#" tabindex="-1" id="my-confirm">
+        <div class="am-modal-dialog pt-15">
+            <div class="mb-10">确定退出登录吗？</div>
+            <div class="am-modal-footer  whitebg">
+                <span class="am-modal-btn color-pink" data-am-modal-confirm>确定</span>
+                <span class="am-modal-btn color-pink" data-am-modal-cancel>取消</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+  $("#info").find("li:last-child").removeClass("bottom-border");
+  $("#info1").find("li:last-child").removeClass("bottom-border");
+
+  $("#loginout").bind("click",function(){
+      $('#my-confirm').modal({
+          relatedTarget: this,
+          onConfirm: function(options) {
+            window.location.href="$mobileContent.getURI("loginout")"
+          },
+          // closeOnConfirm: false,
+          onCancel: function() {
+          }
+      });
+  })
+
+ });
+
+
+
+
+</script>

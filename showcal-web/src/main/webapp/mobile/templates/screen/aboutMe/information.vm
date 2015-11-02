@@ -1,0 +1,270 @@
+$page.setTitle("个人信息")
+<div class="discover discover-detail  chooseShowcal aboutme ">
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="index?passportid=$!passport.id" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+        <h5 class="am-header-title">个人信息</h5>
+
+        <div class="am-header-right am-header-nav">
+            <a href="#right-link" class="info-ico ">
+
+            </a>
+        </div>
+    </header>
+
+    <!--列表 -->
+    <div class="am-g am-cf ">
+        <ul class="am-padding-left-sm clearfix aboutmeul am-text-sm  top-border bottom-border am-margin-top-sm  whitebg"
+            id="info">
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border integral-line">
+                <a href="information?changepassword">
+                    <span>我的头像</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+                    #if($!userDetail.avatarurl)
+                        <img class="am-fr am-margin-right-sm am-circle mt-5" id="myavatarurl"
+                             src="$!userDetail.avatarurl"
+                             width="40px" height="40px">
+                    #elseif($!userDetail.sex=='FEMALE')
+                        <img class="am-fr am-margin-right-sm am-circle mt-5" id="myavatarurl" src="../images/girl.png"
+                             width="40px" height="40px">
+                    #else
+                        <img class="am-fr am-margin-right-sm am-circle mt-5" id="myavatarurl" src="../images/boy.png"
+                             width="40px" height="40px">
+                    #end
+                </a>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border" id="mynick">
+                <span>我的昵称</span>
+                <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+                <span class="am-fr am-padding-right-sm lighter-gray-txt">$!userDetail.nickName</span>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border" id="sex">
+                <a>
+                    <span>性别</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+                    <span class="am-fr am-padding-right-sm lighter-gray-txt">
+                        #if($!userDetail.sex == 'MALE')
+                            男
+                        #elseif($!userDetail.sex == 'FEMALE')
+                            女
+                        #else
+                            无
+                        #end
+                    </span>
+
+                </a>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border" id="myHeight">
+                <a href="#">
+                    <span>身高</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+                    <span class="am-fr am-padding-right-sm lighter-gray-txt">$!userDetail.height<span>cm</span></span>
+
+
+                </a>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border"
+                onclick="window.location.href='editbirth?passportid=$!passport.id&birthday= $!utils.formatMessage("{0, date, yyyy-MM-dd}", $!userDetail.birthday)'">
+                <a>
+                    <span>出生日期</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+                    <span class="am-fr am-padding-right-sm lighter-gray-txt" id="birthvalue">
+                        #if($!userDetail.birthday)
+                        $!utils.formatMessage("{0, date, yyyy-MM-dd}", $!userDetail.birthday)
+                    #end
+                    </span>
+                </a>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border" id="special">
+                <a>
+                    <span>特殊情况</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+                    <span class="am-fr am-padding-right-sm lighter-gray-txt">$!userDetail.settingDisease</span>
+                </a>
+            </li>
+
+        </ul>
+    #*  <div class="mt-10 ml-10 xn-text-left" id="errormsg" style="color: #ff0000;font-weight: 500"></div>*#
+    </div>
+
+    <div id="bg">
+        <div class="dialog-popup" id="mysexbox">
+            <ul class="am-list am-margin-0 ">
+                <li><a class="" onclick="doChangeSex('MALE')">男</a></li>
+                <li><a class="" onclick="doChangeSex('FEMALE')">女</a></li>
+            </ul>
+            <div class="bg-opacity-1"></div>
+            <div class="am-modal-actions-group">
+                <button class="am-btn am-btn-secondary am-btn-block cancel">取消</button>
+            </div>
+        </div>
+        <div class="dialog-popup" id="myspecial">
+            <ul class="am-list am-margin-0">
+                #foreach($!settingDisease in $!settingDiseaseList)
+                    <li><a onclick="doChangeSettingDisease('$!settingDisease.id')">$!settingDisease.name</a></li>
+                #end
+            </ul>
+            <div class="bg-opacity-1"></div>
+            <div class="am-modal-actions-group">
+                <button class="am-btn am-btn-secondary am-btn-block cancel">取消</button>
+            </div>
+        </div>
+        <div class="dialog-popup" id="mybirth" style="bottom: 30%;">
+            <div class="action-comfirm">
+                <input type="date" id="birthday" style="heigth: 60px;" class="xn-text-center am-form-field"/>
+                <span class="am-u-sm-6 border-right cancel">取消</span>
+                <span class="am-u-sm-6" onclick="doChangeBirth()">完成</span>
+
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">瘦咖提醒您</div>
+        <div class="am-modal-bd" id="errormsg">
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn">确定</span>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#info").find("li:last-child").removeClass("bottom-border");
+        $("#mynick").bind("click", function () {
+            window.location.href = "editnick?passportid=$!passport.id&nickName=$!userDetail.nickName";
+        });
+        $("#myHeight").bind("click", function () {
+            window.location.href = "editHeight?passportid=$!passport.id&height=$!userDetail.height";
+        });
+        $("#sex").bind('click', function () {
+            $("#mysexbox").css("display", "block");
+            $("#bg").css("display", "block");
+        })
+
+        $("#special").bind('click', function () {
+            $("#myspecial").css("display", "block");
+            $("#bg").css("display", "block");
+        })
+        $("#birth").bind('click', function () {
+            $("#mybirth").css("display", "block");
+            $("#bg").css("display", "block");
+            $('#birthday').val($('#birthvalue').text().trim());
+        })
+        /*   $("#birth").bind('click', function () {
+               $('#birth').datepicker('open').
+                       on('changeDate.datepicker.amui', function (event) {
+
+                           var birthday = $('#birth').data('date');
+                           var now= new Date();
+                           var birthdays=new Date(birthday);
+                           if(birthdays>now){
+                               $("#errormsg").html("出生日期不能大于系统当前时间");
+                               return;
+                           }else{
+                               $('#birthvalue').text($('#birth').data('date'));
+                               doChangeBirth();
+                               $(this).datepicker('close');
+                           }
+                       /!*    $('#birthvalue').text($('#birth').data('date'));
+                           doChangeBirth();
+                           $(this).datepicker('close');*!/
+                       });
+               ;
+           })*/
+
+        $(".cancel").bind('click', function () {
+            $(".dialog-popup").css("display", "none");
+            $("#bg").css("display", "none");
+        })
+
+    });
+
+    function doChangeSex(sex) {
+        var data = {};
+        data.sex = sex;
+        $.ajax({
+            url: "Api.do?method=api.about.me.info.sex.edit&passportid=$!passport.id",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            type: 'POST',
+            dataType: 'json',
+            success: function (msg) {
+                window.location.href = "information?sex="+sex+"&passportid=$!passport.id";
+            }});
+    }
+
+    function doChangeBirth() {
+        var birthday = $('#birthday').val();
+        var now = new Date();
+        var birthdays = new Date(birthday);
+        if (birthdays > now) {
+            $("#errormsg").html("出生日期不能大于系统当前时间");
+            $('#my-alert').modal({
+                relatedTarget: this
+            })
+            return false;
+        }
+        var data = {};
+        var birthday = $('#birthday').val();
+        data.birthday = birthday;
+        $.ajax({
+            url: "Api.do?method=api.about.me.info.birthday.edit&passportid=$!passport.id",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            type: 'POST',
+            dataType: 'json',
+            success: function (msg) {
+                window.location.href = "information?passportid=$!passport.id";
+            }
+        });
+    }
+
+    function doChangeSettingDisease(id) {
+        var data = {};
+        var settingDiseaseId = id;
+        data.settingDiseaseId = settingDiseaseId;
+        $.ajax({
+            url: "Api.do?method=api.about.me.info.setting.disease.edit&&passportid=$!passport.id",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            type: 'POST',
+            dataType: 'json',
+            success: function (msg) {
+                window.location.href = "information?passportid=$!passport.id";
+            }
+        });
+    }
+
+    /**
+     * 上传头像
+     * @param pid
+     * @param purl
+     */
+    function doChangeAvatar(pid, purl) {
+//        alert("pid : " + pid + " purl: " + purl);
+        $('#myavatarurl').attr('src', purl);
+    ##        alert("pid : " + pid + " purl: " + purl);
+        $.ajax({
+            url: "Api.do?method=api.about.me.avatar.change&passportid=$!passport.id",
+            data: JSON.stringify({userId: '$!userDetail.id', avatarId: pid}),
+            contentType: "application/json",
+            type: 'POST',
+            dataType: 'json',
+            success: function (msg) {
+                window.location.href = "information?passportid=$!passport.id";
+            }});
+    ##        console.log("----------------->")
+//        alert("pid : " + pid + " purl: " + purl);
+//        return "pid : " + pid + " purl: " + purl;
+    }
+</script>

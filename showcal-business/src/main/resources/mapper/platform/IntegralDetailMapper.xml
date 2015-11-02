@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.IntegralDetailMapper">
+
+    <sql id="whereForFindList">
+        <if test="request.startTime !=null">
+            <![CDATA[ AND DATE_FORMAT(`INTEGRAL_TIME`, '%Y-%m-%d')>=  DATE_FORMAT(#{request.startTime}, '%Y-%m-%d')   ]]>
+        </if>
+        <if test="request.endTime !=null">
+            <![CDATA[ AND DATE_FORMAT(`INTEGRAL_TIME`, '%Y-%m-%d')<=  DATE_FORMAT(#{request.endTime}, '%Y-%m-%d')   ]]>
+        </if>
+        <if test="request.ruleId !=null">
+            AND `RULE_ID` =#{ request.ruleId }
+        </if>
+        <if test="request.userId !=null">
+            AND `USER_ID` =#{ request.userId }
+        </if>
+        ORDER BY ID DESC
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           )
+    </sql>
+
+    <select id="find" resultMap="integralDetailPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `PL_INTEGRAL_DETAIL`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_INTEGRAL_DETAIL`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="integralDetailPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `PL_INTEGRAL_DETAIL`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_INTEGRAL_DETAIL`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_INTEGRAL_DETAIL`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `PL_INTEGRAL_DETAIL`
+        SET
+        `USER_ID`=#{ request.userId },
+        `STATUS`=#{ request.status },
+        `INTEGRAL_TIME`=#{ request.integralTime },
+        `CONTENT`=#{ request.content },
+        `RULE_ID`=#{ request.ruleId },
+        `VALUE`=#{ request.value },
+        `REMARK`=#{ request.remark },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+
+</mapper>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.foundation.dal.FileMapper">
+
+    <resultMap  id="filePO" type="com.showcal.foundation.po.FilePO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="NAME"  jdbcType="VARCHAR" property="name"/>
+        <result column="EXTENSION"  jdbcType="VARCHAR" property="extension"/>
+        <result column="SIZE"  jdbcType="NUMERIC" property="size"/>
+        <result column="STORAGE_PATH"  jdbcType="VARCHAR" property="storagePath"/>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"/>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"/>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"/>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"/>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+    </resultMap>
+
+    <sql id="entityColumnList">
+        ID,NAME,EXTENSION,SIZE,STORAGE_PATH,IS_DELETED,CREATED_BY,CREATION_TIME,LAST_UPDATED_BY,LAST_UPDATE_TIME
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            SYS_FILE
+        (
+            ID,NAME,EXTENSION,SIZE,STORAGE_PATH,IS_DELETED,CREATED_BY,CREATION_TIME,LAST_UPDATED_BY,LAST_UPDATE_TIME
+        )
+        VALUES
+        (
+            #{ file.id },
+            #{ file.name },
+            #{ file.extension },
+            #{ file.size },
+            #{ file.storagePath },
+            0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+        SYS_FILE
+        (
+            ID,NAME,EXTENSION,SIZE,STORAGE_PATH,IS_DELETED,CREATED_BY,CREATION_TIME,LAST_UPDATED_BY,LAST_UPDATE_TIME
+        )
+        VALUES
+        <foreach collection="list" item= "file" index ="index" separator=",">
+            (
+                #{ file.id },
+                #{ file.name },
+                #{ file.extension },
+                #{ file.size },
+                #{ file.storagePath },
+                0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            SYS_FILE
+        SET
+            IS_DELETED = 1
+            ,LAST_UPDATED_BY=#{ passport.userId }
+            ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+            IS_DELETED=0
+            AND ID = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            SYS_FILE
+        SET
+            IS_DELETED = 1
+            ,LAST_UPDATED_BY=#{ passport.userId }
+            ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+            IS_DELETED=0
+            AND ID in
+                <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+                    #{id}
+                </foreach >
+    </update >
+
+    <update id="update">
+        UPDATE
+            SYS_FILE
+        SET
+            <if test="name!=null">NAME=#{ file.name },</if>
+            <if test="extension!=null">EXTENSION=#{ file.extension },</if>
+            <if test="size!=null">SIZE=#{ file.size },</if>
+            <if test="storagePath!=null">STORAGE_PATH=#{ file.storagePath },</if>
+            LAST_UPDATED_BY=#{ passport.userId }
+            ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+            IS_DELETED=0
+            AND ID = #{id}
+    </update>
+
+    <update id="updateBatch">
+        <foreach collection="list" item= "item" index ="index" separator=";">
+            UPDATE
+                SYS_FILE
+            SET
+                <if test="item.name!=null">NAME=#{ item.name },</if>
+                <if test="item.extension!=null">EXTENSION=#{ item.extension },</if>
+                <if test="item.size!=null">SIZE=#{ item.size },</if>
+                <if test="item.storagePath!=null">STORAGE_PATH=#{ item.storagePath },</if>
+                LAST_UPDATED_BY=#{ passport. }
+                ,LAST_UPDATE_TIME=SYSDATE()
+            WHERE
+                IS_DELETED=0
+                AND ID=#{item.id}
+        </foreach >
+    </update>
+
+    <select id="getById" resultMap="filePO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            SYS_FILE
+        WHERE
+            ID = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="filePO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            SYS_FILE
+        WHERE
+            ID in
+                <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+                    #{id}
+                </foreach >
+    </select>
+
+    <select id="getAllList" resultMap="filePO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            SYS_FILE
+        WHERE
+            IS_DELETED=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            SYS_FILE
+        WHERE
+            ID=#{id}
+    </select>
+</mapper>

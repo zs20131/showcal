@@ -1,0 +1,45 @@
+<div class="xn-sk-nav-box"   ng-init="navShow=1">
+    <ul >
+        <li class="nav-li">
+            <div class="xn-text-center pb_10" ><img src="$showcalContent.getURI('images/logo.png')"></div>
+        </li>
+        <li class="nav-li" ng-class="navShow===1?'nav-li-hover':''">
+            <a href="$showcalLink.setTarget("dashboard/index")">
+                <i class="xn-icon icon-work" >
+                     <span  class="font-14">工作台</span>
+                </i>
+            </a>
+        </li>
+        <li class="nav-li" ng-class="navShow===2?'nav-li-hover':''">
+            <a href="$showcalLink.setTarget("myuser/index")">
+                <i class="xn-icon icon-user" >
+                    <span class="font-14" >我的用户</span>
+                </i>
+            </a>
+        </li>
+        <li class="nav-li" ng-class="navShow===3?'nav-li-hover':''">
+            <a href="$showcalLink.setTarget("repository/index")">
+                <i class="xn-icon icon-knowledge" >
+                    <span class="font-14" >我的知识库</span>
+                </i>
+            </a>
+        </li>
+        <li class="nav-li" ng-class="navShow===4?'nav-li-hover':''">
+            <a href="$showcalLink.setTarget("cms/index")">
+                <i class="xn-icon icon-posts" >
+                    <span class="font-14" >发帖维护</span>
+                </i>
+            </a>
+        </li>
+        <li class="nav-li" ng-class="navShow===5?'nav-li-hover':''">
+            <a href="$showcalLink.setTarget("md/index")">
+                <i class="xn-icon icon-store" >
+                    <span class="font-14" >商店</span>
+                </i>
+            </a>
+        </li>
+        <li class="nav-li nav-li-setting" ng-class="navShow===6?'nav-li-hover':''">
+            <a href="$showcalLink.setTarget("setting/index")"> <i class="xn-icon icon-setting" ></i></a>
+        </li>
+    </ul>
+</div>

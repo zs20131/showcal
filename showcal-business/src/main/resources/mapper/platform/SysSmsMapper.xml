@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.SysSmsMapper">
+
+    <sql id="whereForFindList">
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           )
+    </sql>
+
+    <select id="find" resultMap="sysSmsPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `PL_SYS_SMS`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SYS_SMS`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="sysSmsPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `PL_SYS_SMS`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SYS_SMS`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SYS_SMS`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `PL_SYS_SMS`
+        SET
+        `BUSINESS_TYPE`=#{ request.businessType },
+        `BUSINESS_ID`=#{ request.businessId },
+        `BUSINESS_CATEGORY`=#{ request.businessCategory },
+        `RECEIPT_USER_ID`=#{ request.receiptUserId },
+        `MOBILE_PHONE`=#{ request.mobilePhone },
+        `MESSAGE_TEXT`=#{ request.messageText },
+        `SENDER_USER_ID`=#{ request.senderUserId },
+        `MESSAGE_TIME`=#{ request.messageTime },
+        `IS_SEND`=#{ request.isSend },
+        `SEND_TIME`=#{ request.sendTime },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+
+</mapper>

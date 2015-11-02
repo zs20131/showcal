@@ -1,0 +1,181 @@
+ <div class="showcal">
+    <!--header-->
+    <header data-am-widget="header" class="am-header am-no-layout am-header-fixed showcal--mobile-header">
+        <div class="am-header-left am-header-nav">
+            <a href="index?passportid=$!passport.id" class="">
+                <img class="showcal-left-arrow" src="$mobileContent.getURI("images/leftarrrow.png")"
+                     width="10" height="24" alt="">
+            </a>
+        </div>
+        <h1 class="am-header-title">商品详情</h1>
+    </header>
+    <!--top图片-->
+##    <div class="goodsdetail-box">
+##        <img src="$item.avatarurl" width="256" height="240">
+##        </div>
+    <div class="goodsdetail-box am-u-sm-12 am-padding-left-lg">
+        <img class="am-u-sm-12 am-padding-0  relative" src="$item.avatarurl@340w_260h_0e" width="100%">
+        <div class="am-padding-right-0 goods-absolute-img" id="f-right">
+                 <img class="praise praise-num"   width="18" height="18"
+                     #if($isCollection)
+                      choose="true"
+                      src="$mobileContent.getURI("images/praise-click.png")"
+                    #else
+                      choose="false"
+                      src="$mobileContent.getURI("images/praise.png")"
+                    #end />
+              <span class="block am-text-middle am-padding-left-xs">$!item.countConnection</span>
+            </div>
+        </div>
+    </div>
+    <!--商品明细-->
+    <div class="goodsdetail-description-listcontainer clearfix">
+        <div class="listp am-g bottom-border">
+            <div class="am-u-sm-4 am-text-center">
+                #if($item.name.length()>14)
+                        $!item.name.substring(0,14)
+                    #else
+                    $!item.name
+                #end
+            </div>
+
+            <li  class="am-u-sm-12 detail-list">
+                <div class="am-u-sm-3">
+                    名称
+                </div>
+                <div class="am-u-sm-9 xn-text-center">
+                    #if($item.name.length()>14)
+                        $!item.name.substring(0,14)
+                    #else
+                        $!item.name
+                    #end
+                </div>
+            </li>
+            <li  class="am-u-sm-12 detail-list">
+                <div class="am-u-sm-3">
+                    品牌
+                </div>
+                <div class="am-u-sm-9 xn-text-center">
+                    $!item.brandId
+                </div>
+            </li>
+            <li  class="am-u-sm-12 detail-list">
+                <div class="am-u-sm-3">
+                    规格
+                </div>
+                <div class="am-u-sm-9 xn-text-center">
+                    $!item.spec1AttributeName
+                </div>
+            </li>
+            <li  class="am-u-sm-12 detail-list">
+                <div class="am-u-sm-3">
+                    单位
+                </div>
+                <div class="am-u-sm-9 xn-text-center">
+                    $!item.uom
+                </div>
+            </li>
+            <li  class="am-u-sm-12 detail-list">
+                <div class="am-u-sm-3">
+                    体积
+                </div>
+                <div class="am-u-sm-9 xn-text-center">
+                    $!item.volume
+                </div>
+            </li>
+            <li  class="am-u-sm-12 detail-list">
+                <div class="am-u-sm-3">
+                    重量
+                </div>
+                <div class="am-u-sm-9 xn-text-center">
+                    $!item.weight
+                </div>
+            </li>
+        </div>
+      #foreach($itemPic in $attachmentList)
+          <img class="block-img clearfix width" src="$itemPic.filePath@320w_240h_0e"  >
+      #end
+    </div>
+    <ul class="am-padding-0 clearfix listul am-margin-0" id="commentPost">
+        #foreach($comment in $commonPostList)
+            <li class="am-u-sm-12  am-padding-0 ">
+                <div class="am-u-sm-2"><img class="am-circle discover-detaillist-img am-center"
+                                            src="$comment.avatarurl@320w_240h_0e"/>
+                </div>
+                <div class="am-u-sm-10 bottom-border minheight">
+                    <p class="am-padding-top-xs"><span class="pic">$!comment.userName</span><span
+                            class="f-right am-text-xs lighter-gray-txt" >$!base.formatDate($!comment.postTime,
+                        "yyyy-MM-dd HH:mm:ss")</span></p>
+
+                    <p class="am-text-xs pb-5">$!comment.content</p>
+                </div>
+            </li>
+        #end
+    </ul>
+##    #if($commentPost.size >0)
+##        <p class=" alllist pl_10 am-cf"><a href="#">查看全部$!commentPost.size 条评论</a></p>
+##    #end
+    </li>
+
+    </ul>
+</div>
+<script>
+    var width=document.body.clientWidth;
+    $(".width").attr("width",width);
+    $(".width").attr("height",width);
+    $('.praise-num').click(function () {
+        var choose = $(this).attr("choose");
+        var praise;
+        if (choose == "false") {
+            praise = true;
+        }
+        else {
+            praise = false;
+        }
+        var param = {
+            id: "$item.id",
+            collection: praise
+        };
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "Collection.do?passportid=$!passport.id",
+            error: function () {
+                $("#errormsg").html("程序错误");
+                $('#my-alert').modal({
+                    relatedTarget: this
+                })
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                if (arr.errors.length == 0) {
+                    if (choose == "false") {
+                        $(".praise-num").attr('src', '$mobileContent.getURI("images/praise-click.png")');
+                        var num = $(".praise-num").next("span").text();
+                        $(".praise-num").next("span").text(parseInt(num) + 1);
+                        $(".praise-num").attr("choose", "true");
+                    }
+                    else {
+                        $(".praise-num").attr('src', '$mobileContent.getURI("images/praise.png")');
+                        var num = $(".praise-num").next("span").text();
+                        $(".praise-num").next("span").text(parseInt(num) - 1);
+                        $(".praise-num").attr("choose", "false");
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    $("#errormsg").html(errors);
+                    $('#my-alert').modal({
+                        relatedTarget: this
+                    });
+                }
+            }
+        })
+
+    });
+
+   /* $("#f-right").attr("style","float:right");*/
+</script>

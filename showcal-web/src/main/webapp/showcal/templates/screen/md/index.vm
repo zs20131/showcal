@@ -1,0 +1,10 @@
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$showcalLink.setTarget("index")">首页</a></li>
+        <li class="active">我的商品</a></li>
+    </ul>
+</div>
+<div class="xn-main xn-width store-waiting-box" ng-controller="MDIndexController">
+    <img  src="$showcalContent.getURI('images/storewaitinggreen.png')">
+    <h3 class="mt_20 mb_20">瘦咖商店正在努力建设中，敬请期待......</h3>
+</div>

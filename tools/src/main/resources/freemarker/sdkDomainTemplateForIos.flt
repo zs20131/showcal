@@ -1,0 +1,37 @@
+//
+//  ${domain.name}.h
+//
+// ***************************************************************
+// Copyright (c) 2014 –${company}
+//  Title: ${basePackage}.${moduleName}.domain.${domain.name}
+//  Description: ${moduleName} Domain
+//  @author ${author}
+// ***************************************************************
+//
+
+#import "BaseDomain.h"
+<#if domain.fields??>
+<#list domain.fields as field>
+    <#if field.isDomain>
+        <#if !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">
+        #import "${field.iostype}.h"
+        </#if>
+    </#if>
+</#list>
+</#if>
+@interface ${domain.name} : BaseDomain
+<#if domain.fields??>
+    <#list domain.fields as field>
+//${field.description}
+<#if field.isEnum>
+@property(nonatomic) NSString* ${field.name};
+<#else>
+@property(nonatomic) ${field.iostype} <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">*</#if>${field.name};
+</#if>
+    </#list>
+</#if>
+
+@property(nonatomic) BaseDomain *baseDomain;
+
+- (instancetype)init;
+@end

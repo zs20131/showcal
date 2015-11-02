@@ -1,0 +1,222 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+        <li><a   href="$platformLink.setTarget("daily/index")">日常管理</a></li>
+        <li class="active">发帖管理</a></li>
+    </ul>
+</div>
+<div class="xn-main  auto xn-width  clearfix"  ng-controller="ArticleManageIndexController">
+    <div class="xn-form clearfix">
+        <div class="xn-search">
+            <form class="form-horizontal clearfix xn-form" name="searchForm" xn-form-validate novalidate role="form">
+                <div class="xn_search_box auto">
+                    <div class="xn-input-line clearfix">
+                        <label class="xn-label query-label xn-text-right">题目：</label>
+
+                        <div class="xn-input-sm">
+                            <input type="text" class="form-control" ng-model="vm.title"/>
+                        </div>
+                        <div class="tip"></div>
+                        <label class="xn-label query-label">发布时间：</label>
+                        <div class="xn-input-sm">
+                            <div class="input-group openData">
+                                <input type="text" class="form-control" id="startDate" placeholder="开始日期"
+                                       ng-model="vm.startDate" name="regularDate"
+                                       datepicker-popup="yyyy-MM-dd" is-open="startDate" min-date="minDate"
+                                       datepicker-options="dateOptions"
+                                       date-disabled="disabled(date, mode)" close-text="关闭" current-text="今天"
+                                       clear-text="清除">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="openStart($event)"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                            </div>
+                        </div>
+                        <div class="tip"></div>
+                        <label class="xn-label">至</label>
+
+                        <div class="tip"></div>
+                        <div class="xn-input-sm">
+                            <div class="input-group openData">
+                                <input type="text" class="form-control" id="endDate" placeholder="结束日期"
+                                       ng-model="vm.endDate" name="regularDate"
+                                       datepicker-popup="yyyy-MM-dd" is-open="endDate" min-date="minDate"
+                                       datepicker-options="dateOptions"
+                                       date-disabled="disabled(date, mode)" close-text="关闭" current-text="今天"
+                                       clear-text="清除">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="openEnd($event)"><i
+                                        class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="xn-input-line clearfix">
+                        <label class="xn-label query-label xn-text-right">点赞数：</label>
+
+                        <div class="xn-input-sm">
+                            <input type="text" class="form-control w_100 f-left"   onkeyup="this.value=this.value.replace(/[^\d]/g,'') "  ng-model="vm.countStartLink" /><span class="f-left ml_5 mr_5">-</span><input type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') "  class="form-control w_100 f-left"  ng-model="vm.countEndLink"/>
+                        </div>
+                        <div class="tip"></div>
+                        <label class="xn-label query-label">评论数：</label>
+
+                        <div class="xn-input-sm">
+                            <input type="text" class="form-control w_100 f-left"  onkeyup="this.value=this.value.replace(/[^\d]/g,'') "  ng-model="vm.countStartComment"/><span class="f-left ml_5 mr_5">-</span><input type="text" class="form-control w_100 f-left" onkeyup="this.value=this.value.replace(/[^\d]/g,'') "  ng-model="vm.countEndComment" />
+                        </div>
+                        <div class="tip"></div>
+                        <label class="xn-label query-label">收藏数：</label>
+
+                        <div class="xn-input-sm">
+                            <input type="text" class="form-control w_100 f-left"  onkeyup="this.value=this.value.replace(/[^\d]/g,'') " ng-model="vm.countStartCollection" /><span class="f-left ml_5 mr_5">-</span><input type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " class="form-control w_100 f-left"  ng-model="vm.countEndCollection" />
+
+                        </div>
+
+                    </div>
+                    <div class="xn-input-line clearfix">
+                        <a class="btn btn-success btn-sm w_80 f-right" href="javascript:void(0)"
+                           xn-submit-enter="doFind()">查询</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="xn-table-wrap">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th class=" xn-text-center">序号</th>
+                    <th class="">题目</th>
+                    <th class="">发布日期</th>
+                    <th class="">发布人</th>
+                    <th class="">点赞数<span ng-show="!orderlink" ng-click="order('COUNT_LINK','ASC')"><i class="icon icon-upward-1"></i></span><span ng-show="orderlink" ng-click="order('COUNT_LINK','DESC')"><i class="icon icon-downward-1"></i></span></th>
+                    <th class="">评论数<span ng-show="!orderComment" ng-click="order('COUNT_COMMENT','ASC')"><i class="icon icon-upward-1"></i></span><span ng-show="orderComment" ng-click="order('COUNT_COMMENT','DESC')"><i class="icon icon-downward-1"></i></span></th>
+                    <th class="">收藏数<span ng-show="!orderCollection" ng-click="order('COUNT_CONNECTION','ASC')"><i class="icon icon-upward-1"></i></span><span ng-show="orderCollection" ng-click="order('COUNT_CONNECTION','DESC')"><i class="icon icon-downward-1"></i></span></th>
+                    <th class="">权重系数</th>
+                    <th class="">权重分数</th>
+                    <th class="">操作</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+                <tr class=" " ng-repeat="article in articles ">
+                    <td class="xn-text-center  "> {{$index+1}}</td>
+                    <td class=" ">{{article.title}}</td>
+                    <td class=" ">{{article.approveTime | timeReturnFormat}}</td>
+                    <td class=" ">{{article.submitUserName}}</td>
+                    <td class=" "><span ng-show="article.edit">{{article.countLink}}</span>
+                        <input ng-show="!article.edit" type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') "  class="form-control w_50" ng-model="article.countLink"/>
+                    </td>
+                    <td class=" "><span ng-show="article.edit">{{article.countComment}}</span>
+                        <input ng-show="!article.edit" type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') "  class="form-control  w_50" ng-model="article.countComment"/>
+                    </td>
+                    <td class=" "><span ng-show="article.edit">{{article.countConnection}}</span>
+                        <input ng-show="!article.edit" type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') "  class="form-control  w_50" ng-model="article.countConnection"/>
+                    </td>
+                    <td class=" ">{{article.weight}}</td>
+                    <td class=" ">{{article.weigthScores}}</td>
+                    <td>
+                        <a ng-click="check(article)">查看</a>
+                        <a ng-click="checkComment(article)">管理评论</a>
+                        <a  ng-click="edit($index)" ng-show="article.edit">修改数据</a>
+                        <a   ng-show="!article.edit"
+                           ng-click="save(article,$index)">确定</a>
+                        <a   ng-click="doDelete(article)">删除</a>
+                    </td>
+                </tr>
+                <tr ng-show="vm.totalCount == 0">
+                    <td colspan="12" class="xn-center">无法找到相应的记录</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="clearfix">
+                <div class="f-left mt_20 mb_10">共{{vm.totalCount}}条</div>
+                <pagination ng-show="vm.totalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                            total-items="vm.totalCount" ng-model="vm.pageNumber" items-per-page="vm.pageSize"
+                            class="pagination-sm" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;"
+                            first-text="&laquo;" last-text="&raquo;"></pagination>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="check.html">
+    <div class="modal-header" >
+        <h3 class="modal-title">查看帖子</h3>
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+
+    <div class="xn-input-line clearfix">
+
+            <div class="f-left mt_5">
+                <label class="xn-label "> 新贴题目：</label>
+                <span class="l-h-34">{{article.title}}</span>
+            </div>
+    </div>
+    <div class="xn-input-line clearfix">
+            <div class=" f-left mt_5">
+                <label class="xn-label ">封面图片：</label>
+                <img ng-if="article.avatarurl != null"
+                     width="234" height="120" ng-src="{{article.avatarurl}}"/>
+            </div>
+        </div>
+    <div class="xn-input-line clearfix">
+            <div class="f-left mt_5">
+                <label class="xn-label ">正文：</label>
+                <span  class="l-h-34">{{article.content}}</span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a ng-click="cancel()" class="btn btn-default  ">返回</a>
+        </div>
+
+</script>
+<script type="text/ng-template" id="checkCommentPost.html">
+    <div class="modal-header" >
+        <h3 class="modal-title">查看评论</h3>
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <div class=" clearfix ">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th class=" xn-text-center">序号</th>
+                <th class="">评论内容</th>
+                <th class="">评论时间</th>
+                <th class="">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <tr class=" " ng-repeat="comment in comments ">
+                <td class="xn-text-center  "> {{$index+1}}</td>
+                <td class=" ">{{comment.content}}</td>
+                <td class=" ">{{comment.postTime | timeReturnFormat}}</td>
+                <td>
+                    <a   ng-click="doDelete(comment)">删除</a>
+                </td>
+            </tr>
+            <tr ng-show="commentPost.totalCount == 0">
+                <td colspan="12" class="xn-center">无法找到相应的记录</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{commentPost.totalCount}}条</div>
+            <pagination ng-show="commentPost.totalCount>commentPost.pageSize" ng-change="getListComment()" max-size="maxPageSize"
+                        total-items="commentPost.totalCount" ng-model="commentPost.pageNumber" items-per-page="commentPost.pageSize"
+                        class="pagination-sm" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;"
+                        first-text="&laquo;" last-text="&raquo;"></pagination>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a ng-click="cancel()" class="btn btn-default  ">返回</a>
+    </div>
+
+</script>

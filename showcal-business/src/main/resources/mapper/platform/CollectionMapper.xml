@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.CollectionMapper">
+
+    <sql id="whereForFindList">
+        <if test="request.userId!=null"> AND `USER_ID` =#{ request.userId }</if>
+        <if test="request.type!=null"> AND `OBJECT_TYPE` =#{ request.type }</if>
+        <if test="request.objectId!=null"> AND `OBJECT_ID` =#{ request.objectId }</if>
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           )
+    </sql>
+
+    <select id="find" resultMap="collectionPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `PL_COLLECTION`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_COLLECTION`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="collectionPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `PL_COLLECTION`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_COLLECTION`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_COLLECTION`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `PL_COLLECTION`
+        SET
+        `USER_ID`=#{ request.userId },
+        `OBJECT_TYPE`=#{ request.objectType },
+        `OBJECT_ID`=#{ request.objectId },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+
+</mapper>

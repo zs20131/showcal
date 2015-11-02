@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.service.dal.MessageMapper">
+
+    <sql id="whereForFindList">
+      <if test="request.showcalId!=null">
+          AND (
+          (FROM_USER_ID =#{request.showcalId} AND TO_USER_ID = #{request.userId}) OR
+          (TO_USER_ID =#{request.showcalId} AND FROM_USER_ID = #{request.userId}))
+      </if>
+      <if test="request.keyword!=null and request.keyword!=''">
+          AND  `CONTENT` LIKE CONCAT ('%',#{ request.keyword },'%')
+      </if>
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           )
+    </sql>
+
+    <select id="getHistory" resultMap="messagePO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `SER_MESSAGE`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+            ORDER BY CREATION_TIME DESC
+            <if test="request.pageSize !=0">
+                LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+            </if>
+        ) AS T
+        <if test="request.beginItemIndex == 0">
+        ORDER BY T.CREATION_TIME
+        </if>
+
+    </select>
+
+    <select id="getHistoryCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_MESSAGE`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="messagePO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `SER_MESSAGE`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+    <select id="getQuestionMessage" resultMap="messagePO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `SER_MESSAGE`
+        WHERE
+        `IS_DELETED`=0
+        AND
+        (SERVICE_ID = #{id} OR SERVICE_ID IN (SELECT ID FROM ser_answer WHERE question_id = #{id} ))
+    </select>
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_MESSAGE`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_MESSAGE`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `SER_MESSAGE`
+        SET
+        `TYPE`=#{ request.type },
+        `MESSAGE_TYPE`=#{ request.messageType },
+        `CONTENT`=#{ request.content },
+        `SERVICE_ID`=#{ request.serviceId },
+        `CREATE_USER_NAME`=#{ request.createUserName },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+
+</mapper>

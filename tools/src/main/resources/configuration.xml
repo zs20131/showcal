@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<configuration>
+    <tagertProject>D:\temp</tagertProject>
+    <basePackage>com.xiniunet</basePackage>
+    <moduleName>temp</moduleName>
+    <contractPath>D:\temp</contractPath>
+    <contractName>tempService</contractName>
+    <author>顾志雄</author>
+    <company>苏州犀牛网络科技有限公司</company>
+    <templates>
+        <template engine="freemarker" name="WEB页面" selected="false">
+            <group>
+                <subtemplate single="false">
+                    <templateFile>Helper.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\${moduleName?uncap_first}\helper\</targetPath>
+                    <targetFileName>${moduleName ?cap_first}Helper.java</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate single="false">
+                    <templateFile>HelperImpl.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\${moduleName?uncap_first}\helper\</targetPath>
+                    <targetFileName>${moduleName ?cap_first}HelperImpl.java</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate single="false">
+                    <templateFile>Api.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\${moduleName?uncap_first}\module\screen</targetPath>
+                    <targetFileName>Api.java</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate single="false">
+                    <templateFile>ServiceJs.flt</templateFile>
+                    <targetPath>${tagertProject}\src\webapp\${moduleName?uncap_first}\scripts\</targetPath>
+                    <targetFileName>xn-${moduleName}-service.js</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+            </group>
+        </template>
+        <template engine="freemarker" name="OPEN网站" selected="false">
+            <group>
+                <subtemplate single="false">
+                    <templateFile>APIClassTemplate.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\api\${moduleName?uncap_first}</targetPath>
+                    <targetFileName>${moduleName}API.java</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate single="true">
+                    <templateFile>sdkRequestTemplate.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\api\request\${moduleName?uncap_first}</targetPath>
+                    <targetFileName>${method.requestName}.java</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate single="true">
+                    <templateFile>sdkResponseTemplate.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\api\response\${moduleName?uncap_first}</targetPath>
+                    <targetFileName>${method.responseName}.java</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate single="true" isdomain="true">
+                    <templateFile>sdkDomainTemplate.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\api\domain\${moduleName?uncap_first}</targetPath>
+                    <targetFileName>${domain.name}.java</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+            </group>
+        </template>
+        <template engine="freemarker" name="OPEN文档" selected="false" >
+            <group>
+                <subtemplate single="false">
+                    <templateFile>sdkGlobalDocTemplate.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\doc</targetPath>
+                    <targetFileName>index.html</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate single="true">
+                    <templateFile>sdkSubDocTemplate.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\doc</targetPath>
+                    <targetFileName>${method.name}.html</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate isdomain="true">
+                    <templateFile>sdkDomainDocTemplate.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\doc\domain</targetPath>
+                    <targetFileName>${domain.name}.html</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+            </group>
+        </template>
+        <template engine="freemarker" name="IOS工程" selected="false" single="false">
+            <group>
+                <subtemplate isdomain="true">
+                    <templateFile>sdkDomainTemplateForIos.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\ios\domain</targetPath>
+                    <targetFileName>${domain.name}.h</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate isdomain="true">
+                    <templateFile>sdkDomainTemplateForIosM.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\ios\domain</targetPath>
+                    <targetFileName>${domain.name}.m</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate single="true">
+                    <templateFile>sdkRequestTemplateForIos.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\ios\request</targetPath>
+                    <targetFileName>${method.requestName}.h</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate single="true">
+                    <templateFile>sdkRequestTemplateForIosM.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\ios\request</targetPath>
+                    <targetFileName>${method.requestName}.m</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate single="true">
+                    <templateFile>sdkResponseTemplateForIos.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\ios\response</targetPath>
+                    <targetFileName>${method.responseName}.h</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+                <subtemplate single="true">
+                    <templateFile>sdkResponseTemplateForIosM.flt</templateFile>
+                    <targetPath>${tagertProject}\src\${basePackage}\ios\response</targetPath>
+                    <targetFileName>${method.responseName}.m</targetFileName>
+                    <encoding>UTF-8</encoding>
+                </subtemplate>
+            </group>
+        </template>
+    </templates>
+</configuration>

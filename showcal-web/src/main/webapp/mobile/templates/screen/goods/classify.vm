@@ -1,0 +1,42 @@
+<div class="showcal">
+    <!--header-->
+    <header data-am-widget="header" class="am-header am-no-layout am-header-fixed showcal--mobile-header">
+        <div class="am-header-left am-header-nav">
+            <a href="create" class="">
+                <img class="goodsdetail-header-img" src="$mobileContent.getURI("images/ceshi.png")" alt="">
+                <span class="ml-10 color-pink">菜菜</span>
+            </a>
+        </div>
+        <h1 class="am-header-title">精品</h1>
+        <div class="am-header-right showcal-header-right">
+            <a href="#right-link" class="">
+                <img  class="" src="$mobileContent.getURI("images/news.png")" width="20" height="20"/>
+            </a>
+        </div>
+    </header>
+    <div class="goodsdetail-description-listcontainer clearfix">
+        <li  class="am-u-sm-12 detail-list xn-text-center">
+            <span>分类</span>
+        </li>
+        <a  href="detail.vm" class="am-u-sm-12 detail-list">
+            <span class="ml-30" >水果</span>
+        </a>
+        <a   class="am-u-sm-12 detail-list">
+            <span class="ml-30" >蔬菜</span>
+        </a >
+        <a   class="am-u-sm-12 detail-list">
+            <span class="ml-30" >营养早餐</span>
+        </a >
+        <a class="am-u-sm-12 detail-list">
+            <span class="ml-30" >瘦身代餐</span>
+        </a >
+        <a   class="am-u-sm-12 detail-list">
+            <span class="ml-30" >低卡饼干</span>
+        </a >
+        <a   class="am-u-sm-12 detail-list">
+            <span class="ml-30">运动能量饮料</span>
+        </a >
+
+    </div>
+</div>
+

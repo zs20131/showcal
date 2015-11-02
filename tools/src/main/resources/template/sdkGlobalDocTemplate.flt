@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<head>
+    <title>API文档 </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../template.css" rel="stylesheet">
+
+    <style type="text/css">html{color:#000;background-color:#f7f7f7;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}legend{color:#000;}del,ins{text-decoration:none;}body{font-family:"微软雅黑","宋体",Arial,sans-serif;font-size:12px;}.api-container {width:960px;margin:0 auto;}.api-container-auto {width:100%;}.api-container-m {width:640px;margin:0 auto;}.api-container-s {width:480px;margin:0 auto;}.api-showgrid {background:url(images/grid.png);}.api-column,.api-span-1,.api-span-2,.api-span-3,.api-span-4,.api-span-5,.api-span-6,.api-span-7,.api-span-8,.api-span-9,.api-span-10,.api-span-11,.api-span-12,.api-span-13,.api-span-14,.api-span-15,.api-span-16,.api-span-17,.api-span-18,.api-span-19,.api-span-20,.api-span-21,.api-span-22,.api-span-23,.api-span-24 {float:left;margin-right:10px;}.api-last {margin-right:0;}.api-span-1 {width:30px;}.api-span-2 {width:70px;}.api-span-3 {width:110px;}.api-span-4 {width:150px;}.api-span-5 {width:190px;}.api-span-6 {width:230px;}.api-span-7 {width:270px;}.api-span-8 {width:310px;}.api-span-9 {width:350px;}.api-span-10 {width:390px;}.api-span-11 {width:430px;}.api-span-12 {width:470px;}.api-span-13 {width:510px;}.api-span-14 {width:550px;}.api-span-15 {width:590px;}.api-span-16 {width:630px;}.api-span-17 {width:670px;}.api-span-18 {width:710px;}.api-span-19 {width:750px;}.api-span-20 {width:790px;}.api-span-21 {width:830px;}.api-span-22 {width:870px;}.api-span-23 {width:910px;}.api-span-24 {width:950px;margin-right:0;}input.api-span-1,textarea.api-span-1,input.api-span-2,textarea.api-span-2,input.api-span-3,textarea.api-span-3,input.api-span-4,textarea.api-span-4,input.api-span-5,textarea.api-span-5,input.api-span-6,textarea.api-span-6,input.api-span-7,textarea.api-span-7,input.api-span-8,textarea.api-span-8,input.api-span-9,textarea.api-span-9,input.api-span-10,textarea.api-span-10,input.api-span-11,textarea.api-span-11,input.api-span-12,textarea.api-span-12,input.api-span-13,textarea.api-span-13,input.api-span-14,textarea.api-span-14,input.api-span-15,textarea.api-span-15,input.api-span-16,textarea.api-span-16,input.api-span-17,textarea.api-span-17,input.api-span-18,textarea.api-span-18,input.api-span-19,textarea.api-span-19,input.api-span-20,textarea.api-span-20,input.span-21,textarea.span-21,input.api-span-22,textarea.api-span-22,input.api-span-23,api-textarea.span-23,input.api-span-24,textarea.api-span-24 {border-left-width:1px;border-right-width:1px;padding-left:5px;padding-right:5px;}input.api-span-1,textarea.api-span-1 {width:18px;}input.api-span-2,textarea.api-span-2 {width:58px;}input.api-span-3,textarea.api-span-3 {width:98px;}input.api-span-4,textarea.api-span-4 {width:138px;}input.api-span-5,textarea.api-span-5 {width:178px;}input.api-span-6,textarea.api-span-6 {width:218px;}input.api-span-7,textarea.api-span-7 {width:258px;}input.api-span-8,textarea.api-span-8 {width:298px;}input.api-span-9,textarea.api-span-9 {width:338px;}input.api-span-10,textarea.api-span-10 {width:378px;}input.api-span-11,textarea.api-span-11 {width:418px;}input.api-span-12,textarea.api-span-12 {width:458px;}input.api-span-13,textarea.api-span-13 {width:498px;}input.api-span-14,textarea.api-span-14 {width:538px;}input.api-span-15,textarea.api-span-15 {width:578px;}input.api-span-16,textarea.api-span-16 {width:618px;}input.api-span-17,textarea.api-span-17 {width:658px;}input.api-span-18,textarea.api-span-18 {width:698px;}input.api-span-19,textarea.api-span-19 {width:738px;}input.api-span-20,textarea.api-span-20 {width:778px;}input.api-span-21,textarea.api-span-21 {width:818px;}input.api-span-22,textarea.api-span-22 {width:858px;}input.api-span-23,textarea.api-span-23 {width:898px;}input.api-span-24,textarea.api-span-24 {width:938px;}.api-append-1 {padding-right:40px;}.api-append-2 {padding-right:80px;}.api-append-3 {padding-right:120px;}.api-append-4 {padding-right:160px;}.api-append-5 {padding-right:200px;}.api-append-6 {padding-right:240px;}.api-append-7 {padding-right:280px;}.api-append-8 {padding-right:320px;}.api-append-9 {padding-right:360px;}.api-append-10 {padding-right:400px;}.api-append-11 {padding-right:440px;}.api-append-12 {padding-right:480px;}.api-append-13 {padding-right:520px;}.api-append-14 {padding-right:560px;}.api-append-15 {padding-right:600px;}.api-append-16 {padding-right:640px;}.api-append-17 {padding-right:680px;}.api-append-18 {padding-right:720px;}.api-append-19 {padding-right:760px;}.api-append-20 {padding-right:800px;}.api-append-21 {padding-right:840px;}.api-append-22 {padding-right:880px;}.api-append-23 {padding-right:920px;}.api-prepend-1 {padding-left:40px;}.api-prepend-2 {padding-left:80px;}.api-prepend-3 {padding-left:120px;}.api-prepend-4 {padding-left:160px;}.api-prepend-5 {padding-left:200px;}.api-prepend-6 {padding-left:240px;}.api-prepend-7 {padding-left:280px;}.api-prepend-8 {padding-left:320px;}.api-prepend-9 {padding-left:360px;}.api-prepend-10 {padding-left:400px;}.api-prepend-11 {padding-left:440px;}.api-prepend-12 {padding-left:480px;}.api-prepend-13 {padding-left:520px;}.api-prepend-14 {padding-left:560px;}.api-prepend-15 {padding-left:600px;}.api-prepend-16 {padding-left:640px;}.api-prepend-17 {padding-left:680px;}.api-prepend-18 {padding-left:720px;}.api-prepend-19 {padding-left:760px;}.api-prepend-20 {padding-left:800px;}.api-prepend-21 {padding-left:840px;}.api-prepend-22 {padding-left:880px;}.api-prepend-23 {padding-left:920px;}.api-border {padding-right:4px;margin-right:5px;border-right:1px solid #ddd;}.api-colborder {padding-right:24px;margin-right:25px;border-right:1px solid #ddd;}.api-pull-1 {margin-left:-40px;}.api-pull-2 {margin-left:-80px;}.api-pull-3 {margin-left:-120px;}.api-pull-4 {margin-left:-160px;}.api-pull-5 {margin-left:-200px;}.api-pull-6 {margin-left:-240px;}.api-pull-7 {margin-left:-280px;}.api-pull-8 {margin-left:-320px;}.api-pull-9 {margin-left:-360px;}.api-pull-10 {margin-left:-400px;}.api-pull-11 {margin-left:-440px;}.api-pull-12 {margin-left:-480px;}.api-pull-13 {margin-left:-520px;}.api-pull-14 {margin-left:-560px;}.api-pull-15 {margin-left:-600px;}.api-pull-16 {margin-left:-640px;}.api-pull-17 {margin-left:-680px;}.api-pull-18 {margin-left:-720px;}.api-pull-19 {margin-left:-760px;}.api-pull-20 {margin-left:-800px;}.api-pull-21 {margin-left:-840px;}.api-pull-22 {margin-left:-880px;}.api-pull-23 {margin-left:-920px;}.api-pull-24 {margin-left:-960px;}.api-pull-1,.api-pull-2,.api-pull-3,.api-pull-4,.api-pull-5,.api-pull-6,.api-pull-7,.api-pull-8,.api-pull-9,.api-pull-10,.api-pull-11,.api-pull-12,.api-pull-13,.api-pull-14,.api-pull-15,.api-pull-16,.api-pull-17,.api-pull-18,.api-pull-19,.api-pull-20,.api-pull-21,.api-pull-22,.api-pull-23,.api-pull-24 {float:left;position:relative;}.api-push-1 {margin:0 -40px 1.5em 40px;}.api-push-2 {margin:0 -80px 1.5em 80px;}.api-push-3 {margin:0 -120px 1.5em 120px;}.api-push-4 {margin:0 -160px 1.5em 160px;}.api-push-5 {margin:0 -200px 1.5em 200px;}.api-push-6 {margin:0 -240px 1.5em 240px;}.api-push-7 {margin:0 -280px 1.5em 280px;}.api-push-8 {margin:0 -320px 1.5em 320px;}.api-push-9 {margin:0 -360px 1.5em 360px;}.api-push-10 {margin:0 -400px 1.5em 400px;}.api-push-11 {margin:0 -440px 1.5em 440px;}.api-push-12 {margin:0 -480px 1.5em 480px;}.api-push-13 {margin:0 -520px 1.5em 520px;}.api-push-14 {margin:0 -560px 1.5em 560px;}.api-push-15 {margin:0 -600px 1.5em 600px;}.api-push-16 {margin:0 -640px 1.5em 640px;}.api-push-17 {margin:0 -680px 1.5em 680px;}.api-push-18 {margin:0 -720px 1.5em 720px;}.api-push-19 {margin:0 -760px 1.5em 760px;}.api-push-20 {margin:0 -800px 1.5em 800px;}.api-push-21 {margin:0 -840px 1.5em 840px;}.api-push-22 {margin:0 -880px 1.5em 880px;}.api-push-23 {margin:0 -920px 1.5em 920px;}.api-push-24 {margin:0 -960px 1.5em 960px;}.api-push-1,.api-push-2,.api-push-3,.api-push-4,.api-push-5,.api-push-6,.api-push-7,.api-push-8,.api-push-9,.api-push-10,.api-push-11,.api-push-12,.api-push-13,.api-push-14,.api-push-15,.api-push-16,.api-push-17,.api-push-18,.api-push-19,.api-push-20,.api-push-21,.api-push-22,.api-push-23,.api-push-24 {float:left;position:relative;}div.api-prepend-top,.api-prepend-top {margin-top:1.5em;}div.api-append-bottom,.api-append-bottom {margin-bottom:1.5em;}.api-hr {background:#ddd;color:#ddd;clear:both;float:none;width:100%;height:1px;margin:0 0 1.45em;border:none;}.api-hr.space {background:#fff;color:#fff;visibility:hidden;}.api-clearfix:after,.api-container:after {content:"\0020";display:block;height:0;clear:both;visibility:hidden;overflow:hidden;}.api-clearfix,.api-container {display:block;}.api-clear {clear:both;}.api-required{color:red;}.api-center{text-align:center;}.api-left{text-align:left;}.api-right{text-align:right;}.api-hidden {display:none;}.api-invisible {visibility:hidden;}.api-floatleft {float:left !important;}.api-floatright {float:right !important;}.api-table-list{padding:0;margin:0;border-left:1px solid #C1DAD7;border-top:1px solid #C1DAD7;border-collapse:collapse;border-spacing:0;width:100%;margin-bottom:20px;font-size:12px}.api-table-list caption{padding:0 0 5px 0;}.api-table-list th {word-break:break-all;color:#4f6b72;border-right:1px solid #C1DAD7;border-bottom:1px solid #C1DAD7;letter-spacing:2px;text-transform:uppercase;background:#CAE8EA;vertical-align:middle;font-weight:normal;float:none !important;height:22px;padding:2px 5px 2px 5px;text-align:center;font-weight:bold;}.api-table-list th label {float:none !important;}.api-table-list td{word-break:break-all;border-right:1px solid #C1DAD7;border-bottom:1px solid #C1DAD7;vertical-align:middle;font-weight:normal;float:none !important;height:22px;padding:2px 5px 2px 5px;}.api-red-text{color:red;}.api-green-text{color:green;}</style>
+
+    <style type="text/css">
+        .api-list-item {
+            background: scroll 0 bottom rgba(0, 0, 0, 0);
+            margin-top: 15px;
+            padding-bottom: 12px;
+            padding-left: 15px;
+        }
+        .contentlist-api .api-list-item {
+            background:scroll 0 bottom rgba(0, 0, 0, 0);
+            margin-top: 15px;
+            padding-bottom: 12px;
+            padding-left: 15px;
+        }
+        .contentlist-api .api-list-item span {
+            background: url("http://img03.taobaocdn.com/tps/i3/T1bJ1kXoXnXXXXXXXX-4-4.png") no-repeat scroll left 8px transparent;
+            margin-left: -11px;
+        }
+        .contentlist-api .api-list-item span a {
+            padding-left: 11px;
+        }
+        .contentlist-api .api-list-item p {
+            line-height: 22px;
+            margin-top: 12px;
+            width: 780px;
+        }
+        .contentlist-api .last {
+            background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+        }
+        .contentlist-api .last {
+            background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+        }
+        .layout:after, .main-wrap:after, .col-sub:after, .col-extra:after {
+            clear: both;
+            content: " ";
+            display: block;
+            height: 0;
+        }
+        .layout, .main-wrap, .col-sub, .col-extra {
+        }
+        a:hover {
+            color: #404040;
+            text-decoration: none;
+        }
+        .link {
+            color: #369;
+            cursor: pointer;
+        }
+        .link:hover {
+            color: #f60;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div id="page">
+    <header id="header" class="site-header">
+        <nav id="navbar" class="site-navbar navbar navbar-static-top one-page-nav" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <h1 class="navbar-brand"><i class="fa"></i></h1>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                    <ul id="navigation" class="nav navbar-nav navbar-right">
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main id="main" class="site-main">
+        <section class="section section-doc">
+            <div class="container">
+                <div class="api-container">
+                    <div class="api-span-24 api-left">
+                        <h3>API列表：</h3>
+                    </div>
+                    <div>
+                        <table class="api-table-list api-span-24" summary="">
+                            <h3>系统级别输入参数  ：</h3>
+                            <thead>
+                                <tr>
+                                    <th class="api-span-2 api-center">名称 </th>
+                                    <th class="api-span-2 api-center">作用 </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <#list methods as method>
+                                <tr>
+                                    <td class="api-span-2 api-left"><a class="link" href="${method.name}.html">${method.apiName} </a></td>
+                                    <td class="api-span-2 api-left">${method.description}</td>
+                                </tr>
+                                </#list>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top:20px" class="api-span-24 api-left">文档结束</div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

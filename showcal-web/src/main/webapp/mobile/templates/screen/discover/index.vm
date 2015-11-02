@@ -1,0 +1,806 @@
+$page.setTitle("发现首页")
+<div class="discover">
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="../aboutMe/index?passportid=$!passport.id" class="pic">
+                <img class="am-circle am-fl" src="$!passport.avatar"/>
+            ##                <span
+            ##                    class="am-padding-left-xs am-text-sm" id="name">$passport.nickName</span>
+            </a>
+        </div>
+
+        <ul class="tabgroup am-center am-text-center am-text-sm " id="workingtab">
+            <li id="newArticle" class="active">最新</li>
+            <li id="hotArticle"> 最热</li>
+        </ul>
+
+        <div class="am-header-right am-header-nav">
+            <a href="../message/index?passportid=$!passport.id" class="info-ico f-right am-padding-left-xs">
+                <img class="am-right" src="$mobileContent.getURI("images/news.png")"/>
+            </a>
+            #if($passport.type=="SUPPLIER")
+                <a href="postmessage" class="info-ico f-right">
+                    <img class="am-right" src="$mobileContent.getURI("images/publish.png")"/>
+                </a>
+            #end
+            #if($passport.tenantId>0)
+                <div class="cycle-dot"></div>
+            #end
+        </div>
+    </header>
+    <!--tab 内容 -->
+    <div class="am-g clearfix tabcontent mt-10 am-text-sm ">
+        <!--tab1 -->
+        <div class="tabcontent" >
+            <ul class="tablist am-padding-0 am-margin-0 tabul1" id="common">
+
+            </ul>
+                <button  style="display:none;" href="javascript:void(0)" class="click-more" id="show-more">点击更多</button>
+        </div>
+        <!--tab2 -->
+        <div class="tabcontent am-hide" >
+            <ul class="tablist1 am-padding-0 am-margin-0 tabul2" id="hot">
+
+            </ul>
+                <button style="display:none;" href="javascript:void(0)" class="click-more" id="show-hot">点击更多</button>
+        </div>
+    </div>
+</div>
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">瘦咖提醒您</div>
+        <div class="am-modal-bd" id="errormsg">
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn">确定</span>
+        </div>
+    </div>
+</div>
+<script>
+    var width=document.body.clientWidth;
+    $(".width").attr("width",width);
+    $(".width").attr("height",width);
+    var pageIndex = 1;
+    var pageIndex1 = 1;
+    $.ajax({
+        type: "post",
+        data: {pageNumber:1},
+        url: "CommonIndex.do?passportid=$!passport.id",
+        error: function () {
+            alert("程序错误")
+        },
+        success: function (msg) {
+            var arr = eval("(" + msg + ")");
+            if (arr.errors.length == 0) {
+                console.log(arr);
+                var next = "";
+                for (var i = 0; i < arr.result.length; i++) {
+                    var createTime = "";
+                    var time = arr.result[i].submitTime;
+                    var date = new Date().getTime();
+                    var reduce = (date - time) / 60 / 60 / 1000;
+                    if (reduce >= 24) {
+                        createTime = Math.floor(reduce / 24) + "天前"
+                    }
+                    else if (reduce > 1) {
+                        createTime = Math.floor(reduce) + "小时前"
+                    }
+                    else {
+                        createTime = Math.floor(reduce * 60) + "分钟前"
+                    }
+                    var url = "";
+                    if(createTime.substring(0,1)=="-"){
+                        createTime = "0分钟前";
+                    }
+                    if ($.trim(arr.result[i].avatarurl) == "") {
+                        url = "../images/listimg1.jpg";
+                    }
+                    else {
+                        url = arr.result[i].avatarurl;
+                    }
+                    next += "<li class=\"whitebg top-bottom-border mt-10\" >";
+                    next += "<div class=\"head-title pl_10 pr-10\">";
+                    next += "<img class=\"am-circle am-fl \" src=\"" + arr.result[i].useravatarurl + "\"/>";
+                    next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].submitUserName + "</span>";
+                    next += "<span class=\"f-right lighter-gray-txt am-text-xs \">" + createTime + "</span> </div>";
+                    next += "<div class=\"imgcon\">";
+                    next += "<div onclick=\"detail('" + arr.result[i].id + "')\"><img src=\"" + url + "@320w_240h_0e\" width=\""+width+"\" height=\""+width+"\"/></div></div>";
+                    next += "<div class=\"listp bottom-border pl_10\">" + arr.result[i].title + "</div>";
+                    next += "<div class=\"listp am-g\">";
+                    next += "<div class=\"am-u-sm-4 am-text-center\">";
+                    next += "<img class=\"praise praise-num1" + arr.result[i].id + "\"   id=\"praise1_" + arr.result[i].id + "\" onclick=\"praise('" + arr.result[i].id + "',1)\"/>";
+                    next += "<span class='am-text-middle am-padding-left-xs'>" + arr.result[i].countLink + "</span></div>";
+                    next += "<div class=\"am-u-sm-4 am-text-center\" onclick=\"detail('" + arr.result[i].id + "')\">";
+                    next += "<img class=\"praise comment-num\" src=\"$mobileContent.getURI(
+                        'images/comment.png')\"/>";
+                    next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].countComment + "</span>";
+                    next += "</div>";
+                    next += "<div class=\"am-u-sm-4 am-text-center\">";
+                    next += "<img class=\"praise collect-num1" + arr.result[i].id + "\" id=\"collect1_" + arr.result[i].id + "\" onclick=\"collection('" + arr.result[i].id + "',1)\"/>";
+                    next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].countConnection + "</span>";
+                    next += "</div>";
+                    next += "</div>";
+                    if (arr.result[i].commentPost.length > 0) {
+                        if (arr.result[i].commentPost.length <= 3) {
+                            for (var j = 0; j < arr.result[i].commentPost.length; j++) {
+                                next += "<li class=\"am-u-sm-12 am-margin-0 am-padding-0\">";
+                                if (typeof(arr.result[i].commentPost[j].userName) != 'undefined') {
+                                    next += " <span class=\"color-pink\">" + arr.result[i].commentPost[j].userName + ":</span>";
+                                }
+                                next += "  <span>" + arr.result[i].commentPost[j].content + "</span> </div> </li> <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                next += "</li>";
+                            }
+                        }
+                        if (arr.result[i].commentPost.length > 3) {
+                            for (var j = 0; j < 3; j++) {
+                                next += "<li class=\"am-u-sm-12 am-margin-0 am-padding-0\">";
+                                if (typeof(arr.result[i].commentPost[j].userName) != 'undefined') {
+                                    next += " <span class=\"color-pink\">" + arr.result[i].commentPost[j].userName + ":</span>";
+                                }
+                                next += "  <span>" + arr.result[i].commentPost[j].content + "</span> </div> </li> <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                next += "</li>";
+                            }
+                            next += " <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                            next += "<span onclick=\"detail('" + arr.result[i].id + "')\">查看全部评论" + arr.result[i].countComment + " 条</span></li>";
+                        }
+                        next += "<div class=\"clearfix\"></div> </ul>";
+
+                    }
+                    next += "</li>";
+                }
+                $("#common").append(next);
+                for (var i = 0; i < arr.result.length; i++) {
+                    if (arr.result[i].isPraise) {
+                        $(".praise-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/praise-click.png")');
+                        $(".praise-num1" + arr.result[i].id).attr("choose", "true");
+                    }
+                    else {
+                        $(".praise-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/praise.png")');
+                        $(".praise-num1" + arr.result[i].id).attr("choose", "false");
+                    }
+                    if (arr.result[i].isCollection) {
+                        $(".collect-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/collect-click.png")');
+                        $(".collect-num1" + arr.result[i].id).attr("choose", "true");
+                    }
+                    else {
+                        $(".collect-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/collect.png")');
+                        $(".collect-num1" + arr.result[i].id).attr("choose", "false");
+                    }
+                }
+                    if (arr.totalCount<=10) {
+                        $("#show-more").hide();
+                    }else{
+                        $("#show-more").show();
+                    }
+            }
+            else {
+                var errors = [];
+                for (var i = 0; i < arr.errors.length; i++) {
+                    errors.push(arr.errors[i].message);
+                }
+                alert(errors);
+            }
+        }
+    })
+    //collect
+    function collection(id, index) {
+        var param = {
+            id: id
+        };
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "Collection.do?passportid=$!passport.id",
+            error: function () {
+                $("#errormsg").html("程序错误");
+                $('#my-alert').modal({
+                    relatedTarget: this
+                })
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                if (arr.errors.length == 0) {
+                    if (arr.success) {
+                        $("#collect2_" + id).attr('src', '$mobileContent.getURI("images/collect-click.png")');
+                        var num = $("#collect2_" + id).next("span").text();
+                        $("#collect2_" + id).next("span").text(parseInt(num) + 1);
+                        $("#collect2_" + id).attr("choose", "true");
+
+                        $("#collect1_" + id).attr('src', '$mobileContent.getURI("images/collect-click.png")');
+                        var num = $("#collect1_" + id).next("span").text();
+                        $("#collect1_" + id).next("span").text(parseInt(num) + 1);
+                        $("#collect1_" + id).attr("choose", "true");
+                    }
+                    else {
+                        $("#collect2_" + id).attr('src', '$mobileContent.getURI("images/collect.png")');
+                        var num = $("#collect2_" + id).next("span").text();
+                        $("#collect2_" + id).next("span").text(parseInt(num) - 1);
+                        $("#collect2_" + id).attr("choose", "false");
+
+                        $("#collect1_" + id).attr('src', '$mobileContent.getURI("images/collect.png")');
+                        var num1 = $("#collect1_" + id).next("span").text();
+                        $("#collect1_" + id).next("span").text(parseInt(num1) - 1);
+                        $("#collect1_" + id).attr("choose", "false");
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    }
+    //praise
+    function praise(id, index) {
+
+        var param = {
+            id: id
+        };
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "Praise.do?passportid=$!passport.id",
+            error: function () {
+                alert("程序错误")
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                if (arr.errors.length == 0) {
+                    if (arr.success) {
+                        $("#praise1_" + id).attr('src', '$mobileContent.getURI("images/praise-click.png")');
+                        var num = $("#praise1_" + id).next("span").text();
+                        $("#praise1_" + id).next("span").text(parseInt(num) + 1);
+                        $("#praise1_" + id).attr("choose", "true");
+
+                        $("#praise2_" + id).attr('src', '$mobileContent.getURI("images/praise-click.png")');
+                        var num1 = $("#praise2_" + id).next("span").text();
+                        $("#praise2_" + id).next("span").text(parseInt(num1) + 1);
+                        $("#praise2_" + id).attr("choose", "true");
+                    }
+                    else {
+                        $("#praise1_" + id).attr('src', '$mobileContent.getURI("images/praise.png")');
+                        var num = $("#praise1_" + id).next("span").text();
+                        $("#praise1_" + id).next("span").text(parseInt(num) - 1);
+                        $("#praise1_" + id).attr("choose", "false");
+
+                        $("#praise2_" + id).attr('src', '$mobileContent.getURI("images/praise.png")');
+                        var num1 = $("#praise2_" + id).next("span").text();
+                        $("#praise2_" + id).next("span").text(parseInt(num1) - 1);
+                        $("#praise2_" + id).attr("choose", "false");
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    }
+    $(function () {
+
+
+        //tab
+        $("#workingtab li").click(function () {
+            var indexLi = $(this).index();
+            $(this).addClass("active").siblings().removeClass("active");
+            $(".tabcontent > div").addClass("am-hide").eq(indexLi).removeClass("am-hide");
+        });
+        //ul li
+        $(".tablist li").slice(1).addClass("mt-10");
+        $(".tablist1 li").slice(1).addClass("mt-10");
+    });
+    function detail(id) {
+        window.location.href = "detail?id=" + id+"&passportid=$!passport.id";
+    };
+
+    $("#show-more").click(function () {
+        var param = {
+            pageNumber: ++pageIndex,
+            submitUserId:"$user.id"
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "CommonIndex.do?passportid=$!passport.id",
+            error: function () {
+                alert("程序错误")
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                if (arr.errors.length == 0) {
+                    console.log(arr);
+                    var next = "";
+                    for (var i = 0; i < arr.result.length; i++) {
+                        var createTime = "";
+                        var time = arr.result[i].submitTime;
+                        var date = new Date().getTime();
+                        var reduce = (date - time) / 60 / 60 / 1000;
+                        if (reduce >= 24) {
+                            createTime = Math.floor(reduce / 24) + "天前"
+                        }
+                        else if (reduce > 1) {
+                            createTime = Math.floor(reduce) + "小时前"
+                        }
+                        else {
+                            createTime = Math.floor(reduce * 60) + "分钟前"
+                        }
+                        var url = "";
+                        if ($.trim(arr.result[i].avatarurl) == "") {
+                            url = "../images/listimg1.jpg";
+                        }
+                        else {
+                            url = arr.result[i].avatarurl;
+                        }
+                        next += "<li class=\"whitebg top-bottom-border mt-10\" >";
+                        next += "<div class=\"head-title pl_10 pr-10\">";
+                        next += "<img class=\"am-circle am-fl \" src=\"" + arr.result[i].useravatarurl + "\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].submitUserName + "</span>";
+                        next += "<span class=\"f-right lighter-gray-txt am-text-xs \">" + createTime + "</span> </div>";
+                        next += "<div class=\"imgcon\">";
+                        next += "<div onclick=\"detail('" + arr.result[i].id + "')\"><img src=\"" + url + "@320w_240h_0e\" width=\""+width+"\" height=\""+width+"\"/></div></div>";
+                        next += "<div class=\"listp bottom-border pl_10\">" + arr.result[i].title + "</div>";
+                        next += "<div class=\"listp am-g\">";
+                        next += "<div class=\"am-u-sm-4 am-text-center\">";
+                        next += "<img class=\"praise praise-num1" + arr.result[i].id + "\"   id=\"praise1_" + arr.result[i].id + "\" onclick=\"praise('" + arr.result[i].id + "',1)\"/>";
+                        next += "<span class='am-text-middle am-padding-left-xs'>" + arr.result[i].countLink + "</span></div>";
+                        next += "<div class=\"am-u-sm-4 am-text-center\" onclick=\"detail('" + arr.result[i].id + "')\">";
+                        next += "<img class=\"praise comment-num\" src=\"$mobileContent.getURI(
+                            'images/comment.png')\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].countComment + "</span>";
+                        next += "</div>";
+                        next += "<div class=\"am-u-sm-4 am-text-center\" >";
+                        next += "<img class=\"praise collect-num1" + arr.result[i].id + "\" id=\"collect1_" + arr.result[i].id + "\" onclick=\"collection('" + arr.result[i].id + "',1)\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].countConnection + "</span>";
+                        next += "</div>";
+                        next += "</div>";
+                        if (arr.result[i].commentPost.length > 0) {
+                            if (arr.result[i].commentPost.length <= 3) {
+                                for (var j = 0; j < arr.result[i].commentPost.length; j++) {
+                                    next += "<li class=\"am-u-sm-12 am-margin-0 am-padding-0\">";
+                                    if (typeof(arr.result[i].commentPost[j].userName) != 'undefined') {
+                                        next += " <span class=\"color-pink\">" + arr.result[i].commentPost[j].userName + ":</span>";
+                                    }
+                                    next += "  <span>" + arr.result[i].commentPost[j].content + "</span> </div> </li> <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                    next += "</li>";
+                                }
+                            }
+                            if (arr.result[i].commentPost.length > 3) {
+                                for (var j = 0; j < 3; j++) {
+                                    next += "<li class=\"am-u-sm-12 am-margin-0 am-padding-0\">";
+                                    if (typeof(arr.result[i].commentPost[j].userName) != 'undefined') {
+                                        next += " <span class=\"color-pink\">" + arr.result[i].commentPost[j].userName + ":</span>";
+                                    }
+                                    next += "  <span>" + arr.result[i].commentPost[j].content + "</span> </div> </li> <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                    next += "</li>";
+                                }
+                                next += " <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                next += "<span onclick=\"detail('" + arr.result[i].id + "')\">查看全部评论" + arr.result[i].countComment + " 条</span></li>";
+                            }
+                            next += "<div class=\"clearfix\"></div> </ul>";
+
+                        }
+                        next += "</li>";
+                    }
+                    $("#common").append(next);
+                    for (var i = 0; i < arr.result.length; i++) {
+                        if (arr.result[i].isPraise) {
+                            $(".praise-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/praise-click.png")');
+                            $(".praise-num1" + arr.result[i].id).attr("choose", "true");
+                        }
+                        else {
+                            $(".praise-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/praise.png")');
+                            $(".praise-num1" + arr.result[i].id).attr("choose", "false");
+                        }
+                        if (arr.result[i].isCollection) {
+                            $(".collect-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/collect-click.png")');
+                            $(".collect-num1" + arr.result[i].id).attr("choose", "true");
+                        }
+                        else {
+                            $(".collect-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/collect.png")');
+                            $(".collect-num1" + arr.result[i].id).attr("choose", "false");
+                        }
+                    }
+                    if (Math.ceil(arr.totalCount / 10) == pageIndex) {
+                        $("#show-more").hide();
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    });
+    $("#show-hot").click(function () {
+        var param = {
+            pageNumber: ++pageIndex1
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "HotIndex.do?passportid=$!passport.id",
+            error: function () {
+                alert("程序错误")
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                if (arr.errors.length == 0) {
+                    var next = "";
+                    for (var i = 0; i < arr.result.length; i++) {
+                        var createTime = "";
+                        var time = arr.result[i].submitTime;
+                        var date = new Date().getTime();
+                        var reduce = (date - time) / 60 / 60 / 1000;
+                        if (reduce >= 24) {
+                            createTime = Math.floor(reduce / 24) + "天前"
+                        }
+                        else if (reduce > 1) {
+                            createTime = Math.floor(reduce) + "小时前";
+
+                        }
+                        else {
+                            createTime = Math.floor(reduce * 60) + "分钟前";
+                        }
+                        var url = "";
+                        if ($.trim(arr.result[i].avatarurl) == "") {
+                            url = "../images/listimg1.jpg";
+                        }
+                        else {
+                            url = arr.result[i].avatarurl;
+                        }
+                        next += "<li class=\"whitebg top-bottom-border mt-10\" >";
+                        next += "<div class=\"head-title pl_10 pr-10\">";
+                        next += "<img class=\"am-circle am-fl \" src=\"" + arr.result[i].useravatarurl + "\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].submitUserName + "</span>";
+                        next += "<span class=\"f-right lighter-gray-txt am-text-xs \">" + createTime + "</span> </div>";
+                        next += "<div class=\"imgcon\">";
+                        next += "<div onclick=\"detail('" + arr.result[i].id + "')\"><img src=\"" + url + "@320w_240h_0e\" width=\""+width+"\" height=\""+width+"\"/></div></div>";
+                        next += "<div class=\"listp bottom-border pl_10\">" + arr.result[i].title + "</div>";
+                        next += "<div class=\"listp am-g\">";
+                        next += "<div class=\"am-u-sm-4 am-text-center\">";
+                        next += "<img class=\"praise praise-num2" + arr.result[i].id + "\"   id=\"praise2_" + arr.result[i].id + "\" onclick=\"praise('" + arr.result[i].id + "',2)\"/>";
+                        next += "<span class='am-text-middle am-padding-left-xs'>" + arr.result[i].countLink + "</span></div>";
+                        next += "<div class=\"am-u-sm-4 am-text-center\" onclick=\"detail('" + arr.result[i].id + "')\">";
+                        next += "<img class=\"praise comment-num\" src=\"$mobileContent.getURI(
+                            'images/comment.png')\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].countComment + "</span>";
+                        next += "</div>";
+                        next += "<div class=\"am-u-sm-4 am-text-center\">";
+                        next += "<img class=\"praise collect-num2" + arr.result[i].id + "\" id=\"collect2_" + arr.result[i].id + "\" onclick=\"collection('" + arr.result[i].id + "',2)\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].countConnection + "</span>";
+                        next += "</div>";
+                        next += "</div>";
+                        if (arr.result[i].commentPost.length > 0) {
+                            if (arr.result[i].commentPost.length <= 3) {
+                                for (var j = 0; j < arr.result[i].commentPost.length; j++) {
+                                    next += "<li class=\"am-u-sm-12 am-margin-0 am-padding-0\">";
+                                    if (typeof(arr.result[i].commentPost[j].userName) != 'undefined') {
+                                        next += " <span class=\"color-pink\">" + arr.result[i].commentPost[j].userName + ":</span>";
+                                    }
+                                    next += "  <span>" + arr.result[i].commentPost[j].content + "</span> </div> </li> <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                    next += "</li>";
+                                }
+                            }
+                            if (arr.result[i].commentPost.length > 3) {
+                                for (var j = 0; j < 3; j++) {
+                                    next += "<li class=\"am-u-sm-12 am-margin-0 am-padding-0\">";
+                                    if (typeof(arr.result[i].commentPost[j].userName) != 'undefined') {
+                                        next += " <span class=\"color-pink\">" + arr.result[i].commentPost[j].userName + ":</span>";
+                                    }
+                                    next += "  <span>" + arr.result[i].commentPost[j].content + "</span> </div> </li> <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                    next += "</li>";
+                                }
+                                next += " <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                next += "<span onclick=\"detail('" + arr.result[i].id + "')\">查看全部评论" + arr.result[i].countComment + " 条</span></li>";
+                            }
+                            next += "<div class=\"clearfix\"></div> </ul>";
+
+                        }
+                        next += "</li>";
+                    }
+                    $("#hot").append(next);
+                    for (var i = 0; i < arr.result.length; i++) {
+                        if (arr.result[i].isPraise) {
+                            $(".praise-num2" + arr.result[i].id).attr('src', '$mobileContent.getURI(
+                                "images/praise-click.png")');
+                            $(".praise-num2" + arr.result[i].id).attr("choose", "true");
+                        }
+                        else {
+                            $(".praise-num2" + arr.result[i].id).attr('src', '$mobileContent.getURI(
+                                "images/praise.png")');
+                            $(".praise-num2" + arr.result[i].id).attr("choose", "false");
+                        }
+                        if (arr.result[i].isCollection) {
+                            $(".collect-num2" + arr.result[i].id).attr('src', '$mobileContent.getURI(
+                                "images/collect-click.png")');
+                            $(".collect-num2" + arr.result[i].id).attr("choose", "true");
+                        }
+                        else {
+                            $(".collect-num2" + arr.result[i].id).attr('src', '$mobileContent.getURI(
+                                "images/collect.png")');
+                            $(".collect-num2" + arr.result[i].id).attr("choose", "false");
+                        }
+                    }
+                    if (Math.ceil(arr.totalCount / 10) == pageIndex1) {
+                        $("#show-hot").hide();
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    });
+
+    $("#hotArticle").click(function () {
+        var param = {
+            pageNumber: 1
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "HotIndex.do?passportid=$!passport.id",
+            error: function () {
+                alert("程序错误")
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                console.log(arr);
+                if (arr.errors.length == 0) {
+                    var next = "";
+                    for (var i = 0; i < arr.result.length; i++) {
+                        var createTime = "";
+                        var time = arr.result[i].submitTime;
+                        var date = new Date().getTime();
+                        var reduce = (date - time) / 60 / 60 / 1000;
+                        if (reduce >= 24) {
+                            createTime = Math.floor(reduce / 24) + "天前"
+                        }
+                        else if (reduce > 1) {
+                            createTime = Math.floor(reduce) + "小时前";
+
+                        }
+                        else {
+                            createTime = Math.floor(reduce * 60) + "分钟前";
+                        }
+                        var url = "";
+                        if ($.trim(arr.result[i].avatarurl) == "") {
+                            url = "../images/listimg1.jpg";
+                        }
+                        else {
+                            url = arr.result[i].avatarurl;
+                        }
+                        next += "<li class=\"whitebg top-bottom-border mt-10\" >";
+                        next += "<div class=\"head-title pl_10 pr-10\">";
+                        next += "<img class=\"am-circle am-fl \" src=\"" + arr.result[i].useravatarurl + "\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].submitUserName + "</span>";
+                        next += "<span class=\"f-right lighter-gray-txt am-text-xs \">" + createTime + "</span> </div>";
+                        next += "<div class=\"imgcon\">";
+                        next += "<div onclick=\"detail('" + arr.result[i].id + "')\"><img src=\"" + url + "@320w_240h_0e\" width=\""+width+"\" height=\""+width+"\"/></div></div>";
+                        next += "<div class=\"listp bottom-border pl_10\">" + arr.result[i].title + "</div>";
+                        next += "<div class=\"listp am-g\">";
+                        next += "<div class=\"am-u-sm-4 am-text-center\">";
+                        next += "<img class=\"praise praise-num2" + arr.result[i].id + "\"   id=\"praise2_" + arr.result[i].id + "\" onclick=\"praise('" + arr.result[i].id + "',2)\"/>";
+                        next += "<span class='am-text-middle am-padding-left-xs'>" + arr.result[i].countLink + "</span></div>";
+                        next += "<div class=\"am-u-sm-4 am-text-center\" onclick=\"detail('" + arr.result[i].id + "')\">";
+                        next += "<img class=\"praise comment-num\" src=\"$mobileContent.getURI(
+                            'images/comment.png')\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].countComment + "</span>";
+                        next += "</div>";
+                        next += "<div class=\"am-u-sm-4 am-text-center\">";
+                        next += "<img class=\"praise collect-num2" + arr.result[i].id + "\" id=\"collect2_" + arr.result[i].id + "\" onclick=\"collection('" + arr.result[i].id + "',2)\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].countConnection + "</span>";
+                        next += "</div>";
+                        next += "</div>";
+                        if (arr.result[i].commentPost.length > 0) {
+                            if (arr.result[i].commentPost.length <= 3) {
+                                for (var j = 0; j < arr.result[i].commentPost.length; j++) {
+                                    console.log( arr.result[i].commentPost[j]);
+                                    next += "<li class=\"am-u-sm-12 am-margin-0 am-padding-0\">";
+                                    if (typeof(arr.result[i].commentPost[j].userName) != 'undefined') {
+                                        next += " <span class=\"color-pink\">" + arr.result[i].commentPost[j].userName + ":</span>";
+                                    }
+                                    next += "  <span>" + arr.result[i].commentPost[j].content + "</span> </div> </li> <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                    next += "</li>";
+                                }
+                            }
+                            if (arr.result[i].commentPost.length > 3) {
+                                for (var j = 0; j < 3; j++) {
+                                    next += "<li class=\"am-u-sm-12 am-margin-0 am-padding-0\">";
+                                    if (typeof(arr.result[i].commentPost[j].userName) != 'undefined') {
+                                        next += " <span class=\"color-pink\">" + arr.result[i].commentPost[j].userName + ":</span>";
+                                    }
+                                    next += "  <span>" + arr.result[i].commentPost[j].content + "</span> </div> </li> <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                    next += "</li>";
+                                }
+                                next += " <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                next += "<span onclick=\"detail('" + arr.result[i].id + "')\">查看全部评论" + arr.result[i].countComment + " 条</span></li>";
+                            }
+                            next += "<div class=\"clearfix\"></div> </ul>";
+                        }
+                        next += "</li>";
+                    }
+                    $("#hot").append(next);
+                    for (var i = 0; i < arr.result.length; i++) {
+                        if (arr.result[i].isPraise) {
+                            $(".praise-num2" + arr.result[i].id).attr('src', '$mobileContent.getURI(
+                                "images/praise-click.png")');
+                            $(".praise-num2" + arr.result[i].id).attr("choose", "true");
+                        }
+                        else {
+                            $(".praise-num2" + arr.result[i].id).attr('src', '$mobileContent.getURI(
+                                "images/praise.png")');
+                            $(".praise-num2" + arr.result[i].id).attr("choose", "false");
+                        }
+                        if (arr.result[i].isCollection) {
+                            $(".collect-num2" + arr.result[i].id).attr('src', '$mobileContent.getURI(
+                                "images/collect-click.png")');
+                            $(".collect-num2" + arr.result[i].id).attr("choose", "true");
+                        }
+                        else {
+                            $(".collect-num2" + arr.result[i].id).attr('src', '$mobileContent.getURI(
+                                "images/collect.png")');
+                            $(".collect-num2" + arr.result[i].id).attr("choose", "false");
+                        }
+                    }
+                    if (arr.totalCount>10 ) {
+                        $("#show-hot").show();
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    });
+    $("#newArticle").click(function () {
+        var param = {
+            pageNumber: 1,
+            submitUserId:"$user.id"
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "CommonIndex.do?passportid=$!passport.id",
+            error: function () {
+                alert("程序错误")
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                if (arr.errors.length == 0) {
+                    console.log(arr);
+                    var next = "";
+                    for (var i = 0; i < arr.result.length; i++) {
+                        var createTime = "";
+                        var time = arr.result[i].submitTime;
+                        var date = new Date().getTime();
+                        var reduce = (date - time) / 60 / 60 / 1000;
+                        if (reduce >= 24) {
+                            createTime = Math.floor(reduce / 24) + "天前"
+                        }
+                        else if (reduce > 1) {
+                            createTime = Math.floor(reduce) + "小时前"
+                        }
+                        else {
+                            createTime = Math.floor(reduce * 60) + "分钟前"
+                        }
+                        var url = "";
+                        if ($.trim(arr.result[i].avatarurl) == "") {
+                            url = "../images/listimg1.jpg";
+                        }
+                        else {
+                            url = arr.result[i].avatarurl;
+                        }
+                        next += "<li class=\"whitebg top-bottom-border mt-10\" >";
+                        next += "<div class=\"head-title pl_10 pr-10\">";
+                        next += "<img class=\"am-circle am-fl \" src=\"" + arr.result[i].useravatarurl + "\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].submitUserName + "</span>";
+                        next += "<span class=\"f-right lighter-gray-txt am-text-xs \">" + createTime + "</span> </div>";
+                        next += "<div class=\"imgcon\">";
+                        next += "<div onclick=\"detail('" + arr.result[i].id + "')\"><img src=\"" + url + "@320w_240h_0e\" width=\""+width+"\" height=\""+width+"\"/></div></div>";
+                        next += "<div class=\"listp bottom-border pl_10\">" + arr.result[i].title + "</div>";
+                        next += "<div class=\"listp am-g\">";
+                        next += "<div class=\"am-u-sm-4 am-text-center\">";
+                        next += "<img class=\"praise praise-num1" + arr.result[i].id + "\"   id=\"praise1_" + arr.result[i].id + "\" onclick=\"praise('" + arr.result[i].id + "',1)\"/>";
+                        next += "<span class='am-text-middle am-padding-left-xs'>" + arr.result[i].countLink + "</span></div>";
+                        next += "<div class=\"am-u-sm-4 am-text-center\" onclick=\"detail('" + arr.result[i].id + "')\">";
+                        next += "<img class=\"praise comment-num\" src=\"$mobileContent.getURI(
+                            'images/comment.png')\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].countComment + "</span>";
+                        next += "</div>";
+                        next += "<div class=\"am-u-sm-4 am-text-center\">";
+                        next += "<img class=\"praise collect-num1" + arr.result[i].id + "\" id=\"collect1_" + arr.result[i].id + "\" onclick=\"collection('" + arr.result[i].id + "',1)\"/>";
+                        next += "<span class=\"am-text-middle am-padding-left-xs\">" + arr.result[i].countConnection + "</span>";
+                        next += "</div>";
+                        next += "</div>";
+                        if (arr.result[i].commentPost.length > 0) {
+                            if (arr.result[i].commentPost.length <= 3) {
+                                for (var j = 0; j < arr.result[i].commentPost.length; j++) {
+                                    next += "<li class=\"am-u-sm-12 am-margin-0 am-padding-0\">";
+                                    if (typeof(arr.result[i].commentPost[j].userName) != 'undefined') {
+                                        next += " <span class=\"color-pink\">" + arr.result[i].commentPost[j].userName + ":</span>";
+                                    }
+                                    next += "  <span>" + arr.result[i].commentPost[j].content + "</span> </div> </li> <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                    next += "</li>";
+                                }
+                            }
+                            if (arr.result[i].commentPost.length > 3) {
+                                for (var j = 0; j < 3; j++) {
+                                    next += "<li class=\"am-u-sm-12 am-margin-0 am-padding-0\">";
+                                    if (typeof(arr.result[i].commentPost[j].userName) != 'undefined') {
+                                        next += " <span class=\"color-pink\">" + arr.result[i].commentPost[j].userName + ":</span>";
+                                    }
+                                    next += "  <span>" + arr.result[i].commentPost[j].content + "</span> </div> </li> <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                    next += "</li>";
+                                }
+                                next += " <li class=\"am-u-sm-12 am-margin-0  color-pink am-padding-0\">";
+                                next += "<span onclick=\"detail('" + arr.result[i].id + "')\">查看全部评论" + arr.result[i].countComment + " 条</span></li>";
+                            }
+                            next += "<div class=\"clearfix\"></div> </ul>";
+
+                        }
+                        next += "</li>";
+                    }
+                    $("#common").append(next);
+                    for (var i = 0; i < arr.result.length; i++) {
+                        if (arr.result[i].isPraise) {
+                            $(".praise-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/praise-click.png")');
+                            $(".praise-num1" + arr.result[i].id).attr("choose", "true");
+                        }
+                        else {
+                            $(".praise-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/praise.png")');
+                            $(".praise-num1" + arr.result[i].id).attr("choose", "false");
+                        }
+                        if (arr.result[i].isCollection) {
+                            $(".collect-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/collect-click.png")');
+                            $(".collect-num1" + arr.result[i].id).attr("choose", "true");
+                        }
+                        else {
+                            $(".collect-num1" + arr.result[i].id).attr('src', '$mobileContent.getURI("images/collect.png")');
+                            $(".collect-num1" + arr.result[i].id).attr("choose", "false");
+                        }
+                    }
+                    if (arr.totalCount<=10) {
+                        $("#show-more").hide();
+                    }else{
+                        $("#show-more").show();
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    });
+    //名字长度截取
+    $(function () {
+        var namecontent = $("#name").html();
+        if (namecontent.length > 4) {
+            namecontent = namecontent.substring(0, 3) + "...";
+        }
+        $("#name").html(namecontent);
+    })
+</script>

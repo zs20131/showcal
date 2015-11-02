@@ -1,0 +1,474 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+            <li><a href="$platformLink.setTarget("md/index")">瘦咖精选</a></li>
+            <li class="active">商品主数据</a></li>
+        </ul>
+    </ul>
+</div>
+<div class="xn-main  auto xn-width  clearfix" ng-controller="ItemIndexController">
+    <div class="xn-form clearfix">
+        <div class="xn-search">
+            <div class="clearfix">
+            </div>
+            <form class="form-horizontal clearfix xn-form" name="searchForm" xn-form-validate novalidate role="form">
+                <div class="xn_search_box auto">
+                    <div class="xn-input-line clearfix">
+                        <label class="xn-label query-label xn-text-right">名称：</label>
+
+                        <div class="xn-input-sm">
+                            <input type="text" class="form-control" ng-model="vm.title"/>
+                        </div>
+                        <div class="tip"></div>
+                        <label class="xn-label query-label">发布时间：</label>
+
+                        <div class="xn-input-sm">
+                            <div class="input-group openData">
+                                <input type="text" class="form-control" id="startDate" placeholder="开始日期"
+                                       ng-model="vm.startDate" name="regularDate"
+                                       datepicker-popup="yyyy-MM-dd" is-open="startDate" min-date="minDate"
+                                       datepicker-options="dateOptions"
+                                       date-disabled="disabled(date, mode)" close-text="关闭" current-text="今天"
+                                       clear-text="清除">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="openStart($event)"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                            </div>
+                        </div>
+                        <div class="tip"></div>
+                        <label class="xn-label">至</label>
+
+                        <div class="tip"></div>
+                        <div class="xn-input-sm">
+                            <div class="input-group openData">
+                                <input type="text" class="form-control" id="endDate" placeholder="结束日期"
+                                       ng-model="vm.endDate" name="regularDate"
+                                       datepicker-popup="yyyy-MM-dd" is-open="endDate" min-date="minDate"
+                                       datepicker-options="dateOptions"
+                                       date-disabled="disabled(date, mode)" close-text="关闭" current-text="今天"
+                                       clear-text="清除">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="openEnd($event)"><i
+                                        class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="xn-input-line clearfix">
+                        <label class="xn-label query-label xn-text-right">收藏数：</label>
+
+                        <div class="xn-input-sm">
+                            <input type="text" class="form-control w_100 f-left"
+                                   onkeyup="this.value=this.value.replace(/[^\d]/g,'') "
+                                   ng-model="vm.countStartCollection"/><span class="f-left ml_5 mr_5">-</span><input
+                                type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') "
+                                class="form-control w_100 f-left" ng-model="vm.countEndCollection"/>
+                        </div>
+                        <div class="tip"></div>
+                        <label class="xn-label query-label">状态：</label>
+
+                        <div class="xn-input-sm">
+                            <div class="xn-input" style="width: 500px;margin-left:27px;" xn-checkbox-list
+                                 ng-model="status" data-checkbox-list="checkboxlist"
+                                 ng-change="changeStatus(status)">
+                            </div>
+                        </div>
+                        <div class="tip"></div>
+                        <label class="xn-label query-label">类别：</label>
+
+                        <div class="xn-input-sm">
+                            <select class="form-control  mr_10 w_165 f-left ml_10 " ng-model="vm.categoryId"
+                                    ng-options="category.id as category.name for category in categories">
+                                <option value="">----请选择----</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="xn-input-line clearfix">
+
+                        <div class="tip"></div>
+                        <a class="btn btn-success btn-sm w_80 f-right" href="javascript:void(0)"
+                           xn-submit-enter="doFind()">查询</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="xn-input-line clearfix">
+            <a class="btn btn-primary  ml_10 mr_20 f-right"
+               ng-click="create()">新建商品</a>
+        </div>
+        <div class="xn-search">
+            <div class="clearfix">
+            </div>
+        </div>
+        <div class="pm-task-bottom-top pm-plan-bottom-top  mt_20  mb_10 clearfix">
+        </div>
+        <div class="xn-table">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class=" xn-text-center">序号</th>
+                    <th class="">商品名称</th>
+                    <th class="">图片</th>
+                    <th class="">排序</th>
+                    <th class="">链接</th>
+                    <th class="">原价</th>
+                    <th class="">现价</th>
+                    <th class="">类别</th>
+                    <th class="">发布日期</th>
+                    <th class="">浏览量</th>
+                    <th class="">收藏数</th>
+                    <th class="">状态</th>
+                    <th class="">操作</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+                <tr class="line" ng-repeat="item in items ">
+                    <td class="xn-text-center column"> {{$index+1}}</td>
+                    <td class="column">{{item.name|substr:10}}</td>
+                    <td class="column"><img width="60" height="30" ng-src="{{item.avatarurl}}"></img></td>
+                    <td class="column">{{item.orderSort}}</td>
+                    <td class="column"><a href="{{item.url}}">{{item.url|substr:10}}</a></td>
+                    <td class="column">{{item.originalPrice}}</td>
+                    <td class="column">{{item.currentPrice}}</td>
+                    <td class="column">{{item.categoryName}}</td>
+                    <td>{{item.approveTime | timeReturnFormat}}</td>
+                    <td>{{item.countRead}}</td>
+                    <td>{{item.countConnection }}</td>
+                    <td><span ng-if="item.isApproved">已发布</span>
+                        <span ng-if="!item.isApproved">未发布</span></td>
+                    </td>
+                    <td>
+                        <a ng-click="changeOrder(item)">排序</a>
+                        <a ng-click="check(item)">查看</a>
+                        <a ng-click="doDelete(item)">删除</a>
+                        <a ng-if="!item.isApproved" ng-click="approve(item)">发布</a>
+                        <a ng-if="item.isApproved" ng-click="cancel(item)">取消发布</a>
+                        <a ng-click="createComment(item)">评论</a>
+                    </td>
+                </tr>
+                <tr ng-show="vm.totalCount == 0">
+                    <td colspan="12" class="xn-center">无法找到相应的记录</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="clearfix">
+                <div class="f-left mt_20 mb_10">共{{vm.totalCount}}条</div>
+                <pagination ng-show="vm.totalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                            total-items="vm.totalCount" ng-model="vm.pageNumber" items-per-page="vm.pageSize"
+                            class="pagination-sm" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;"
+                            first-text="&laquo;" last-text="&raquo;"></pagination>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="create.html">
+    <div class="modal-header">
+        <h3 class="modal-title">新建</h3>
+
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <form class="form-horizontal xn-form clearfix" role="form" xn-form-validate novalidate name="validateForm">
+        <div class=" clearfix ">
+            <div class="mt_5">
+                <label class="xn-label ">商品名称：</label>
+                <input class="form-control w_200" ng-model="item.name" name="itemName" required maxlength="14"/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">类别：</label>
+                <select class="form-control    w_200   " ng-model="item.classId" name="classId" required
+                        ng-options="category.id as category.name for category in categories">
+                    <option value="">----请选择----</option>
+                </select>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">链接：</label>
+                <input class="form-control w_200" ng-model="item.url" type="text" value=""/>
+            </div>
+            <div class="mt_5 clearfix">
+                <label class="xn-label ">封面图片：</label>
+                <input type="file" id="pictureFile" name="pictureFile" ng-click="showPicture()" width="114" height="85"
+                       contentEditable="false" style="display:none"
+                       accept="image/png,image/gif,image/bmp,image/jpeg,image/jpg"/>
+                <img class="f-left clearfix" ng-if="item.avatarurl == null" alt="请选择图片" onclick="pictureFile.click()"
+                     class="view-img imgFile" id="spanImage" alt="请选择图片"
+                     width="234" height="120"/>
+                <img class="f-left clearfix" ng-if="item.avatarurl != null" onclick="pictureFile.click()"
+                     class="view-img imgFile" id="spanImage" alt="请选择图片"
+                     width="234" height="120" ng-src="{{item.avatarurl}}"/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">详情图片：</label>
+
+                <div xn-attachment-edit ng-model="attachment" class="detail"></div>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">原价：</label>
+                <input class="form-control w_200" ng-model="itemEcommerce.originalPrice" required name="originalPrice"
+                       ng-pattern="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/"/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">现价：</label>
+                <input class="form-control w_200" ng-model="itemEcommerce.currentPrice" required name="originalPrice"
+                       ng-pattern="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/"/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">品牌：</label>
+                <input class="form-control w_200" ng-model="item.brandId" required type="text" value=""/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">单位：</label>
+                <input class="form-control w_200" ng-model="item.uom" required/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">规格：</label>
+                <input class="form-control w_200" ng-model="item.spec1AttributeName" required/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">体积：</label>
+                <input class="form-control w_200" ng-model="item.volume" required name="volume"
+                       ng-pattern="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/">
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">重量：</label>
+                <input class="form-control w_200" ng-model="item.weight" required name="weight"
+                       ng-pattern="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/"/>
+            </div>
+        <div class="mt_5">
+            <label class="xn-label ">商品介绍：</label>
+               <div class="l-h-34 ">
+                   <div class="mt_20 f-left" xn-markdown rows="8" ng-model=" itemDetail.text" name="itemText"
+                        required></div>
+               </div>
+        </div>
+        </div>
+        <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+            <div class="col-sm-10">
+                <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5"
+                                                                   ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]
+                    }}
+                </div>
+            </div>
+        </div>
+
+    <div class="modal-footer">
+        <a xn-submit-enter="create()" class="btn btn-default ">保存</a>
+        <a ng-click="cancel()" class="btn btn-default  ">取消</a>
+    </div>
+    </form>
+</script>
+
+<script type="text/ng-template" id="check.html">
+    <div class="modal-header">
+        <h3 class="modal-title">查看</h3>
+
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <form class="form-horizontal xn-form clearfix" role="form" xn-form-validate novalidate name="validateForm">
+        <div class=" clearfix ">
+            <div class="mt_5">
+                <label class="xn-label ">商品名称：</label>
+                <input class="form-control w_200" ng-model="item.name" type="text" value="" name="itemName" required
+                       maxlength="14"/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">类别：</label>
+                <select class="form-control    w_200   " ng-model="item.classId" name="classId" required
+                        ng-options="category.id as category.name for category in categories">
+                    <option value="">----请选择----</option>
+                </select>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">链接：</label>
+                <input class="form-control w_200" ng-model="item.url" type="text" value=""/>
+            </div>
+            <div class="mt_5 clearfix">
+                <label class="xn-label ">图片：</label>
+                <input type="file" id="pictureFile" name="pictureFile" ng-click="showPicture()" width="114" height="85"
+                       contentEditable="false" style="display:none"
+                       accept="image/png,image/gif,image/bmp,image/jpeg,image/jpg"/>
+                <img class="f-left clearfix" ng-if="item.avatarurl != null" onclick="pictureFile.click()"
+                     class="view-img imgFile" id="spanImage" alt="请选择图片"
+                     width="234" height="120" ng-src="{{item.avatarurl}}"/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">详情图片：</label>
+
+                <div xn-attachment-edit ng-model="attachment" class="detail"></div>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">原价：</label>
+                <input class="form-control w_200" ng-model="item.originalPrice" required name="originalPrice"
+                       ng-pattern="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/"/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">现价：</label>
+                <input class="form-control w_200" ng-model="item.currentPrice" required name="originalPrice"
+                       ng-pattern="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/"/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">品牌：</label>
+                <input class="form-control w_200" ng-model="item.brandId" required/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">单位：</label>
+                <input class="form-control w_200" ng-model="item.uom" required/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">规格：</label>
+                <input class="form-control w_200" ng-model="item.spec1AttributeName" required/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">体积：</label>
+                <input class="form-control w_200" ng-model="item.volume" required name="volume"/>
+            </div>
+            <div class="mt_5">
+                <label class="xn-label ">重量：</label>
+                <input class="form-control w_200" ng-model="item.weight" required name="weight"/>
+            </div>
+
+            <div class="mt_5 ">
+                <label class="xn-label ">商品介绍：</label>
+
+                <div class="mt_20 f-left" xn-markdown rows="8" ng-model="item.context" name="itemText" required></div>
+            </div>
+
+        </div>
+        <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+            <div class="col-sm-10">
+                <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5"
+                                                                   ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]
+                    }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a xn-submit-enter="update()" class="btn btn-default ">更新</a>
+        ##        <a ng-if="!item.isApproved" ng-click="submitApprove(item)" class="btn btn-default  ">发布</a>
+            <a ng-click="cancel()" class="btn btn-default  ">取消</a>
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="changeOrder.html">
+    <div class="modal-header">
+        <h3 class="modal-title">排序</h3>
+
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <form class="form-horizontal xn-form clearfix" role="form" xn-form-validate novalidate name="validateForm">
+        <div class=" clearfix ">
+            <div class="mt_5">
+                <label class="xn-label "><i class="xn-required-i xn-location-required f-right"></i>排序：</label>
+                <input class="form-control w_100" ng-model="item.orderSort" required type="text" name="weight"
+                       onkeyup="this.value=this.value.replace(/[^\d]/g,'') "/>
+            </div>
+        </div>
+        <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+            <div class="col-sm-10">
+                <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5"
+                                                                   ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]
+                    }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a xn-submit-enter="sure()" class="btn btn-default ">确定</a>
+            <a ng-click="cancel()" class="btn btn-default  ">取消</a>
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="createComment.html">
+    <div class="modal-header">
+        <h3 class="modal-title">新建评论</h3>
+
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <form class="form-horizontal xn-form clearfix" role="form" xn-form-validate novalidate name="validateForm">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="w_100">项次</th>
+                <th class="w_100">操作</th>
+                <th class="w_200">评论人</th>
+                <th class="w_300">评论内容</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <tr class="line" ng-repeat="user in commentPosts ">
+                <td class="xn-center column"> {{$index+1}}</td>
+                <td class="xn-col-sm-3 xn-center">
+                    <i class="icon icon-add" ng-click="addLine($index)"></i>
+                    <i class="icon icon-delete" ng-click="removeLine($index)"></i>
+                </td>
+                <td class="{{user.trCl}}">
+                    <div class="xn-data" ng-if="user.name" ng-click="selectMemo(user)">
+                        {{user.userName}}
+                    </div>
+                    <div class="line_item w_200"
+                         ng-if="!user.name || 'false'==user.name"
+                         ng-blur="">
+                        <lookup options="itemInfoOptions" name="itemInfo
+                            " show-field="user.userName"
+                                ng-model="user.userName" place-holder=请瘦咖姓名>
+                            <table>
+                                <tbody>
+                                <tr ng-repeat="sysUser in users"
+                                    ng-click="selectItemInfo(user, sysUser)">
+                                    <td>{{sysUser.nickName}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </lookup>
+                    </div>
+                </td>
+                <td class="column">
+                    <textarea name="itemText" style="width: 292px; height: 73px;" ng-model="user.content"
+                              required></textarea>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+        <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+            <div class="col-sm-10">
+                <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5"
+                                                                   ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]
+                    }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a xn-submit-enter="create()" class="btn btn-default ">保存</a>
+            <a ng-click="cancel()" class="btn btn-default  ">取消</a>
+        </div>
+
+</script>

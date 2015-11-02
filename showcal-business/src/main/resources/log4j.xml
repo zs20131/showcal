@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="true">
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <param name="Threshold" value="WARN"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d{yyyy/MM/dd hh:mm:ss:sss z}] %t %5p %c{2}: %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="DEBUG"
+              class="org.apache.log4j.ConsoleAppender">
+        <!--<param name="File" value="./logs/debug.log"/>-->
+        <param name="DatePattern" value="'.'yyyy-MM-dd-HH" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d{yyyy/MM/dd hh:mm:ss:sss z}] %t %5p %c{2}: %m%n"/>
+        </layout>
+    </appender>
+
+    <category name="com.xiniunet">
+        <level  value="debug"/>
+        <appender-ref ref="DEBUG"/>
+    </category>
+
+    <root>
+        <level value="WARN"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</log4j:configuration>

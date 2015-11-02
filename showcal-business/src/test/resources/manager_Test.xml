@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       default-autowire="byName">
+    <aop:aspectj-autoproxy/>
+
+    <context:component-scan base-package="com.showcal.foundation">
+        <context:include-filter type="regex" expression=".*Impl"/>
+    </context:component-scan>
+    <context:component-scan base-package="com.showcal.cms">
+        <context:include-filter type="regex" expression=".*Impl"/>
+    </context:component-scan>
+    <context:component-scan base-package="com.showcal.mobile">
+        <context:include-filter type="regex" expression=".*Impl"/>
+    </context:component-scan>
+    <context:component-scan base-package="com.showcal.platform">
+        <context:include-filter type="regex" expression=".*Impl"/>
+    </context:component-scan>
+    <context:component-scan base-package="com.showcal.service">
+        <context:include-filter type="regex" expression=".*Impl"/>
+    </context:component-scan>
+    <context:component-scan base-package="com.showcal.thermalcontrol">
+        <context:include-filter type="regex" expression=".*Impl"/>
+    </context:component-scan>
+    <context:component-scan base-package="com.showcal.merchandise">
+        <context:include-filter type="regex" expression=".*Impl"/>
+    </context:component-scan>
+    <bean id="passport" class="com.xiniunet.framework.security.Passport">
+        <property name="id" value="1"/>
+        <property name="tenantId" value="512824102474878976"/>
+        <property name="userId" value="34567"/>
+        <property name="userName" value="铁蛋"/>
+    </bean>
+</beans>

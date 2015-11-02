@@ -1,0 +1,110 @@
+package ${basePackage}.${moduleName?uncap_first}.module.screen;
+
+import com.alibaba.citrus.service.requestcontext.buffered.BufferedRequestContext;
+import com.alibaba.citrus.turbine.dataresolver.Param;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.xiniunet.foundation.request.FilePathGetRequest;
+import com.xiniunet.foundation.response.FilePathGetResponse;
+import com.xiniunet.foundation.service.FoundationService;
+import com.xiniunet.framework.base.BaseResponse;
+import com.xiniunet.framework.exception.ErrorType;
+import com.xiniunet.framework.log.LogUtil;
+import com.xiniunet.framework.security.Passport;
+import com.xiniunet.framework.util.DateUtil;
+import com.xiniunet.framework.util.EncryptUtil;
+import com.xiniunet.framework.util.auth.ConfigToolObject;
+import com.xiniunet.${moduleName?uncap_first}.domain.*;
+import com.xiniunet.${moduleName?uncap_first}.request.*;
+import com.xiniunet.${moduleName?uncap_first}.response.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+/**
+* <p/>
+* <pre>
+ * ***************************************************************
+ *  Copyright (c) 2014 –${company}
+    *  Title: ${basePackage}.${moduleName}.module.screen.Api
+    *  Description: ${moduleName} 的API信息
+    *  @since
+    *  @author ${author}
+    * ***************************************************************
+ * </pre>
+*/
+public class Api {
+@Autowired
+private HttpServletResponse response;
+
+@Autowired
+private BufferedRequestContext brc;
+
+@Autowired
+private HttpServletRequest request;
+
+@Autowired
+private FoundationService foundationService;
+
+@Autowired
+private  ${moduleName ?cap_first}Helper ${moduleName}Helper;
+
+public void execute(@Param("method") String method) throws Exception {
+    BaseResponse baseResponse = new BaseResponse();
+    try {
+    // 必须关闭buffering，未完成的页面才会被显示在浏览器上。
+    brc.setBuffering(false);
+    // 设置content type，但不需要设置charset，框架会设置正确的charset。
+    response.setContentType("text/plain");
+    method = method.toLowerCase();
+    Passport passport = (Passport) request.getAttribute("passport");
+    InputStreamReader isr = new InputStreamReader(request.getInputStream());
+    BufferedReader in = new BufferedReader(isr);
+    String line = in.readLine();
+    JSONObject jsonObject = JSON.parseObject(line);
+
+    switch (method) {
+    <#if methods??>
+     <#list methods as method>
+        // ${method.description}
+        case "api.${moduleName}${method.apiName?lower_case}":
+        baseResponse = ${method.name}(jsonObject,passport);
+        break;
+     </#list>
+    </#if>
+    default:
+    baseResponse.addError(ErrorType.INVALID_PARAMETER, Constants.NOT_EXIST_METHOD);
+    break;
+    }
+    } catch (Exception ex) {
+    baseResponse.addError(ErrorType.SYSTEM_ERROR, Constants.ERROR_MESSAGE_500);
+    baseResponse.addError(ErrorType.STACK_DUMP, LogUtil.dumpException(ex));
+    LogUtil.errorLog(ex);
+    } finally {
+    String jsonTenant = JSON.toJSONString(baseResponse);
+    PrintWriter out = response.getWriter();
+    out.println(jsonTenant);
+    }
+  }
+
+    <#if methods??>
+        <#list methods as method>
+        /**
+        * ${method.description}
+        */
+        private BaseResponse ${method.name}(JSONObject jsonObject, Passport passport) {
+        ${method.requestName} request = JSON.toJavaObject(jsonObject,${method.requestName}.class);
+        return ${moduleName}Helper.${method.name}(request, passport);
+        }
+        </#list>
+    </#if>
+
+}

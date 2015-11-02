@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.thermalcontrol.dal.SportHeadMapper">
+
+    <resultMap  id="sportHeadPO" type="com.showcal.thermalcontrol.po.SportHeadPO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="NAME"  jdbcType="VARCHAR" property="name"></result>
+        <result column="TOTAL_TIME"  jdbcType="NUMERIC" property="totalTime"></result>
+        <result column="INTENSITY"  jdbcType="VARCHAR" property="intensity"></result>
+        <result column="ADDRESS"  jdbcType="VARCHAR" property="address"></result>
+        <result column="START_BMI"  jdbcType="NUMERIC" property="startBmi"></result>
+        <result column="END_BMI"  jdbcType="NUMERIC" property="endBmi"></result>
+        <result column="IS_INJURY_JOIN"  jdbcType="TINYINT" property="isInjuryJoin"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`NAME`,`TOTAL_TIME`,`INTENSITY`,`ADDRESS`,`START_BMI`,`END_BMI`,`IS_INJURY_JOIN`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `TC_SPORT_HEAD`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ sportHead.id },
+        
+        #{ sportHead.name },
+        #{ sportHead.totalTime },
+        #{ sportHead.intensity },
+        #{ sportHead.address },
+        #{ sportHead.startBmi },
+        #{ sportHead.endBmi },
+        #{ sportHead.isInjuryJoin },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `TC_SPORT_HEAD`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "sportHead" index ="index" separator=",">
+            (
+            #{ sportHead.id },
+            
+            #{ sportHead.name },
+            #{ sportHead.totalTime },
+            #{ sportHead.intensity },
+            #{ sportHead.address },
+            #{ sportHead.startBmi },
+            #{ sportHead.endBmi },
+            #{ sportHead.isInjuryJoin },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `TC_SPORT_HEAD`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `TC_SPORT_HEAD`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="sportHeadPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `TC_SPORT_HEAD`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="sportHeadPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `TC_SPORT_HEAD`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="sportHeadPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `TC_SPORT_HEAD`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_SPORT_HEAD`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

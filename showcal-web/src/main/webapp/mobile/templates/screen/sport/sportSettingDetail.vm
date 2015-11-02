@@ -1,0 +1,114 @@
+$page.setTitle("运动控制详情")
+<div class="discover sport discover-detail">
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="index?passportid=$!passport.id" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+
+        <h5 class="am-header-title">$sportHead.name</h5>
+
+        <div class="am-header-right am-header-nav">
+
+        </div>
+    </header>
+    <!--内容 -->
+    <div class="am-g clearfix tabcontent  am-text-sm ">
+        <input type="hidden" id="sportHeadId" value="$sportHead.id"></input>
+        <input type="hidden" id="totalTime" value="$sportHead.totalTime"></input>
+        <input type="hidden" id="intensity" value="$sportHead.intensity"></input>
+        <input type="hidden" id="address" value="$sportHead.address"></input>
+        <div class="am-cf ">
+            <ul class="am-padding-0 am-margin-0 scheme am-cf">
+                #foreach($sportLine in $sportHead.sportLineList)
+                    <li class="scheme-li ">
+                        <span class="red-circle am-text-default">$sportLine.step</span>
+
+                        <div class="step-name">$sportLine.sportSetting.name</div>
+                        <p>$sportLine.sportSetting.content
+                        #if('Picture'==$sportLine.sportSetting.type)
+                        <img src="$sportLine.sportSetting.url"/>
+                        #end
+                        #if('Video'==$sportLine.sportSetting.type)
+                            <video class="video am-margin-top-xs" controls="controls" preload="auto">
+                       <!--     <source src="$sportLine.sportSetting.url" type="video/ogg">  -->
+                            <source src="$sportLine.sportSetting.url" type="video/mp4">
+                            您的浏览器不支持此种视频格式。
+                            </video>
+
+                        #end
+                        #if('URL'==$sportLine.sportSetting.type)
+                            <a class="url" href="$sportLine.sportSetting.url">$sportLine.sportSetting.url</a>
+                        #end
+                        </p>
+                    </li>
+                #end
+            </ul>
+
+
+        </div>
+        <!--弹出框 -->
+        <div class="am-modal  am-modal-no-btn" tabindex="-1" id="my-modal-loading">
+            <div class="am-modal-dialog">
+                <div class="am-modal-hd">已成功同步给瘦咖</div>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="sport-submit am-text-center am-text-default whitebg" id="sport-submit"
+            data-am-modal="{target: '#my-modal-loading'}">同步给瘦咖
+    </button>
+</div>
+
+<script>
+    $(function () {
+        //设置整个背景颜色
+        $(document.body).css("background", "#fafafa");
+        //同步给瘦咖
+        $("#sport-submit").on("click", function () {
+            setTimeout("test()", 1000);
+            test = function () {
+                var sportHeadId = $("#sportHeadId").val();
+                var totalTime = $("#totalTime").val();
+                var intensity = $("#intensity").val();
+                var address = $("#address").val();
+                var isSynced = true;
+                var param={
+                    sportHeadId: sportHeadId,
+                    totalTime: totalTime ,
+                    intensity:intensity,
+                    address:address
+                    }
+                $.ajax({
+                    type: 'POST',
+                    data: param,
+                    url: "SyncDetail.do?passportid=$!passport.id",
+                    error: function () {
+                        $("#errormsg").html("程序错误");
+                    },
+                    success: function (msg) {
+                        var arr = eval("(" + msg + ")");
+                        console.log(arr);
+                        if (arr.errors.length == 0) {
+                            $(".am-modal").addClass("am-hide");
+                            $(".am-dimmer.am-active").hide();
+                            $(".am-dimmer").hide();
+                        }
+                        else {
+                            var errors = [];
+                            for (var i = 0; i < arr.errors.length; i++) {
+                                errors.push(arr.errors[i].message);
+                            }
+                            alert(errors);
+                        }
+                    }
+                })
+            };
+        })
+    });
+
+</script>

@@ -1,0 +1,58 @@
+<!DOCTYPE html >
+<html lang="zh-CN">
+<head>
+    <title>瘦咖管理平台</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Expires" CONTENT="0">
+    <meta http-equiv="Cache-Control" CONTENT="no-cache">
+    <meta http-equiv="Cache-Control" CONTENT="no-store">
+    <meta http-equiv="Pragma" content="no-cache">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="瘦咖网络管理平台">
+    <meta name="author" content="瘦咖">
+    <link rel="Shortcut Icon" href="$platformContent.getURI('images/favicon.ico')" type="image/x-icon">
+    <link href="$platformContent.getURI('vendor/xn/styles/global.min.css')" rel="stylesheet">
+
+    <link href="$platformContent.getURI('dist/styles/local.min.css')" rel="stylesheet">
+
+    <link rel="stylesheet" href="$platformContent.getURI('vendor/mmgrid/mmGrid.css')">
+    <link rel="stylesheet" href="$platformContent.getURI('vendor/mmgrid/mmPaginator.css')">
+    <link rel="stylesheet" href="$platformContent.getURI('vendor/color/color.min.css')">
+
+
+    <script src="$platformContent.getURI('vendor/xn/scripts/base.min.js')"></script>
+    <script src="$platformContent.getURI('vendor/xn/scripts/global.min.js')"></script>
+    <script src="$platformContent.getURI('dist/scripts/local.min.js')"></script>
+    <script src="$platformContent.getURI('vendor/xn/scripts/markdownsetting.min.js')"></script>
+
+    <script type="text/javascript"  src="$platformContent.getURI('vendor/jquery/jquery.min.js')"></script>
+    <script type="text/javascript"  src="$platformContent.getURI('vendor/jquery/jquery.min.js')"></script>
+    <script type="text/javascript"  src="$platformContent.getURI('vendor/mmgrid/plugins.js')"></script>
+    <script type="text/javascript"  src="$platformContent.getURI('vendor/mmgrid/json2.js')"></script>
+    <script type="text/javascript"  src="$platformContent.getURI('vendor/mmgrid/mmGrid.js')"></script>
+    <script type="text/javascript"  src="$platformContent.getURI('vendor/mmgrid/mmPaginator.js')"></script>
+    <script type="text/javascript"  src="$platformContent.getURI('vendor/color/tinycolor.min.js')"></script>
+    <script type="text/javascript"  src="$platformContent.getURI('vendor/color/pickcolor.min.js')"></script>
+</head>
+<body ng-controller="BodyController" class="ng-cloak">
+<div id="loadingInit" ng-if="global.loadingInit"></div>
+##    $application.setCode("yunland")
+    $control.setTemplate("platform:nav")
+    $screen_placeholder
+    $control.setTemplate("platform:footer")
+<div xn-nprogress></div>
+</body>
+
+<script type="text/javascript">
+    /*犀牛ng-app的运用*/
+    angular.element(document).ready(function () {
+        initApp();
+        angular.bootstrap(document.body, ['xn']);
+    });
+    ##    var uploadjson =  '$baseContent.getURI("/fileUploadJson.do")';
+    ##    var uploadmamagerjson = '$baseContent.getURI("/fileUploadManager.do")';
+</script>
+</html>
+

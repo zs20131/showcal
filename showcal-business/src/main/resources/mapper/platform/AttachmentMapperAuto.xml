@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.foundation.dal.AttachmentMapper">
+
+    <resultMap  id="attachmentPO" type="com.showcal.foundation.po.AttachmentPO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="BUSINESS_TYPE"  jdbcType="VARCHAR" property="businessType"/>
+        <result column="BUSINESS_ID"  jdbcType="NUMERIC" property="businessId"/>
+        <result column="BUSINESS_CATEGORY"  jdbcType="VARCHAR" property="businessCategory"/>
+        <result column="FILE_ID"  jdbcType="NUMERIC" property="fileId"/>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"/>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"/>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"/>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"/>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+    </resultMap>
+
+    <sql id="entityColumnList">
+        ID,
+        BUSINESS_TYPE,
+        BUSINESS_ID,
+        BUSINESS_CATEGORY,
+        FILE_ID,
+        IS_DELETED,
+        CREATED_BY,
+        CREATION_TIME,
+        LAST_UPDATED_BY,
+        LAST_UPDATE_TIME
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            SYS_ATTACHMENT
+        (
+            ID,BUSINESS_TYPE,BUSINESS_ID,BUSINESS_CATEGORY,FILE_ID,IS_DELETED,CREATED_BY,CREATION_TIME,LAST_UPDATED_BY,LAST_UPDATE_TIME
+        )
+        VALUES
+        (
+            #{ attachment.id },
+            #{ attachment.businessType },
+            #{ attachment.businessId },
+            #{ attachment.businessCategory },
+            #{ attachment.fileId },
+            0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+        SYS_ATTACHMENT
+        (
+            ID,BUSINESS_TYPE,BUSINESS_ID,BUSINESS_CATEGORY,FILE_ID,IS_DELETED,CREATED_BY,CREATION_TIME,LAST_UPDATED_BY,LAST_UPDATE_TIME
+        )
+        VALUES
+        <foreach collection="list" item= "attachment" index ="index" separator=",">
+            (
+                #{ attachment.id },
+                #{ attachment.businessType },
+                #{ attachment.businessId },
+                #{ attachment.businessCategory },
+                #{ attachment.fileId },
+                0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            SYS_ATTACHMENT
+        SET
+            IS_DELETED = 1
+            ,LAST_UPDATED_BY=#{ passport.userId }
+            ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+            IS_DELETED=0
+            AND ID = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            SYS_ATTACHMENT
+        SET
+            IS_DELETED = 1
+            ,LAST_UPDATED_BY=#{ passport.userId }
+            ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+            IS_DELETED=0
+            AND ID in
+                <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+                    #{id}
+                </foreach >
+    </update >
+
+    <update id="update">
+        UPDATE
+            SYS_ATTACHMENT
+        SET
+            <if test="businessType!=null">BUSINESS_TYPE=#{ attachment.businessType },</if>
+            <if test="businessId!=null">BUSINESS_ID=#{ attachment.businessId },</if>
+            <if test="businessCategory!=null">BUSINESS_CATEGORY=#{ attachment.businessCategory },</if>
+            <if test="fileId!=null">FILE_ID=#{ attachment.fileId },</if>
+            LAST_UPDATED_BY=#{ passport.userId }
+            ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+            IS_DELETED=0
+            AND ID = #{id}
+    </update>
+
+    <update id="updateBatch">
+        <foreach collection="list" item= "item" index ="index" separator=";">
+            UPDATE
+                SYS_ATTACHMENT
+            SET
+                <if test="item.businessType!=null">BUSINESS_TYPE=#{ item.businessType },</if>
+                <if test="item.businessId!=null">BUSINESS_ID=#{ item.businessId },</if>
+                <if test="item.businessCategory!=null">BUSINESS_CATEGORY=#{ item.businessCategory },</if>
+                <if test="item.fileId!=null">FILE_ID=#{ item.fileId },</if>
+                LAST_UPDATED_BY=#{ passport. }
+                ,LAST_UPDATE_TIME=SYSDATE()
+            WHERE
+                IS_DELETED=0
+                AND ID=#{item.id}
+        </foreach >
+    </update>
+
+    <select id="getById" resultMap="attachmentPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            SYS_ATTACHMENT
+        WHERE
+            ID = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="attachmentPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            SYS_ATTACHMENT
+        WHERE
+            ID in
+                <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+                    #{id}
+                </foreach >
+    </select>
+
+    <select id="getAllList" resultMap="attachmentPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            SYS_ATTACHMENT
+        WHERE
+            IS_DELETED=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            SYS_ATTACHMENT
+        WHERE
+            ID=#{id}
+    </select>
+</mapper>

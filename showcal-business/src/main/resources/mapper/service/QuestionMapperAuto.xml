@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.service.dal.QuestionMapper">
+
+    <resultMap  id="questionPO" type="com.showcal.service.po.QuestionPO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="TAG"  jdbcType="VARCHAR" property="tag"></result>
+        <result column="KEYWORD"  jdbcType="VARCHAR" property="keyword"></result>
+        <result column="RESPONSE_TIME"  jdbcType="TIMESTAMP" property="responseTime"></result>
+        <result column="IS_ANSWERED"  jdbcType="TINYINT" property="isAnswered"></result>
+        <result column="ANSWER_USER_ID"  jdbcType="NUMERIC" property="answerUserId"></result>
+        <result column="ANSWER_TIME"  jdbcType="TIMESTAMP" property="answerTime"></result>
+        <result column="ANSWER_ID"  jdbcType="NUMERIC" property="answerId"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`TAG`,`KEYWORD`,`RESPONSE_TIME`,`IS_ANSWERED`,`ANSWER_USER_ID`,`ANSWER_TIME`,`ANSWER_ID`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `SER_QUESTION`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ question.id },
+        
+        #{ question.tag },
+        #{ question.keyword },
+        #{ question.responseTime },
+        #{ question.isAnswered },
+        #{ question.answerUserId },
+        #{ question.answerTime },
+        #{ question.answerId },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `SER_QUESTION`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "question" index ="index" separator=",">
+            (
+            #{ question.id },
+            
+            #{ question.tag },
+            #{ question.keyword },
+            #{ question.responseTime },
+            #{ question.isAnswered },
+            #{ question.answerUserId },
+            #{ question.answerTime },
+            #{ question.answerId },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `SER_QUESTION`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `SER_QUESTION`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="questionPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `SER_QUESTION`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="questionPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `SER_QUESTION`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="questionPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `SER_QUESTION`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_QUESTION`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.SettingDiseaseMapper">
+
+    <sql id="whereForFindList">
+        <if test="request.name!=null"> AND `NAME` LIKE CONCAT ('%',#{ request.name },'%')</if>
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           `NAME` LIKE CONCAT ('%',#{ request.keyword },'%')  OR  
+           )
+    </sql>
+
+    <select id="find" resultMap="settingDiseasePO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `PL_SETTING_DISEASE`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SETTING_DISEASE`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="settingDiseasePO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `PL_SETTING_DISEASE`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SETTING_DISEASE`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SETTING_DISEASE`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `PL_SETTING_DISEASE`
+        SET
+        `NAME`=#{ request.name },
+        `REMARK`=#{ request.remark },
+        `IS_ACTIVE`=#{ request.isActive },
+        `ACTIVE_DATE`=#{ request.activeDate },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+
+    <update id="inactive">
+        UPDATE
+            `PL_SETTING_DISEASE`
+        SET
+            `IS_ACTIVE` = 0
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `IS_ACTIVE`=1
+            AND `ID` = #{id}
+    </update>
+
+    <update id="active">
+        UPDATE
+            PL_SETTING_DISEASE
+        SET
+            `IS_ACTIVE` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `IS_ACTIVE`=0
+            AND `ID` = #{id}
+    </update>
+
+    <select id="getAppAllList" resultMap="settingDiseasePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+        `PL_SETTING_DISEASE`
+        WHERE
+        `IS_DELETED`=0
+        AND `IS_ACTIVE`=1
+    </select>
+
+</mapper>

@@ -1,0 +1,185 @@
+<div class="showcal">
+    <!--header-->
+    <header data-am-widget="header" class="am-header am-no-layout am-header-fixed showcal--mobile-header
+    showcal--mobile-header-borderbottom">
+        <div class="am-header-left am-header-nav">
+            <a onclick="doBack()">
+                <img class="showcal-left-arrow" src="$mobileContent.getURI("images/leftarrrow.png")"
+                     width="10" height="24" alt="">
+            </a>
+        </div>
+        <h1 class="am-header-title">消息中心</h1>
+    </header>
+
+    <!--消息列表-->
+    <div class="am-u-sm-12  am-padding-0 whitebg">
+        <div class="am-u-sm-2 am-padding-0">
+            <img class="message-person-img" src="$mobileContent.getURI('images/picture.png')">
+        </div>
+        #if($num==0)
+            <div class="am-u-sm-10 clearfix am-padding-0 border-bottom-1">
+                <div class="am-u-sm-12 clearfix">
+                    <div class="f-left clearfix pt-2 relative-box">
+                        系统消息
+                    </div>
+
+                    <div class="f-right light-gray-txt "></div>
+
+                </div>
+                <div class="am-u-sm-12 clearfix message-description am-text-truncate">
+                    $sendMessage
+                </div>
+            </div>
+        #else
+            <div class="am-u-sm-10 clearfix am-padding-0 border-bottom-1" onclick="detail()">
+                <div class="am-u-sm-12 clearfix">
+                    <div class="f-left clearfix pt-2 relative-box">
+            #if($passport.tenantId>0)
+                        <img class="cycle-img" src="$mobileContent.getURI('images/small.png')" width="8" height="8">
+            #end
+                        系统消息
+                    </div>
+                    <div class="f-right light-gray-txt "> $!base.formatDate($sendMessage.sendTime,
+                        "yyyy-MM-dd HH:mm:ss")</div>
+                </div>
+                <div class="am-u-sm-12 clearfix message-description am-text-truncate">
+                    $!sendMessage.messageTitle
+                </div>
+            </div>
+        #end
+
+    </div>
+    #foreach($message in $sysMessageList)
+        <div class="am-u-sm-12  am-padding-0 whitebg"
+            #if($message.businessType=='SERVICE')
+             onclick="showCal('$!message.id','$!message.businessId')"
+            #else
+             onclick="showArticle('$!message.id','$!message.businessId')"
+            #end
+                >
+            <div class="am-u-sm-2 am-padding-0 ">
+                <img src="$!message.url" class="message-person-img">
+            </div>
+            <div class="am-u-sm-10 clearfix am-padding-0 border-bottom-1">
+                <div class="am-u-sm-12 clearfix">
+                    #if($message.businessType=='COMMENT')
+                        <div class="f-left clearfix pt-2 ">$!message.name 评论我</div>
+                    #end
+                    #if($message.businessType=='ARTICLE')
+                        <div class="f-left clearfix pt-2 ">推送的帖子</div>
+                    #end
+                    #if($message.businessType=='SERVICE')
+                        <div class="f-left clearfix pt-2 ">服务评价</div>
+                    #end
+                    <div class="f-right light-gray-txt ">$!base.formatDate($message.sendTime,
+                        "yyyy-MM-dd HH:mm:ss")</div>
+                </div>
+                <div class="am-u-sm-12 clearfix  am-text-truncate message-description">
+                    $!message.messageTitle
+                </div>
+            </div>
+        </div>
+    #end
+</div>
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">瘦咖提醒您</div>
+        <div class="am-modal-bd" id="errormsg">
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn">确定</span>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(function () {
+        /*  var len=$(".message").html();
+          if(len.length>30){
+              $(".message").html(len.substr(0,31)+"...")
+          }*/
+    });
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        strs = str.split("&");
+        console.log(strs);
+        for (var i = 0; i < strs.length; i++) {
+            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+        }
+    }
+    var doBack = function () {
+        if (theRequest.type == 1) {
+            window.location.href = "index?back=1&type=" + theRequest.type + "&passportid=$!passport.id";
+        }
+        else {
+            window.location.href = "../chat/index?back=1&passportid=$!passport.id";
+        }
+
+    }
+    function detail() {
+        window.location = "listmessage?type=" + theRequest.type + "&passportid=$!passport.id";
+    }
+    function showArticle(id, businessId) {
+        var param = {
+            id: id
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "Update.do?passportid=$!passport.id",
+            error: function () {
+                $("#errormsg").html("程序错误");
+                $('#my-alert').modal({
+                    relatedTarget: this
+                });
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                console.log(arr);
+                if (arr.errors.length == 0) {
+                    window.location.href = "../discover/detail?passportid=$!passport.id&id=" + businessId;
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    }
+    function showCal(id, businessId) {
+        var param = {
+            id: id
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "Update.do?message=1&passportid=$!passport.id",
+            error: function () {
+                $("#errormsg").html("程序错误");
+                $('#my-alert').modal({
+                    relatedTarget: this
+                });
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                console.log(arr);
+                if (arr.errors.length == 0) {
+                    window.location.href = "showcal?type="+ theRequest.type +"&passportid=$!passport.id&id=" + businessId;
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    }
+</script>

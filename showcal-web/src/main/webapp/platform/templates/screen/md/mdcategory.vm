@@ -1,0 +1,123 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+            <li><a href="$platformLink.setTarget("md/index")">瘦咖精选</a></li>
+            <li class="active">商品类别</a></li>
+        </ul>
+    </ul>
+</div>
+<div class="xn-main  auto xn-width  clearfix" ng-controller="CategoryController">
+    <div class=" clearfix">
+        <div class="xn-table">
+            <div class="xn-input-line clearfix">
+                <a class="btn btn-primary  ml_10 mr_20 f-right"
+                   ng-click="create()">新建类别</a>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class=" ">序号</th>
+                    <!--<th class="col-w-2 col_1">操作</th>-->
+                    <th class=" ">类目名称</th>
+                    <th class=" ">代码</th>
+                    <th class=" ">备注</th>
+                    <th class=" ">操作</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+                <tr class="line" ng-repeat="category in categories ">
+                    <td class="xn-center column"> {{$index+1}}</td>
+                    <td class="column">
+                        <div ng-show="category.edit"> {{category.name}}</div>
+                        <input ng-show="!category.edit" type="text" class="form-control w_200" ng-model="category.name"/>
+                    </td>
+
+                    <td class="column  xn-text-right ">
+                        <div ng-show="category.edit">{{category.code}}</div>
+                        <input ng-show="!category.edit" type="text" class="form-control w_200" ng-model="category.code"/>
+                    </td>
+                    <td class="column xn-text-center">
+                        <div ng-show="category.edit">{{category.description}}</div>
+                        <input ng-show="!category.edit" type="text" class="form-control w_200" ng-model="category.description"/>
+                    </td>
+                    <td class="column  xn-text-right ">
+                        <a class="btn btn-primary btn-sm mr_10 " ng-show="category.edit"
+                           ng-click="edit($index)">编辑</a>
+                        <a class="btn btn-primary btn-sm mr_10  " ng-show="!category.edit"
+                           ng-click="save(category,$index)">确定</a>
+                        <a class="btn btn-primary btn-sm mr_10"
+                           ng-click="doDelete(category)">删除</a>
+                    </td>
+                </tr>
+                <tr ng-show="vm.totalCount == 0">
+                    <td colspan="9" class="xn-center">无法找到相应的记录</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="clearfix">
+                <div class="f-left mt_20 mb_10">共{{vm.totalCount}}条</div>
+                <pagination ng-show="vm.totalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                            total-items="vm.totalCount" ng-model="vm.pageNumber" items-per-page="vm.pageSize"
+                            class="pagination-sm" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;"
+                            first-text="&laquo;" last-text="&raquo;"></pagination>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="create.html">
+    <div class="modal-header" >
+        <h3 class="modal-title">新建类别</h3>
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <form  class="form-horizontal xn-form clearfix" role="form"  xn-form-validate novalidate  name="validateForm" >
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th class="col-w-2 col_1">项次</th>
+            <th class="col-w-2 col_1">操作</th>
+            <th class="w_300">类目名称</th>
+            <th class="w_200">代码</th>
+            <th class="w_130">备注</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        <tr class="line" ng-repeat="clazz in clazzs ">
+            <td class="xn-center column"> {{$index+1}}</td>
+            <td class="xn-col-sm-3 xn-center">
+                <i class="icon icon-add" ng-click="addLine($index)"></i>
+                <i class="icon icon-delete" ng-click="removeLine($index)"></i>
+            </td>
+            <td class="column">
+                <input type="text" class="form-control w_130"   maxlength="10"
+                       ng-model="clazz.name" name="clazzName" required/>
+            </td>
+            <td class="column">
+                <input type="text" class="form-control w_130"   maxlength="10"
+                       ng-model="clazz.code"/>
+            </td>
+            <td class="column">
+                <input type="text" class="form-control w_130"   maxlength="10"
+                       ng-model="clazz.description"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+        <div class="col-sm-10">
+            <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5" ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]}}</div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a xn-submit-enter="create()" class="btn btn-default ">保存</a>
+        <a ng-click="cancel()" class="btn btn-default  ">取消</a>
+    </div>
+
+</script>

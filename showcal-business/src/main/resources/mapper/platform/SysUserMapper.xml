@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.SysUserMapper">
+
+    <sql id="whereForFindList">
+        <if test="request.ids!=null and request.ids.size>0">
+            AND `ID` in
+            <foreach collection="request.ids" item="id" open="(" close=")" separator="," index="index">
+                #{id}
+            </foreach>
+        </if>
+        <if test="request.usertypes!=null and request.usertypes.size>0">
+            AND `USER_TYPE` IN
+            <foreach collection="request.usertypes" item="usertype" open="(" close=")" separator="," index="index">
+                #{usertype}
+            </foreach>
+        </if>
+        <if test="request.sexs!=null and request.sexs.size>0">
+            AND `SEX` IN
+            <foreach collection="request.sexs" item="sex" open="(" close=")" separator="," index="index">
+                #{sex}
+            </foreach>
+        </if>
+        <if test="request.status!=null and request.status.size>0">
+            AND T1.STATE IN
+            <foreach collection="request.status" item="state" open="(" close=")" separator="," index="index">
+                #{state}
+            </foreach>
+        </if>
+        <if test="request.usertags!=null and request.usertags.size>0">
+            AND ID IN
+            (SELECT put.USER_ID FROM pl_sys_user_tags put WHERE put.USER_TAG_ID
+            IN
+            <foreach collection="request.usertags" item="usertag" open="(" close=")" separator="," index="index">
+                #{usertag}
+            </foreach>
+            )
+        </if>
+        <if test="request.account!=null">
+            AND `ACCOUNT` LIKE CONCAT ('%',#{ request.account },'%')
+        </if>
+        <if test="request.mobilePhone!=null">
+            AND `MOBILE_PHONE` LIKE CONCAT ('%',#{ request.mobilePhone },'%')
+        </if>
+        <if test="request.nickName!=null">
+            AND `NICK_NAME` LIKE CONCAT ('%',#{ request.nickName },'%')
+        </if>
+        <if test="request.mobilePhone!=null">
+            AND `MOBILE_PHONE` LIKE CONCAT ('%',#{ request.mobilePhone },'%')
+        </if>
+        <if test="request.qq!=null">
+            AND `QQ` LIKE CONCAT ('%',#{ request.qq },'%')
+        </if>
+        <if test="request.wechat!=null">
+            AND `WECHAT` LIKE CONCAT ('%',#{ request.wechat },'%')
+        </if>
+        <if test="request.startDate!=null">AND `CREATION_TIME` >= #{request.startDate}</if>
+        <if test="request.endDate!=null">AND `CREATION_TIME` <![CDATA[ <= ]]> #{request.endDate}</if>
+        <if test="request.serviceId!=null"> AND `ID` !=#{request.serviceId} </if>
+        ORDER BY
+        <if test="request.isCountService != null and request.isCountService">T1.COUNT_SERVICE DESC,</if>
+        <if test="request.isResponseTime != null and request.isResponseTime">T1.RESPONSE_TIME ASC,</if>
+        <if test="request.isCountService != null and !request.isCountService">T1.COUNT_SERVICE ASC,</if>
+        <if test="request.isResponseTime != null and !request.isResponseTime">T1.RESPONSE_TIME DESC,</if>
+        T1.ID DESC
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           )
+    </sql>
+
+    <select id="find" resultMap="sysUserPO">
+        SELECT * FROM
+        (
+        SELECT
+        user.*,extent.COUNT_SERVICE,extent.RESPONSE_TIME,
+        CASE
+        WHEN user.IS_ACTIVE = 0 THEN 'BLOCK'
+        WHEN user.IS_ACTIVE = 1 AND user.IS_BANNED = 1 THEN 'BANNED'
+        ELSE 'NORMAL'
+        END AS STATE
+        FROM
+        `PL_SYS_USER` AS user,`PL_SYS_USER_EXTENT` AS extent
+        where user.id=extent.id
+        ) AS T1
+        WHERE
+        T1.`IS_DELETED`=0
+        <include refid="whereForFindList"/>
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        (
+        SELECT
+        user.*,extent.COUNT_SERVICE,extent.RESPONSE_TIME,
+        CASE
+        WHEN user.IS_ACTIVE = 0 THEN 'BLOCK'
+        WHEN user.IS_ACTIVE = 1 AND user.IS_BANNED = 1 THEN 'BANNED'
+        ELSE 'NORMAL'
+        END AS STATE
+        FROM
+        `PL_SYS_USER` AS user,`PL_SYS_USER_EXTENT` AS extent
+        where user.id=extent.id
+        ) AS T1
+        WHERE
+        T1.`IS_DELETED`=0
+        <include refid="whereForFindList"/>
+    </select>
+    <select id="queryShowCalInfo" resultMap="showCalInfo">
+        SELECT a.*,b.`COUNT_SERVICE`,b.`RESPONSE_TIME`,b.`SUCCESS_RATE`
+        FROM pl_sys_user a
+        LEFT JOIN pl_sys_user_extent b ON a.`ID`=b.`ID`
+        WHERE a.`IS_DELETED`=0 AND a.USER_TYPE = 'SHOWCAL'
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+    <select id="queryShowCalInfoCount" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM pl_sys_user WHERE `IS_DELETED`=0 AND `USER_TYPE` = 'SHOWCAL'
+    </select>
+    <select id="search" resultMap="sysUserPO">
+        SELECT * FROM
+        (
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `PL_SYS_USER`
+        WHERE
+        `IS_DELETED`=0
+        <if test="request.keyword !=null">
+            AND
+            <include refid="whereForSearchList"/>
+        </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        `PL_SYS_USER`
+        WHERE
+        `IS_DELETED`=0
+        AND
+        <include refid="whereForSearchList"/>
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SYS_USER`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+        `PL_SYS_USER`
+        SET
+        <if test="request.account!=null">
+            `ACCOUNT`=#{ request.account },
+        </if>
+        <if test="request.name!=null">
+            `NAME`=#{ request.name },
+        </if>
+        <if test="request.pinyin!=null">
+            `PINYIN`=#{ request.pinyin },
+        </if>
+        <if test="request.py!=null">
+            `PY`=#{ request.py },
+        </if>
+        <if test="request.nickName!=null">
+            `NICK_NAME`=#{ request.nickName },
+        </if>
+        <if test="request.mobilePhone!=null">
+            `MOBILE_PHONE`=#{ request.mobilePhone },
+        </if>
+        <if test="request.qq!=null">
+            `QQ`=#{ request.qq },
+        </if>
+        <if test="request.wechat!=null">
+            `WECHAT`=#{ request.wechat },
+        </if>
+        <if test="request.sex!=null">
+            `SEX`=#{ request.sex },
+        </if>
+        <if test="request.userType!=null">
+            `USER_TYPE`=#{ request.userType },
+        </if>
+        <if test="request.avatarId!=null">
+            `AVATAR_ID`=#{ request.avatarId },
+        </if>
+        <if test="request.isBanned!=null">
+            `IS_BANNED`=#{ request.isBanned },
+        </if>
+        <if test="request.bannedTime!=null">
+            `BANNED_TIME`=#{ request.bannedTime },
+        </if>
+        <if test="request.isActive!=null">
+            `IS_ACTIVE`=#{ request.isActive },
+        </if>
+        <if test="request.bannedReason!=null">
+            `BANNED_REASON`=#{ request.bannedReason },
+        </if>
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+        `IS_DELETED`=0
+        AND `ID` = #{ request.id }
+    </update>
+
+
+    <select id="existByMobile" resultType="java.lang.Long">
+        SELECT
+        ID
+        FROM
+        `PL_SYS_USER`
+        WHERE
+        `IS_DELETED`=0
+        AND `MOBILE_PHONE`=#{mobilePhone}
+        <if test="id!=null and id>0">
+            AND id != #{id}
+        </if>
+        LIMIT 0,1
+    </select>
+    <select id="existByOpenId" resultType="java.lang.Long">
+        SELECT id FROM pl_sys_user WHERE IS_DELETED=0
+        AND ( (QQ = #{request.openId} AND  'QQ'=#{request.type})
+              OR
+              (WECHAT = #{request.openId} AND  'WECHAT'=#{request.type})
+            )
+    </select>
+
+    <select id="getUserByAccount" resultMap="sysUserPO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `PL_SYS_USER`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ACCOUNT`=#{account}
+        LIMIT 0, 1
+    </select>
+    <resultMap id="showCalInfo" type="com.showcal.mobile.domain.ShowCalInfo">
+        <id column="ID" jdbcType="NUMERIC" property="id"/>
+        <result column="ACCOUNT" jdbcType="VARCHAR" property="account"></result>
+        <result column="NAME" jdbcType="VARCHAR" property="name"></result>
+        <result column="PINYIN" jdbcType="VARCHAR" property="pinyin"></result>
+        <result column="PY" jdbcType="VARCHAR" property="py"></result>
+        <result column="NICK_NAME" jdbcType="VARCHAR" property="nickName"></result>
+        <result column="MOBILE_PHONE" jdbcType="VARCHAR" property="mobilePhone"></result>
+        <result column="QQ" jdbcType="VARCHAR" property="qq"></result>
+        <result column="WECHAT" jdbcType="VARCHAR" property="wechat"></result>
+        <result column="SEX" jdbcType="VARCHAR" property="sex"></result>
+        <result column="USER_TYPE" jdbcType="VARCHAR" property="userType"></result>
+        <result column="AVATAR_ID" jdbcType="VARCHAR" property="avatarId"></result>
+        <result column="IS_ACTIVE" jdbcType="TINYINT" property="isActive"></result>
+        <result column="ACTIVE_DATE" jdbcType="DATE" property="activeDate"></result>
+        <result column="IS_BANNED" jdbcType="VARCHAR" property="isBanned"></result>
+        <result column="AVATAR_ID" jdbcType="VARCHAR" property="avatarId"></result>
+        <result column="BANNED_REASON" jdbcType="VARCHAR" property="bannedReason"></result>
+        <result column="RESUME" jdbcType="TIMESTAMP" property="resume"></result>
+        <result column="COUNT_SERVICE" jdbcType="TIMESTAMP" property="countService"></result>
+        <result column="RESPONSE_TIME" jdbcType="TIMESTAMP" property="responseTime"></result>
+        <result column="SUCCESS_RATE" jdbcType="TIMESTAMP" property="successRate"></result>
+    </resultMap>
+</mapper>

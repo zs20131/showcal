@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setting>
+     <tablePrefix>PL_</tablePrefix>
+     <developerName>顾志雄</developerName>
+     <applicationCode>Platfrom</applicationCode>
+     <applicationName>平台管理PL</applicationName>
+     <companyCode>xiniunet</companyCode>
+     <companyName>苏州犀牛网络科技有限公司</companyName>
+</setting>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.SysUserCurveMapper">
+
+    <sql id="whereForFindList">
+          <if test="request.type!=null">
+              AND TYPE = #{request.type}
+          </if>
+          <if test="request.userId!=null">
+              AND USER_ID = #{request.userId}
+          </if>
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           )
+    </sql>
+
+    <resultMap  id="sysUserCurve" type="com.showcal.platform.domain.SysUserCurve">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="USER_ID"  jdbcType="NUMERIC" property="userId"></result>
+        <result column="TYPE"  jdbcType="VARCHAR" property="type"></result>
+        <result column="VALUE"  jdbcType="NUMERIC" property="value"></result>
+        <result column="RECORD_DATE"  jdbcType="VARCHAR" property="recordDate"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+        <result column="AVG_WEIGHT"  jdbcType="NUMERIC" property="avgWeight"></result>
+        <result column="MONTH"  jdbcType="VARCHAR" property="month"></result>
+        <result column="DAY"  jdbcType="VARCHAR" property="day"></result>
+    </resultMap>
+
+    <select id="find" resultMap="sysUserCurvePO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `PL_SYS_USER_CURVE`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SYS_USER_CURVE`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="sysUserCurvePO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `PL_SYS_USER_CURVE`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SYS_USER_CURVE`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SYS_USER_CURVE`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `PL_SYS_USER_CURVE`
+        SET
+        `USER_ID`=#{ request.userId },
+        `TYPE`=#{ request.type },
+        `VALUE`=#{ request.value },
+        `RECORD_DATE`=#{ request.recordDate },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+    <select id="existRecord" resultType="java.lang.Long">
+        SELECT
+          ID
+        FROM
+          `PL_SYS_USER_CURVE`
+        WHERE
+          IS_DELETED = 0
+          AND USER_ID = #{request.userId}
+          AND TYPE = #{request.type}
+          AND RECORD_DATE = #{request.recordDate}
+    </select>
+
+    <update id="deleteByCondition">
+        UPDATE
+        `PL_SYS_USER_CURVE`
+        SET
+        `IS_DELETED` = 1
+        ,`LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+        `IS_DELETED`=0
+        AND USER_ID = #{request.userId}
+        AND TYPE = #{request.type}
+        AND RECORD_DATE = #{request.recordDate}
+    </update>
+
+    <select id="getYearList" resultMap="sysUserCurve">
+        SELECT DATE_FORMAT(record_date,'%Y-%m') AS MONTH,
+        AVG(VALUE) AS AVG_WEIGHT
+        FROM pl_sys_user_curve
+        WHERE IS_DELETED = 0
+        AND USER_ID =  #{request.userId}
+        AND TYPE = #{request.type}
+        <if test="request.startDate!=null">AND RECORD_DATE >= #{request.startDate}</if>
+        <if test="request.endDate!=null"> AND RECORD_DATE <![CDATA[ < ]]> #{request.endDate}</if>
+        GROUP BY MONTH
+    </select>
+
+    <select id="getMonthList" resultMap="sysUserCurve">
+        SELECT DATE_FORMAT(record_date,'%Y-%m-%d') AS DAY,
+        `VALUE`
+        FROM pl_sys_user_curve
+        WHERE IS_DELETED = 0
+        AND USER_ID = #{request.userId}
+        AND TYPE = #{request.type}
+        AND str_to_date(RECORD_DATE,'%Y-%m-%d') >= #{request.startDate}
+        AND str_to_date(RECORD_DATE,'%Y-%m-%d') <![CDATA[ < ]]> #{request.endDate}
+        ORDER BY RECORD_DATE
+    </select>
+
+    <select id="getWeekList" resultMap="sysUserCurve">
+        SELECT DATE_FORMAT(record_date,'%Y-%m-%d') AS DAY,
+        `VALUE`
+        FROM pl_sys_user_curve
+        WHERE IS_DELETED = 0
+        AND USER_ID = #{request.userId}
+        AND TYPE = #{request.type}
+        AND str_to_date(RECORD_DATE,'%Y-%m-%d') >= #{request.startDate}
+        AND str_to_date(RECORD_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{request.endDate}
+        ORDER BY RECORD_DATE
+    </select>
+
+</mapper>

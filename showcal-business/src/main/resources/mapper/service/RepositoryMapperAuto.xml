@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.service.dal.RepositoryMapper">
+
+    <resultMap  id="repositoryPO" type="com.showcal.service.po.RepositoryPO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="TYPE"  jdbcType="VARCHAR" property="type"></result>
+        <result column="TAG"  jdbcType="VARCHAR" property="tag"></result>
+        <result column="KEYWORD"  jdbcType="VARCHAR" property="keyword"></result>
+        <result column="CONTENT"  jdbcType="VARCHAR" property="content"></result>
+        <result column="SOURCE_ID"  jdbcType="NUMERIC" property="sourceId"></result>
+        <result column="QUESTION"  jdbcType="VARCHAR" property="question"></result>
+        <result column="SOURCE_USER_ID"  jdbcType="NUMERIC" property="sourceUserId"></result>
+        <result column="IS_ACTIVE"  jdbcType="TINYINT" property="isActive"></result>
+        <result column="ACTIVE_DATE"  jdbcType="TIMESTAMP" property="activeDate"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+        <result column="KEYWORD_NAME"  jdbcType="VARCHAR" property="keywordName"></result>
+        <result column="TAG_NAME"  jdbcType="VARCHAR" property="tagName"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`TYPE`,`TAG`,`KEYWORD`,`CONTENT`,`SOURCE_ID`,`QUESTION`,`SOURCE_USER_ID`,IS_ACTIVE,ACTIVE_DATE,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `SER_REPOSITORY`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ repository.id },
+        
+        #{ repository.type },
+        #{ repository.tag },
+        #{ repository.keyword },
+        #{ repository.content },
+        #{ repository.sourceId },
+        #{ repository.question },
+        #{ repository.sourceUserId },
+        #{ repository.isActive },
+        #{ repository.activeDate },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `SER_REPOSITORY`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "repository" index ="index" separator=",">
+            (
+            #{ repository.id },
+            
+            #{ repository.type },
+            #{ repository.tag },
+            #{ repository.keyword },
+            #{ repository.content },
+            #{ repository.sourceId },
+            #{ repository.question },
+            #{ repository.sourceUserId },
+            #{ repository.isActive },
+            #{ repository.activeDate },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `SER_REPOSITORY`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `SER_REPOSITORY`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="repositoryPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `SER_REPOSITORY`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="repositoryPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `SER_REPOSITORY`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="repositoryPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `SER_REPOSITORY`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_REPOSITORY`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

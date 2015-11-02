@@ -1,0 +1,85 @@
+<div id="nav" class="xn_nav">
+    <div class="xn-nav xn-nav-2">
+        <div class="xn-width auto inner_div clearfix">
+            <div class="logo xn-logo clearfix">
+                <a href="$platformLink.setTarget("index")">
+                    <div class="logo-title">
+                        <span class="logo-title-word">瘦咖管理平台</span>
+                    </div>
+                </a>
+            </div>
+
+            <ul class="clearfix title-ul">
+                <li ng-class="navShow===1?'nav-li-hover':'nav-li'">
+                    <a href="$platformLink.setTarget("setting/index")" target="_self">设置</a>
+                </li>
+                <li ng-class="navShow===2?'nav-li-hover':'nav-li'" class="dropdown" ng-mouseleave="showDropdown2=false;"
+                    ng-init="showDropdown2=false;" ng-mouseenter="showDropdown2=true;">
+                    <a href="$platformLink.setTarget("sport/index")" target="_self">运动方案<span class="caret"></span></a>
+                    <ul class="dropdown-menu" ng-show="showDropdown2">
+                        <li><a href="$platformLink.setTarget("sport/setting")">主数据</a></li>
+                        <li><a href="$platformLink.setTarget("sport/sportscheme")">运动方案</a></li>
+                    </ul>
+                </li>
+                <li ng-class="navShow===3?'nav-li-hover':'nav-li'" class="dropdown" ng-mouseleave="showDropdown3=false;"
+                    ng-init="showDropdown3=false;" ng-mouseenter="showDropdown3=true;">
+                    <a href="$platformLink.setTarget("food/index")" target="_self">食物管理<span class="caret"></span></a>
+                    <ul class="dropdown-menu" ng-show="showDropdown3">
+                        #*<li><a href="$platformLink.setTarget("food/foodcategory")">食物类别</a></li>*#
+                        <li><a href="$platformLink.setTarget("food/food")">食物主数据</a></li>
+                    </ul>
+                </li>
+                <li ng-class="navShow===4?'nav-li-hover':'nav-li'" class="dropdown" ng-mouseleave="showDropdown4=false;"
+                    ng-init="showDropdown4=false;" ng-mouseenter="showDropdown4=true;">
+                    <a href="$platformLink.setTarget("daily/index")" target="_self">日常管理<span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu" ng-show="showDropdown4">
+                        <li><a href="$platformLink.setTarget("daily/usermanager")">用户管理</a></li>
+                        <li><a href="$platformLink.setTarget("daily/accountmanager")">账户管理</a></li>
+                        <li><a href="$platformLink.setTarget("daily/cmsmanager")">帖子管理</a></li>
+                        <li><a href="$platformLink.setTarget("daily/complatint")">投诉处理</a></li>
+                    </ul>
+                </li>
+                <li ng-class="navShow===5?'nav-li-hover':'nav-li'" class="dropdown" ng-mouseleave="showDropdown5=false;"
+                    ng-init="showDropdown5=false;" ng-mouseenter="showDropdown5=true;">
+                    <a href="$platformLink.setTarget("md/index")" target="_self">瘦咖精选<span class="caret"></span></a>
+                    <ul class="dropdown-menu" ng-show="showDropdown5">
+                        <li><a href="$platformLink.setTarget("md/mdcategory")">商品类别</a></li>
+                        <li><a href="$platformLink.setTarget("md/mditem")">商品管理</a></li>
+                    </ul>
+                </li>
+                <li ng-class="navShow===6?'nav-li-hover':'nav-li'" class="dropdown" ng-mouseleave="showDropdown6=false;"
+                    ng-init="showDropdown6=false;" ng-mouseenter="showDropdown6=true;">
+                    <a href="$platformLink.setTarget("report/index")" target="_self">报表中心</a>
+                </li>
+            </ul>
+
+            <div class="xn-header-right info_div">
+                <span class="xn-name f-right welcome">欢迎您
+                    <a class="name_a" href="javascript:" ng-init="showSetting=false"
+                       ng-click="showSetting=!showSetting;" ng-mouseenter="showSetting=true;"
+                       ng-mouseleave="showSetting=false;">
+                        <span>$!passport.nickName</span><span class="icon icon-downward-2"></span>
+                    </a>
+                </span>
+            ##                <img class="avatar f-right" #if($principal.avatar)  ng-src="$principal.avatar"  #else  ng-src="$baseLink.setTarget("image/logo.png")"  #end>
+                <div class="hideSetting" ng-class="showSetting?'showSetting':''" ng-mouseenter="showSetting=true;"
+                     ng-mouseleave="showSetting=false;">
+                    <div class="hideSetting-top">
+                    </div>
+                    <div class="hideSetting-content clearfix">
+                        <ul>
+                            <li>
+                                <a title="修改密码" href="$platformLink.setTarget("password/change")">
+                                    <i class="icon icon-tubiaoxiugaimima01"></i>修改密码
+                                </a>
+                            </li>
+                        </ul>
+                        <a class="btn f-right exit btn-danger" #*href="$platformLink.setTarget("loginout")"*#
+                           ng-click="platformloginout()">注销</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,566 @@
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$showcalLink.setTarget("index")">首页</a></li>
+        <li class="active">我的用户</a></li>
+    </ul>
+</div>
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="MyUserIndexController" ng-init="userId='$passport.userId'">
+    <div class="clearfix">
+##        <a class="btn btn-primary btn-sm f-right mr_10" ng-click="sendMessage()">发送消息</a>
+        <a class="btn btn-primary btn-sm f-right mr_10" ng-click="pushArticle()">推送帖子</a>
+    </div>
+    <!--搜索部分-->
+    <form class="form-horizontal clearfix xn-form ng-valid ng-valid-required ng-dirty" name="searchForm" xn-form-validate  novalidate="" role="form">
+        <div class="xn_search_box auto">
+            <div class="xn-input-line clearfix">
+                <label class="xn-label">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</label>
+                <div class="xn-input-sm" xn-checkbox-list ng-model="vm.sexsObj" data-checkbox-list="sexs"
+                     method="">
+                </div>
+                <div class="tip"></div>
+                <label class="xn-label">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：</label>
+                <div class="xn-input-sm">
+                    <input type="text" class="form-control ng-pristine ng-valid w_80 myuser-input-short" id="fromAge" name="fromAge"
+                           ng-model="vm.fromAge"><div class="tip">-</div>
+                    <input type="text" class="form-control ng-pristine ng-valid w_80 myuser-input-short" id="toAge" name="toAge"
+                           ng-model="vm.toAge">
+                </div>
+                <label class="xn-label">账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</label>
+                <div class="xn-input-sm">
+                    <input type="text" class="form-control ng-pristine ng-valid" id="account" name="account"
+                           ng-model="vm.account">
+                </div>
+            </div>
+            <div class="xn-input-line  clearfix">
+                <label for="orderdate" class="xn-label">选我时间：</label>
+                <div class="xn-input-sm">
+                    <div class="input-group openData">
+                        <input type="text" class="form-control" id="startDate" ng-model="vm.startDate" name="regularDate"
+                               datepicker-popup="yyyy-MM-dd" is-open="startDate" max-date="maxDate"  datepicker-options="dateOptions"
+                               date-disabled="disabled(date, mode)"  close-text="关闭" current-text="今天"  clear-text="清除">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"  ng-click="openStartDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="tip"></div>
+                <label for="number" class="xn-label">到：</label>
+                <div class="xn-input-sm">
+                    <div class="input-group openData">
+                        <input type="text" class="form-control" id="endDate" ng-model="vm.endDate" name="regularDate"
+                               datepicker-popup="yyyy-MM-dd" is-open="endDate" min-date="minDate"  datepicker-options="dateOptions"
+                               date-disabled="disabled(date, mode)"  close-text="关闭" current-text="今天"  clear-text="清除">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button"  ng-click="openEndDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                    </div>
+                </div>
+                <div class="tip"></div>
+                <label class="xn-label">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</label>
+                <div class="xn-input-sm">
+                    <input type="text" class="form-control ng-pristine ng-valid" id="nickName" name="nickName"
+                           ng-model="vm.nickName">
+                </div>
+            </div>
+            <div class="xn-input-line clearfix">
+                <label class="xn-label">用户标签：</label>
+
+                <div class="xn-input-sm">
+                    <select id="type" class="form-control" name="usertags" ng-model="vm.usertag"
+                            ng-options="usertag.id as usertag.tag for usertag in usertags">
+                        <option value="">-- 请选择用户标签 --</option>
+                    </select>
+                </div>
+                <a class="btn btn-success btn-sm w_80 f-right" href="javascript:void(0)"
+                   xn-submit-enter="doSearch()">查询</a>
+            </div>
+        </div>
+    </form>
+    <!--搜索部分结束-->
+    <div class="xn-table-wrap">
+        <div class="clearfix">
+            <div class="showcal-service-tab-title position-relative" ng-init="tab=1">
+                <ul class="clearfix showcal-bottom-ul">
+                    <li ng-click="tab=1" ng-class="tab==1?'on':''">正在服务</li>
+                    <li ng-click="tab=2"  ng-class="tab==2?'on':''">历史服务</li>
+                </ul>
+            </div>
+            <div class="showcal-service-tab-con mt_10">
+                <div class="land-detail" ng-show="tab==1">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th class="col-sm-1">
+                                <label class="xn-label-checkbox">
+                                    <i class="xn-checkbox"></i>
+                                    <i class="icon icon-right_3 ng-scope" ng-if="all"></i>
+                                    <input type="checkbox" class="xn-checkbox-input" ng-click="allBox()">
+                                </label>
+                            </th>
+                            <th class="col-sm-1">序号</th>
+                            <th class="col-sm-1">选我时间</th>
+                            <th class="col-sm-1">服务状态</th>
+                            <th class="col-sm-1">头像</th>
+                            <th class="col-sm-1">昵称</th>
+                            <th class="col-sm-1">用户标签</th>
+                            <th class="col-sm-2">用户信息</th>
+                            <th class="col-sm-1">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        <tr ng-repeat="user in pagedResult">
+                            <td class="">
+                                <label class="xn-label-checkbox">
+                                    <i class="xn-checkbox"></i>
+                                    <i class="icon icon-right_3 ng-scope" ng-if="user.check"></i>
+                                    <input type="checkbox" class="xn-checkbox-input" ng-click="changeBox($index)">
+                                </label>
+                            </td>
+                            <td>
+                                {{(vm.pageNumber-1)*vm.pageSize+$index+1}}
+                            </td>
+                            <td>
+                                {{user.serviceDate | date : 'yyyy-MM-dd' }}
+                            </td>
+                            <td>
+                                {{user.serviceState | serviceState }}
+                            </td>
+                            <td>
+                                <img class="xn-user-photo" width="50px" height="50px" ng-src="{{user.avatarurl}}"/>
+                            </td>
+                            <td>
+                                {{user.nickName}}
+                            </td>
+                            <td>
+                                <span ng-repeat="settingUserTag in user.settingUserTagList track by $index">
+                                    <span style="background-color: {{settingUserTag.tagRgb}}">{{settingUserTag.tag}}</span><br>
+                                </span>
+                            </td>
+                            <td>
+                                身高：{{user.height}}<br>
+                                体重：{{user.weight}}<br>
+                                生日: {{user.birthday | date : 'yyyy-MM-dd'}}<br>
+                                性别：{{user.sex | sexType}}<br>
+                                年龄：{{user.age}}
+                            </td>
+                            <td class="xn-center">
+                                <a  ng-click="addTag(user.id)" href="javascript:void(0);">贴标签</a>
+                                #*<a  ng-click="" href="javascript:void(0);">查看参数</a>*#
+                                <a #*ng-click="doActive(user.id)"*# ng-click="showcal(user)"  href="javascript:void(0);">查看用户参数</a>
+                            </td>
+                        </tr>
+                        <tr ng-if="vm.totalCount == 0">
+                            <td colspan="12" class="center">无法找到相应的记录</td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                    <div class="clearfix">
+                        <div class="f-left mt_20 mb_10">共{{vm.totalCount}}条</div>
+                        <pagination ng-show="vm.totalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                                    total-items="vm.totalCount"
+                                    ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                                    boundary-links="true"
+                                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                    last-text="&raquo;"></pagination>
+                    </div>
+                </div>
+                <div class="land-detail" ng-show="tab==2">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th class="col-sm-1">序号</th>
+                            <th class="col-sm-1">选我时间</th>
+                            <th class="col-sm-1">服务状态</th>
+                            <th class="col-sm-1">头像</th>
+                            <th class="col-sm-1">昵称</th>
+                            <th class="col-sm-1">用户标签</th>
+                            <th class="col-sm-2">用户信息</th>
+                            <th class="col-sm-1">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        <tr ng-repeat="user in pagedHistoryResult">
+                            <td>
+                                {{(vmH.pageNumber-1)*vmH.pageSize+$index+1}}
+                            </td>
+                            <td>
+                                {{user.serviceDate | date : 'yyyy-MM-dd' }}
+                            </td>
+                            <td>
+                                {{user.serviceState | serviceState }}
+                            </td>
+                            <td>
+                                <img class="xn-user-photo" width="50px" height="50px" ng-src="{{user.avatarurl}}"/>
+                            </td>
+                            <td>
+                                {{user.nickName}}
+                            </td>
+                            <td>
+                                <span ng-repeat="settingUserTag in user.settingUserTagList track by $index">
+                                    <span style="background-color: {{settingUserTag.tagRgb}}">{{settingUserTag.tag}}</span><br>
+                                </span>
+                            </td>
+                            <td>
+                                身高：{{user.height}}<br>
+                                体重：{{user.weight}}<br>
+                                生日: {{user.birthday | date : 'yyyy-MM-dd'}}<br>
+                                性别：{{user.sex | sexType}}<br>
+                                年龄：{{user.age}}
+                            </td>
+                            <td class="xn-center">
+                                <a  ng-click="addTag(user.id)" href="javascript:void(0);">贴标签</a>
+                                #*<a  ng-click="doActive(user.id)" href="javascript:void(0);">查看参数</a>*#
+                                <a #*ng-click="doActive(user.id)"*# ng-click="showcal(user)"  href="javascript:void(0);">查看用户参数</a>
+                            </td>
+                        </tr>
+                        <tr ng-if="vmH.totalCount == 0">
+                            <td colspan="12" class="center">无法找到相应的记录</td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                    <div class="clearfix">
+                        <div class="f-left mt_20 mb_10">共{{vmH.totalCount}}条</div>
+                        <pagination ng-show="vmH.totalCount>vmH.pageSize" ng-change="getList()" max-size="maxPageSize"
+                                    total-items="vmH.totalCount"
+                                    ng-model="vmH.pageNumber" items-per-page="vmH.pageSize" class="pagination-sm"
+                                    boundary-links="true"
+                                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                    last-text="&raquo;"></pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/ng-template" id="openTag.html">
+        <form  class="form-horizontal xn-form clearfix" role="form"   >
+            <div class="modal-header">
+                <h3 class="modal-title">{{window.title}}</h3>
+
+                <div class="xn-close xn-cursor" ng-click="cancel()">
+                    <i class="icon icon-delete"></i>
+                </div>
+            </div>
+            <div class="modal-body clearfix">
+                <div class="form-group col-md-12 col-md-offset-1 clearfix">
+                    <label class="col-md-4 xn-label"><span class="f-right">标签：</span></label>
+                    <div class="col-md-8">
+                        <select id="type" class="form-control" name="usertags" ng-model="vm.usertag"
+                                ng-options="usertag.id as usertag.tag for usertag in usertags">
+                            <option value="">-- 请选择用户标签 --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="doTag()">贴标签</button>
+                <button class="btn btn-default" ng-click="cancel()">取消</button>
+            </div>
+        </form>
+    </script>
+</div>
+
+<script type="text/ng-template" id="showcaldetail.html" >
+    <div class="modal-header">
+        <h3 class="modal-title">{{user.nickName}}-参数详情</h3>
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+    <div class="modal-body clearfix" ng-init="weight=true">
+        <div class="xn-col-md-24 ">
+            <div class="xn-col-md-6">性别：{{user.sex|sexType}}</div>
+            <div class="xn-col-md-6">年龄：{{user.age}}</div>
+            <div class="xn-col-md-6">身高：{{user.height}}cm</div>
+            <div class="xn-col-md-6">起始体重：{{firstWeight.value}}Kg</div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="mt_20" >
+            <span>记录情况：</span>
+            <a class="showcal-detail-tab {{vm.color}}" ng-click="weightshow()">体重</a>
+            <a class="showcal-detail-tab {{vm.color1}}" ng-click="backshow()">腰围</a>
+            <a class="showcal-detail-tab {{vm.color2}}" ng-click="hipshow()">臀围</a>
+        ##            <a class="showcal-detail-tab {{vm.color3}}" ng-click="calshow()">摄入热量</a>
+        ##            <a class="showcal-detail-tab {{vm.color4}}" ng-click="sporttimeshow()">运动时间</a>
+        ##            <a class="showcal-detail-tab-1 {{vm.color5}}" ng-click="sportconsumeshow()">运动消耗</a>
+            <div class="xn-table-wrap showcal-detail-table"  ng-show="weight==true">
+                <table class="table table-bordered  ">
+                    <thead>
+                    <tr>
+                        <th class="xn-col-md-4">日期</th>
+                        <th class="xn-col-md-4">体重（Kg）</th>
+                    ##                  <th class="xn-col-md-4">对比上次</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody" >
+                    <tr ng-repeat="weight in weights ">
+                        <td>{{weight.recordDate}}</td>
+                        <td>{{weight.value}}</td>
+                    ##                  <td>110.3</td>
+                    </tr>
+                    #*  <tr ng-if="vm.totalCount == 0">
+                          <td colspan="9" class="xn-center">
+                              <i class="xn-icon icon-iconfontquestioneps01 no-icon-2"></i>
+                              <span class="no-span-1">你当前还没有任何问题</span>
+                          </td>
+                      </tr>*#
+                    </tbody>
+                </table>
+            </div>
+            <div class="xn-table-wrap showcal-detail-table" ng-show="back==true">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th class="xn-col-md-4">日期</th>
+                        <th class="xn-col-md-4">腰围</th>
+                    ##                        <th class="xn-col-md-4">对比上次</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody" >
+                    <tr ng-repeat="waistline in waistlines ">
+                        <td>{{waistline.recordDate}}</td>
+                        <td>{{waistline.value}}</td>
+                    ##                        <td>0.3</td>
+                    </tr>
+                    #*  <tr ng-if="vm.totalCount == 0">
+                          <td colspan="9" class="xn-center">
+                              <i class="xn-icon icon-iconfontquestioneps01 no-icon-2"></i>
+                              <span class="no-span-1">你当前还没有任何问题</span>
+                          </td>
+                      </tr>*#
+                    </tbody>
+                </table>
+            </div>
+            <div class="xn-table-wrap showcal-detail-table" ng-show="hip==true">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th class="xn-col-md-4">日期</th>
+                        <th class="xn-col-md-4">臀围</th>
+                    ##                        <th class="xn-col-md-4">对比上次</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    <tr ng-repeat="hipline in hiplines ">
+                        <td>{{hipline.recordDate}}</td>
+                        <td>{{hipline.value}}</td>
+                    </tr>
+                    #*  <tr ng-if="vm.totalCount == 0">
+                          <td colspan="9" class="xn-center">
+                              <i class="xn-icon icon-iconfontquestioneps01 no-icon-2"></i>
+                              <span class="no-span-1">你当前还没有任何问题</span>
+                          </td>
+                      </tr>*#
+                    </tbody>
+                </table>
+            </div>
+            <div class="xn-table-wrap showcal-detail-table" ng-show="cal==true">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th class="xn-col-md-4">日期</th>
+                        <th class="xn-col-md-4">摄入热量</th>
+                        <th class="xn-col-md-4">对比上次</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    <tr>
+                        <td>2015-09-09</td>
+                        <td>423.0</td>
+                        <td>110.3</td>
+                    </tr>
+                    <tr>
+                        <td>2015-09-09</td>
+                        <td>423.0</td>
+                        <td>110.3</td>
+                    </tr>
+                    #*  <tr ng-if="vm.totalCount == 0">
+                          <td colspan="9" class="xn-center">
+                              <i class="xn-icon icon-iconfontquestioneps01 no-icon-2"></i>
+                              <span class="no-span-1">你当前还没有任何问题</span>
+                          </td>
+                      </tr>*#
+                    </tbody>
+                </table>
+            </div>
+            <div class="xn-table-wrap showcal-detail-table"  ng-show="sporttime==true">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th class="xn-col-md-4">日期</th>
+                        <th class="xn-col-md-4">运动时间</th>
+                        <th class="xn-col-md-4">对比上次</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    <tr>
+                        <td>2015-09-09</td>
+                        <td>6</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>2015-09-09</td>
+                        <td>5</td>
+                        <td>6</td>
+                    </tr>
+                    #*  <tr ng-if="vm.totalCount == 0">
+                          <td colspan="9" class="xn-center">
+                              <i class="xn-icon icon-iconfontquestioneps01 no-icon-2"></i>
+                              <span class="no-span-1">你当前还没有任何问题</span>
+                          </td>
+                      </tr>*#
+                    </tbody>
+                </table>
+            </div>
+            <div class="xn-table-wrap showcal-detail-table" ng-show="sportconsume==true">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th class="xn-col-md-4">日期</th>
+                        <th class="xn-col-md-4">运动消耗（大卡）</th>
+                        <th class="xn-col-md-4">对比上次</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    <tr>
+                        <td>2015-09-09</td>
+                        <td>423.0</td>
+                        <td>110.3</td>
+                    </tr>
+                    <tr>
+                        <td>2015-09-09</td>
+                        <td>423.0</td>
+                        <td>110.3</td>
+                    </tr>
+                    #*  <tr ng-if="vm.totalCount == 0">
+                          <td colspan="9" class="xn-center">
+                              <i class="xn-icon icon-iconfontquestioneps01 no-icon-2"></i>
+                              <span class="no-span-1">你当前还没有任何问题</span>
+                          </td>
+                      </tr>*#
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="choose.html">
+    <div class="modal-header">
+        <h3 class="modal-title">所有帖子</h3>
+
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+
+    <form class="form-horizontal clearfix xn-form" name="searchForm" xn-form-validate novalidate role="form">
+        <div class="xn-input-line clearfix">
+            <label class="xn-label query-label xn-text-right ">题目：</label>
+
+            <div class="w_200 f-left">
+                <input type="text" class="form-control  w_200" ng-model="vm1.title"/>
+            </div>
+            <label class="xn-label query-label xn-text-right ">作者：</label>
+
+            <div class="w_200 f-left">
+                <input type="text" class="form-control w_200 " ng-model="vm1.submitUserName"/>
+            </div>
+            <a class="btn btn-success btn-sm w_80 f-right" href="javascript:void(0)"
+               xn-submit-enter="doFind()">查询</a>
+        </div>
+    </form>
+    <form class="form-horizontal xn-form clearfix" role="form" xn-form-validate novalidate name="validateForm">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th align="center">
+                    <label class="xn-label-checkbox">
+                        <i class="xn-checkbox"></i>
+                        <i class="icon icon-right_3 ng-scope" ng-if="allArticle"></i>
+                        <input type="checkbox" class="xn-checkbox-input" ng-click="allArticleBox()">
+                    </label>
+                </th>
+                <th class="col-sm-5">帖子名称</th>
+                <th class="col-sm-5">帖子作者</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <tr class="line" ng-repeat="article in articles ">
+                <td>
+                    <label class="xn-label-checkbox">
+                        <i class="xn-checkbox"></i>
+                        <i class="icon icon-right_3 ng-scope" ng-if="article.check"></i>
+                        <input type="checkbox" class="xn-checkbox-input" ng-click="changeArticleBox($index)">
+                    </label>
+                </td>
+                <td>
+                    《{{article.title}}》
+                </td>
+                <td>
+                    {{article.submitUserName}}
+                </td>
+            </tr>
+            <tr ng-if="vm1.totalCount == 0">
+                <td colspan="12" class="center">无法找到相应的记录</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{vm1.totalCount}}条</div>
+            <pagination ng-show="vm1.totalCount>vm1.pageSize" ng-change="getAllArticle()" max-size="maxPageSize"
+                        total-items="vm1.totalCount"
+                        ng-model="vm1.pageNumber" items-per-page="vm1.pageSize" class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                        last-text="&raquo;"></pagination>
+        </div>
+        <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+            <div class="col-sm-10">
+                <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5"
+                                                                   ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]
+                    }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a  xn-submit-enter="create()" class="btn btn-default ">推送</a>
+            <a ng-click="cancel()" class="btn btn-default  ">取消</a>
+        </div>
+
+</script>
+<script type="text/ng-template" id="send.html">
+    <div class="modal-header">
+        <h3 class="modal-title">发送系统消息</h3>
+
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+    <form class="form-horizontal xn-form clearfix" role="form" xn-form-validate novalidate name="validateForm">
+        <div class="mt_5 ">
+            <label class="xn-label ">系统消息：</label>
+
+            <div class="mt_20 f-left" xn-markdown rows="8" ng-model="content" name="sendMessage" required></div>
+        </div>
+        <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+            <div class="col-sm-10">
+                <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5"
+                                                                   ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]
+                    }}
+                </div>
+            </div>
+        </div>
+        <div class="xn-input-line clearfix">
+        </div>
+        <div class="modal-footer">
+            <a xn-submit-enter="send()" class="btn btn-default ">发送</a>
+            <a ng-click="cancel()" class="btn btn-default  ">取消</a>
+        </div>
+    </form>
+</script>

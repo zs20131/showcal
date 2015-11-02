@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.service.dal.ComplatintMapper">
+
+    <resultMap  id="complatintPO" type="com.showcal.service.po.ComplatintPO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="SOURCE_TYPE"  jdbcType="VARCHAR" property="sourceType"></result>
+        <result column="SOURCE_ID"  jdbcType="NUMERIC" property="sourceId"></result>
+        <result column="CONTENT"  jdbcType="VARCHAR" property="content"></result>
+        <result column="IS_PROCESSED"  jdbcType="TINYINT" property="isProcessed"></result>
+        <result column="PROCESS_USER_ID"  jdbcType="NUMERIC" property="processUserId"></result>
+        <result column="PROCESS_USER_NAME"  jdbcType="VARCHAR" property="processUserName"></result>
+        <result column="PROCESS_TIME"  jdbcType="TIMESTAMP" property="processTime"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`SOURCE_TYPE`,`SOURCE_ID`,`CONTENT`,`IS_PROCESSED`,`PROCESS_USER_ID`,`PROCESS_USER_NAME`,`PROCESS_TIME`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `SER_COMPLATINT`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ complatint.id },
+        
+        #{ complatint.sourceType },
+        #{ complatint.sourceId },
+        #{ complatint.content },
+        #{ complatint.isProcessed },
+        #{ complatint.processUserId },
+        #{ complatint.processUserName },
+        #{ complatint.processTime },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `SER_COMPLATINT`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "complatint" index ="index" separator=",">
+            (
+            #{ complatint.id },
+            
+            #{ complatint.sourceType },
+            #{ complatint.sourceId },
+            #{ complatint.content },
+            #{ complatint.isProcessed },
+            #{ complatint.processUserId },
+            #{ complatint.processUserName },
+            #{ complatint.processTime },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `SER_COMPLATINT`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `SER_COMPLATINT`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="complatintPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `SER_COMPLATINT`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="complatintPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `SER_COMPLATINT`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="complatintPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `SER_COMPLATINT`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_COMPLATINT`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

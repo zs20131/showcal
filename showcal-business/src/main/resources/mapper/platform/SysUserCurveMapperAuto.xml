@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.SysUserCurveMapper">
+
+    <resultMap  id="sysUserCurvePO" type="com.showcal.platform.po.SysUserCurvePO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="USER_ID"  jdbcType="NUMERIC" property="userId"></result>
+        <result column="TYPE"  jdbcType="VARCHAR" property="type"></result>
+        <result column="VALUE"  jdbcType="NUMERIC" property="value"></result>
+        <result column="RECORD_DATE"  jdbcType="VARCHAR" property="recordDate"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`USER_ID`,`TYPE`,`VALUE`,`RECORD_DATE`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `PL_SYS_USER_CURVE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ sysUserCurve.id },
+        
+        #{ sysUserCurve.userId },
+        #{ sysUserCurve.type },
+        #{ sysUserCurve.value },
+        #{ sysUserCurve.recordDate },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `PL_SYS_USER_CURVE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "sysUserCurve" index ="index" separator=",">
+            (
+            #{ sysUserCurve.id },
+            
+            #{ sysUserCurve.userId },
+            #{ sysUserCurve.type },
+            #{ sysUserCurve.value },
+            sysdate(),
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `PL_SYS_USER_CURVE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `PL_SYS_USER_CURVE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="sysUserCurvePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `PL_SYS_USER_CURVE`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="sysUserCurvePO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `PL_SYS_USER_CURVE`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="sysUserCurvePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `PL_SYS_USER_CURVE`
+        WHERE
+            `IS_DELETED`=0
+        AND USER_ID = #{request.userId}
+        AND `TYPE` = #{request.type}
+        <if test="request.months != null">
+            AND SUBSTR(RECORD_DATE , 1 , 7) IN
+            <foreach collection="request.months" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY RECORD_DATE
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SYS_USER_CURVE`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

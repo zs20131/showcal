@@ -1,0 +1,727 @@
+$rundata.setLayout("weightControl")
+$page.setTitle("围度记录")
+<div class="discover discover-detail weight pb-70">
+    <!--header -->
+    <header data-am-widget="header" class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="index?passportid=$!passport.id" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+
+        <ul class="tabgroup am-center am-text-center am-text-sm am-header-title" id="workingtab">
+            <li id="waistLine"  class="active">腰围</li>
+            <li id="hipline">臀围</li>
+        </ul>
+
+        <div class="am-header-right am-header-nav">
+            <a id="curve" class="pic">
+                曲线
+            </a>
+        </div>
+    </header>
+    <div class="tabBack">
+
+
+        <!--标尺 内容 -->
+    #*<div class="am-g am-cf am-text-sm top-border bottom-border whitebg rulelinecon">
+        <div class="ruleline">
+            <div class="weight-num pic"><span id="bmi">31.5</span>kg</div>
+            <div class="arrow-bottom"></div>
+            <div class="con" id="con">
+                <div class="bg"></div>
+                <div class="num">
+                    #set($index =[15 .. 150])
+                    #foreach($i in $index)
+                        <span>$i</span>
+                    #end
+
+                </div>
+            </div>
+        </div>
+    </div>*#
+    </div>
+    <div class="tabHip am-hide">
+        <!--日历 内容 -->
+    #*<div class="am-g am-cf am-text-sm " id="time1" data-am-datepicker="{theme: 'warning', autoClose: 0}">
+    </div>*#
+        <!--标尺 内容 -->
+    #*<div class="am-g am-cf am-text-sm top-border bottom-border whitebg rulelinecon">
+        <div class="ruleline">
+            <div class="weight-num pic"><span id="bmi1">31.5</span>kg</div>
+            <div class="arrow-bottom"></div>
+            <div class="con" id="con">
+                <div class="bg"></div>
+                <div class="num">
+                    #set($index =[15 .. 150])
+                    #foreach($i in $index)
+                        <span>$i</span>
+                    #end
+                </div>
+            </div>
+        </div>
+    </div>*#
+    </div>
+
+    <!--日历 内容 -->
+    <div class="am-g am-cf am-text-sm " id="time" data-am-datepicker="{theme: 'warning', autoClose: 0}">
+    </div>
+
+    <!--标尺 内容 -->
+    <div class="am-g am-cf am-text-sm top-border bottom-border whitebg rulelinecon">
+        <div class="ruleline">
+            <div class="weight-num pic"><span id="bmi"></span>cm</div>
+            <div class="arrow-bottom"></div>
+            <div class="con" id="con">
+                <div class="bg"></div>
+                <div class="num">
+                    #set($index =[49.. 150])
+                    #foreach($i in $index)
+                        <span>$i</span>
+                    #end
+
+                </div>
+            </div>
+        </div>
+
+        <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+            <div class="am-modal-dialog">
+                <div class="am-modal-hd">瘦咖提醒您</div>
+                <div class="am-modal-bd" id="errormsg">
+                </div>
+                <div class="am-modal-footer">
+                    <span class="am-modal-btn">确定</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="fix-bottom am-cf top-border am-g am-g-collapse am-text-sm">
+            <span class="am-u-sm-6 border-right" id="deleteBtn">删除记录</span>
+            <span class="am-u-sm-6" id="saveBtn">保存</span>
+        </div>
+    </footer>
+
+
+    <script>
+        $(function () {
+            $("#time").datepicker('open');
+            $(".am-datepicker").css("z-index","1000");
+            var checkin = $('#time').datepicker();
+            $(".am-datepicker").css("top", 40 + "px");
+            $(".am-datepicker").css("font-size", 12 + "px");
+
+            // 查询使用的月份
+            var month;
+            var year = $(".am-datepicker-select").html().substr(0,4);
+            var _month = $(".am-datepicker-select").html().substr(-3,2);
+            month = year + "-" + _month;
+
+            //根据时间填充数据
+            /*function DateWeight(dateArr,weightArr){
+                var arryDate=dateArr;
+                var arryWeight=weightArr;
+                var arryDate1=[];
+                var j=0;
+                for( i=0; i<arryDate.length; i++){
+                    if(arryDate[i].substr(-2)=="0"){
+                        arryDate[i]= arryDate[i].substr(-2,1);
+                    }
+                    arryDate1.push(arryDate[i]);
+                }
+                var arryLength=arryDate1.length;
+
+                // 还原初始状态
+                $(".am-datepicker-day").each(function (index,element) {
+                    if($(this).hasClass("am-datepicker-new")){
+                        return false;
+                    }else{
+                        $(this).find("i").html("");
+                    }
+                })
+
+                for(i=0;i<arryLength;i++){
+                    var dateNew=new Date(arryDate1[i]);
+                    var whichday = dateNew.getDate();
+
+                    //console.log(whichday);
+                    var pickmonth = dateNew.getMonth()+1;
+                    var headMonth=$(".am-datepicker-select").html().substr(-3,2);
+                    //console.log(headMonth);
+                    if(headMonth.substr(-3)=="0"){
+                        headMonth= headMonth.substr(-3,1);
+                    }
+
+                    if(pickmonth == headMonth){
+                        $(".am-datepicker-day").each(function (index,element) {
+                            if ($(this).context.textContent == whichday)
+                                if($(this).hasClass("am-datepicker-new")){
+                                    return false;
+                                }else{
+                                    $(this).find("i").html(arryWeight[i]);
+                                }
+                        })
+                    }
+                }
+                return DateWeight;
+            };*/
+
+            // 根据日期和纬度填充控件
+            function fillData(dateArr,weightArr){
+                console.log("month:" + month);
+
+                // 还原初始状态
+                $(".am-datepicker-day").each(function (index,element) {
+                        $(this).find("i").html("");
+                })
+
+                $(".am-datepicker-day").each(function(){
+                    var currentDate;
+                    var fullDate = $(this).context.textContent;
+                    if( fullDate <= 9 ){
+                        fullDate = '0' + fullDate;
+                    }
+                    if($(this).hasClass("am-datepicker-new")){
+                        currentDate=getNext(month)+"-"+fullDate;
+                    }else if($(this).hasClass("am-datepicker-old")){
+                        currentDate=getLast(month)+"-"+fullDate;
+                    }
+                    else
+                    {
+                        currentDate=month+"-"+fullDate;
+                    }
+                    console.log(currentDate);
+                    for(var i=0; i<dateArr.length; i++){
+                        if(currentDate == dateArr[i]){
+                            $(this).find("i").html(weightArr[i]);
+                        }
+                    }
+                });
+            }
+
+            //下一个月
+            $(".am-datepicker-next").on("click",function(){
+                var headMonth=$(".am-datepicker-select").html().substr(-3,2);
+                var headYear=$(".am-datepicker-select").html().substr(0,4);
+                if(headMonth == 12){
+                    headMonth=1;
+                    if(headMonth <= 9){
+                        headMonth = '0' + headMonth;
+                    }
+                    headYear=parseInt(headYear)+1;
+                    var headYearMonth=headYear+"-"+ headMonth;
+                    month = headYearMonth;
+                    console.log(headYearMonth);
+                }else{
+                    headMonth=parseInt(headMonth)+1;
+                    if(headMonth <= 9){
+                        headMonth = '0' + headMonth;
+                    }
+                    var headYearMonth=headYear+"-"+ headMonth;
+                    month = headYearMonth;
+                    console.log(headYearMonth);
+                }
+
+                data.month = month;
+                monthArr.length = 0;
+                preMonth = getLast(month);
+                nextMonth = getNext(month);
+                monthArr.push(preMonth);
+                monthArr.push(month);
+                monthArr.push(nextMonth);
+                data.months = monthArr;
+
+                if(tag == "waistLine"){
+                    url = "Api.do?method=api.about.me.info.waistLine.get.list&passportid=$!passport.id";
+                }else if(tag == "hipline"){
+                    url = "Api.do?method=api.about.me.info.hipline.get.list&passportid=$!passport.id";
+                }
+
+                // 查询该用户的所有腰围列表
+                $.ajax({
+                    url: url,
+                    data: JSON.stringify(data),
+                    contentType:"application/json",
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (msg) {
+                        console.log(msg);
+                        var result = msg.result;
+                        dateArr.length = 0;
+                        waistLineArr.length = 0;
+                        for(var i=0 ; i<result.length; i++){
+                            dateArr.push(result[i].recordDate);
+                            waistLineArr.push(result[i].value);
+                        }
+
+                        fillData(dateArr,waistLineArr);
+                    }
+                });
+            });
+            //上一个月
+            $(".am-datepicker-prev").on("click",function(){
+                var headMonth=$(".am-datepicker-select").html().substr(-3,2);
+                var headYear=$(".am-datepicker-select").html().substr(0,4);
+                if(headMonth == 1){
+                    headMonth=12;
+                    if(headMonth <= 9){
+                        headMonth = '0' + headMonth;
+                    }
+                    headYear=parseInt(headYear)-1;
+                    var headYearMonth=headYear+"-"+ headMonth;
+                    month = headYearMonth;
+                    console.log(headYearMonth);
+                }else{
+                    headMonth=parseInt(headMonth)-1;
+                    if(headMonth <= 9){
+                        headMonth = '0' + headMonth;
+                    }
+                    var headYearMonth=headYear+"-"+ headMonth;
+                    month = headYearMonth;
+                    console.log(headYearMonth);
+                }
+
+                data.month = month;
+                monthArr.length = 0;
+                preMonth = getLast(month);
+                nextMonth = getNext(month);
+                monthArr.push(preMonth);
+                monthArr.push(month);
+                monthArr.push(nextMonth);
+                data.months = monthArr;
+
+                if(tag == "waistLine"){
+
+                    url = "Api.do?method=api.about.me.info.waistLine.get.list&passportid=$!passport.id";
+                }else if(tag == "hipline"){
+                    url = "Api.do?method=api.about.me.info.hipline.get.list&passportid=$!passport.id";
+                }
+
+                // 查询该用户的所有腰围列表
+                $.ajax({
+                    url: url,
+                    data: JSON.stringify(data),
+                    contentType:"application/json",
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (msg) {
+                        console.log(msg);
+                        var result = msg.result;
+                        dateArr.length = 0;
+                        waistLineArr.length = 0;
+                        for(var i=0 ; i<result.length; i++){
+                            dateArr.push(result[i].recordDate);
+                            waistLineArr.push(result[i].value);
+                        }
+                        fillData(dateArr,waistLineArr);
+                    }
+                });
+
+            });
+            //上一个月
+            $(".am-datepicker-day").on("click",function(){
+                if($(this).hasClass("am-datepicker-old")){
+                    var headMonth=$(".am-datepicker-select").html().substr(-3,2);
+                    var headYear=$(".am-datepicker-select").html().substr(0,4);
+                    if(headMonth == 1){
+                        headMonth=12;
+                        headYear=parseInt(headYear)-1;
+                        var headYearMonth=headYear+"-"+ headMonth;
+                        //console.log(headYearMonth);
+                    }else{
+                        headMonth=parseInt(headMonth)-1;
+                        var headYearMonth=headYear+"-"+ headMonth;
+                        // console.log(headYearMonth);
+                    }
+                }else{
+//                $(this).css("background","#f0f0f0");
+                    var currentDay= $(this).text();
+                    //console.log(currentDay);
+
+                }
+
+            });
+
+            //下一个月
+            $(".am-datepicker-day").on("click",function(){
+                if($(this).hasClass("am-datepicker-new")){
+                    var headMonth=$(".am-datepicker-select").html().substr(-3,2);
+                    var headYear=$(".am-datepicker-select").html().substr(0,4);
+                    if(headMonth == 12){
+                        headMonth=1;
+                        headYear=parseInt(headYear)+1;
+                        var headYearMonth=headYear+"-"+ headMonth;
+                    }else{
+                        headMonth=parseInt(headMonth)+1;
+                        var headYearMonth=headYear+"-"+ headMonth;
+                    }
+                }else{
+                    var currentDay= $(this).text();
+                }
+
+            });
+
+
+            //体重标尺
+            //第一个数的位置
+            $(".num").find("span:first-child").css("margin", "0px 0px 0px -50px");
+            var isdrag = false;
+            var tx, x, ty, y;
+
+            //最小的体重
+            var mixweight = $(".num").find("span:first-child").html();
+            var ox = parseInt($(".arrow-bottom").css('left'));
+            var m = parseInt(mixweight) + ox / 100;
+            //红色标注位置显示的值
+            $("#bmi").html(m);
+            var oldtext= $("#bmi").html()
+            //日期点击样式变化/标识跟着值变化
+            $(".am-datepicker-day").on("click",function(){
+                $(".am-datepicker-day").removeClass("am-active");
+                $(".am-datepicker-day").find("i").css("color","#92c3ff");
+                $(this).addClass("am-active");
+                $(this).find("i").css("color","#fff");
+                oldtext = $("#bmi").html();
+                /* var thisWeight = $(this).find("i").text();
+                 if(thisWeight.length < 2){
+                     $("#bmi").text(m);
+                     $("#con").css("left",0);
+                     oldtext = $("#bmi").html();
+                 }else{
+                     $("#bmi").text(thisWeight);
+                     //体重标尺变化
+                     var differentWeight=parseFloat(thisWeight)-parseFloat(m);
+                     var different=differentWeight*100
+                     $("#con").css("left",-different);
+                     oldtext = $("#bmi").html();
+                 }*/
+            });
+            //touch 事件
+            $(function () {
+
+                document.getElementById("con").addEventListener('touchstart', touchStart);
+                document.getElementById("con").addEventListener('touchmove', touchMove);
+                document.getElementById("con").addEventListener('touchend', function () {
+                    isdrag = false;
+                    oldtext = $("#bmi").html();
+                });
+            });
+
+            function touchStart(e) {
+                isdrag = true;
+                oldtext = $("#bmi").html();
+                e.preventDefault();
+                tx = parseInt($("#con").css('left'));
+                ty = parseInt($("#con").css('top'));
+                x = e.touches[0].pageX;
+                y = e.touches[0].pageY;
+            };
+
+            function touchMove(e) {
+
+                if (isdrag) {
+                    e.preventDefault();
+                    var n = tx + e.touches[0].pageX - x;
+                    var h = ty;
+                    $("#con").css("left", n);
+                    $("#con").css("top", h);
+//               console.log(n);
+                    if (n > 0) {
+                        $("#con").css("left", 0);
+                    }
+                    var absn = Math.abs(n);
+                    var abstx = Math.abs(tx);
+
+
+                    if (absn > 13000) {
+                        $("#con").css("left", -13000);
+                    }
+
+                    if ((e.touches[0].pageX - x) < 0) {
+                        $("#bmi").html(Math.round((parseFloat(oldtext) + (Math.abs(e.touches[0].pageX - x) / 100)) * 10) / 10);
+                    } else if ((e.touches[0].pageX - x) > 0 && n < 0) {
+                        $("#bmi").html(Math.round((parseFloat(oldtext) - (Math.abs(e.touches[0].pageX - x) / 100)) * 10) / 10);
+                    }
+                }
+            };
+
+            // 标签标识
+            var tag = "waistLine";
+            var url = "Api.do?method=api.about.me.info.waistLine.edit&passportid=$!passport.id";
+
+            $("#saveBtn").click(function(){
+                var waistLine = $("#bmi").html();
+                var date = $("#time").data('date');
+                var newdate=new Date();
+                var dates=new Date(date);
+                if(dates > newdate){
+                    $("#errormsg").html("不能设置未来日期的数值哦");
+
+                    $('#my-alert').modal({
+                        relatedTarget: this
+                    })
+                    return false;
+                }
+                var data = {};
+                if(tag == "waistLine"){
+                    data.waistLine = waistLine;
+                    url = "Api.do?method=api.about.me.info.waistLine.edit&passportid=$!passport.id";
+                }else if(tag == "hipline"){
+                    data.hipline = waistLine;
+                    url = "Api.do?method=api.about.me.info.hipline.edit&passportid=$!passport.id";
+                }
+                data.date = date;
+                $.ajax({
+                    url: url,
+                    data: JSON.stringify(data),
+                    contentType:"application/json",
+                    type: 'POST',
+                    dataType: 'json',
+                    error: function () {
+                        $("#errormsg").html("程序错误");
+                        $('#my-alert').modal({
+                            relatedTarget: this
+                        })
+                    },
+                    success: function (msg) {
+                        console.log(msg);
+                        if(msg.errors == null || msg.errors.length > 0){
+                            //alert(msg.errors[0].message);
+                        }else{
+                            window.location.href="girthControl?passportid=$!passport.id";
+                        }
+                    }});
+            });
+
+            $("#deleteBtn").click(function(){
+                var date = $("#time").data('date');
+                var data = {};
+                if(tag == "waistLine"){
+                    url = "Api.do?method=api.about.me.info.waistLine.delete&passportid=$!passport.id";
+                }else if(tag == "hipline"){
+                    url = "Api.do?method=api.about.me.info.hipline.delete&passportid=$!passport.id";
+                }
+                data.date = date;
+                $.ajax({
+                    url: url,
+                    data: JSON.stringify(data),
+                    contentType:"application/json",
+                    type: 'POST',
+                    dataType: 'json',
+                    error: function () {
+                        $("#errormsg").html("程序错误");
+                        $('#my-alert').modal({
+                            relatedTarget: this
+                        })
+                    },
+                    success: function (msg) {
+                        console.log(msg);
+                        if(msg.errors == null || msg.errors.length > 0){
+                            //alert(msg.errors[0].message);
+                        }else{
+                            window.location.href="girthControl?passportid=$!passport.id";
+                        }
+                    }});
+            });
+
+            var dateArr = [];
+            var waistLineArr = [];
+            var currentwaistLine=""
+            var data = {}; // 查询参数
+            data.month = month;
+            // 保存三个月份的数组
+            var monthArr = [];
+            var currentMonth = month;
+            var preMonth = getLast(month);
+            var nextMonth = getNext(month);
+            monthArr.push(currentMonth);
+            monthArr.push(preMonth);
+            monthArr.push(nextMonth);
+            data.months = monthArr;
+
+            // 查询该用户的所有腰围列表
+            $.ajax({
+                url: "Api.do?method=api.about.me.info.waistLine.get.list&passportid=$!passport.id",
+                data: JSON.stringify(data),
+                contentType:"application/json",
+                type: 'POST',
+                dataType: 'json',
+                success: function (msg) {
+                    console.log(msg);
+                    var result = msg.result;
+                    for(var i=0 ; i<result.length; i++){
+                        dateArr.push(result[i].recordDate);
+                        waistLineArr.push(result[i].value);
+                    }
+                    fillData(dateArr,waistLineArr);
+                    for(var j=0;j<waistLineArr.length;j++){
+                        if(j==waistLineArr.length-1){
+                            currentwaistLine=waistLineArr[j]
+                        }
+                    }
+                    /*  $("#bmi").data("current",current);*/
+
+                    if(currentwaistLine){
+                        $("#bmi").html(currentwaistLine);
+                    }else{
+                        $("#bmi").html(50.5);
+                    }
+                    var differentWeight1=parseFloat(currentwaistLine)-parseFloat(m);
+                    var different1=differentWeight1*100;
+                    $("#con").css("left",-different1);
+                }
+            });
+
+            // 查询该用户的所有臀围信息
+            var dateArrHipline = [];
+            var hiplineArr = [];
+            var hipline=""
+            $("#hipline").click(function(){
+                tag = "hipline";
+                $.ajax({
+                    url: "Api.do?method=api.about.me.info.hipline.get.list&passportid=$!passport.id",
+                    data: JSON.stringify(data),
+                    contentType:"application/json",
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (msg) {
+                        console.log(msg);
+                        var result = msg.result;
+                        dateArrHipline.length = 0;
+                        hiplineArr.length = 0;
+                        for(var i=0 ; i<result.length; i++){
+                            dateArrHipline.push(result[i].recordDate);
+                            hiplineArr.push(result[i].value);
+                        }
+                        fillData(dateArrHipline,hiplineArr);
+                        for(var j=0;j<hiplineArr.length;j++){
+                            if(j==hiplineArr.length-1){
+                                hipline=hiplineArr[j]
+                            }
+                        }
+                        /*  $("#bmi").data("current",current);*/
+
+                        if(hipline){
+                            $("#bmi").html(hipline);
+                        }else{
+                            $("#bmi").html(50.5);
+                        }
+                        if(hipline){
+                            var differentWeight1=parseFloat(hipline)-parseFloat(m);
+                            var different1=differentWeight1*100;
+                            $("#con").css("left",-different1);
+                        }else{
+                            var differentWeight1=parseFloat(50.5)-parseFloat(m);
+                            var different1=differentWeight1*100;
+                            $("#con").css("left",-different1);
+                        }
+                    }
+                });
+            });
+
+            // 再次查询用户所有的腰围信息
+            $("#waistLine").click(function(){
+                tag = "waistLine";
+                $.ajax({
+                    url: "Api.do?method=api.about.me.info.waistLine.get.list&passportid=$!passport.id",
+                    data: JSON.stringify(data),
+                    contentType:"application/json",
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (msg) {
+                        console.log(msg);
+                        var result = msg.result;
+                        dateArr.length = 0;
+                        waistLineArr.length = 0;
+                        for(var i=0 ; i<result.length; i++){
+                            dateArr.push(result[i].recordDate);
+                            waistLineArr.push(result[i].value);
+                        }
+                        //DateWeight(dateArr,waistLineArr);
+                        fillData(dateArr,waistLineArr);
+                        for(var j=0;j<waistLineArr.length;j++){
+                            if(j==waistLineArr.length-1){
+                                currentwaistLine=waistLineArr[j]
+                            }
+                        }
+                        /*  $("#bmi").data("current",current);*/
+                        if(currentwaistLine){
+                            $("#bmi").html(currentwaistLine);
+                        }else{
+                            $("#bmi").html(50.5);
+                        }
+                        /*   $("#bmi").html(currentwaistLine);*/
+                        if(currentwaistLine){
+                            var differentWeight1=parseFloat(currentwaistLine)-parseFloat(m);
+                            var different1=differentWeight1*100;
+                            $("#con").css("left",-different1);
+                        }else{
+                            var differentWeight1=parseFloat(50.5)-parseFloat(m);
+                            var different1=differentWeight1*100;
+                            $("#con").css("left",-different1);
+                        }
+                    }
+                });
+            });
+
+            //tab
+            $("#curve").click(function(){
+                if(tag == 'waistLine'){
+                    window.location.href = "waistLineCurve.vm?passportid=$!passport.id"
+                }else{
+                    window.location.href = "hipLineCurve.vm?passportid=$!passport.id"
+                }
+            });
+
+            var back=$('#workingtab li:eq(0)'),hip=$('#workingtab li:eq(1)'),tabback=$('.tabBack'),tabhip=$('.tabHip');
+            back.click(function(){
+                back.addClass("active").siblings().removeClass("active");
+                tabhip.addClass("am-hide");
+                tabback.removeClass("am-hide");
+
+            });
+            hip.click(function(){
+                hip.addClass("active").siblings().removeClass("active");
+                tabback.addClass("am-hide");
+                tabhip.removeClass("am-hide");
+
+            });
+
+            function getNext(s){
+                var a = s.split("-");
+
+                if(a[1]){
+                    a[1]=parseInt(a[1])+1;
+                    if(a[1]>12){
+                        a[1]=a[1]-12;
+                        a[0]=a[0]+1;
+                    }
+                }
+
+                if(  a[1] <= 9){
+                    a[1] = '0' + a[1];
+                }
+                return a.join("-") ;
+            }
+
+            function getLast(s){
+                var a = s.split("-");
+
+                if(a[1]){
+                    a[1]=parseInt(a[1])-1;
+                    if(a[1]<0){
+                        a[1]=a[1]+12;
+                        a[0]=a[0]-1;
+                    }
+                }
+                if(  a[1] <= 9){
+                    a[1] = '0' + a[1];
+                }
+                return  a.join("-") ;
+            }
+
+        });
+
+
+    </script>

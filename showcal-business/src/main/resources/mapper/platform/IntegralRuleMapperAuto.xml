@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.IntegralRuleMapper">
+
+    <resultMap  id="integralRulePO" type="com.showcal.platform.po.IntegralRulePO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="TYPE"  jdbcType="VARCHAR" property="type"></result>
+        <result column="CONTENT"  jdbcType="VARCHAR" property="content"></result>
+        <result column="STATUS"  jdbcType="NUMERIC" property="status"></result>
+        <result column="VALUE"  jdbcType="NUMERIC" property="value"></result>
+        <result column="IS_SETUP"  jdbcType="TINYINT" property="isSetup"></result>
+        <result column="START_TIME"  jdbcType="TIMESTAMP" property="startTime"></result>
+        <result column="END_TIME"  jdbcType="TIMESTAMP" property="endTime"></result>
+        <result column="REMARK"  jdbcType="VARCHAR" property="remark"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`TYPE`,`CONTENT`,`STATUS`,`VALUE`,`IS_SETUP`,`START_TIME`,`END_TIME`,`REMARK`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `PL_INTEGRAL_RULE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ integralRule.id },
+        
+        #{ integralRule.type },
+        #{ integralRule.content },
+        #{ integralRule.status },
+        #{ integralRule.value },
+        #{ integralRule.isSetup },
+        #{ integralRule.startTime },
+        #{ integralRule.endTime },
+        #{ integralRule.remark },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `PL_INTEGRAL_RULE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "integralRule" index ="index" separator=",">
+            (
+            #{ integralRule.id },
+            
+            #{ integralRule.type },
+            #{ integralRule.content },
+            #{ integralRule.status },
+            #{ integralRule.value },
+            #{ integralRule.isSetup },
+            #{ integralRule.startTime },
+            #{ integralRule.endTime },
+            #{ integralRule.remark },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `PL_INTEGRAL_RULE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `PL_INTEGRAL_RULE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="integralRulePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `PL_INTEGRAL_RULE`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="integralRulePO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `PL_INTEGRAL_RULE`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="integralRulePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `PL_INTEGRAL_RULE`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_INTEGRAL_RULE`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

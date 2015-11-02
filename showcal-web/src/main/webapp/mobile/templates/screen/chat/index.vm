@@ -1,0 +1,362 @@
+<style>
+    body {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+    }
+</style>
+$page.setTitle("聊天首页")
+<div class="discover discover-detail  chooseShowcal chat">
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="../aboutMe/index?passportid=$!passport.id" class="pic">
+                <img class="am-circle am-fl" src="$!passport.avatar"/>
+            ##                <span
+            ##                    class="am-padding-left-xs am-text-sm" id="name">$!passport.userName</span>
+        </div>
+
+        <h5 class="am-header-title">
+            #if($index==1)
+                <a class="dark-gray" href="../showcal/choose?choose=2&passportid=$!passport.id">$!myShowCal.nickName</a>
+            #else
+                <a class="dark-gray" href="../showcal/index?passportid=$!passport.id">$!myShowCal.nickName</a>
+            #end
+        </h5>
+        <div class="am-header-right am-header-nav">
+            <a href="../message/index?passportid=$!passport.id" class="info-ico ">
+                <img class="am-right" src="$mobileContent.getURI("images/news.png")"/>
+                #if($passport.tenantId>0)
+                    <div class="cycle-dot"></div>
+                #end
+            </a>
+
+        </div>
+    </header>
+    <!--分类 -->
+    <div class="choose1 am-text-sm bottom-border am-text-center am-cf">
+        <div class="choose-con am-g ">
+            <div class="am-u-sm-6 border-right" id="label-btn"><img class="am-margin-right-xs"
+                                                                    src="$mobileContent.getURI("images/label.png")"
+                                                                    width="20px" height="20px"/><span>标签</span></div>
+            <div class="am-u-sm-6" id="history-btn" ><img class="am-margin-right-xs"
+                                                         src="$mobileContent.getURI("images/record.png")" width="20px"
+                                                         height="18px"/><span>历史记录</span></div>
+        </div>
+##        <button id="testmessage" onclick="testsend()">TestMessage</button>
+    </div>
+
+    <!--聊天列表 -->
+    <div class=" am-cf mt-10" id="wrapper" onclick="doclick()">
+
+        <div id="scroller">
+
+            <div id="pullDown" class="am-text-center">
+                <span class="pullDownIcon"></span><span class="pullDownLabel">下拉刷新...</span>
+            </div>
+            <ul class="am-padding-0 am-text-sm" id="messagelist" >
+                #set($size = $!historyMessages.size())
+                #if($!size==0)
+                    <li class=" am-g am-padding-sm ">
+                        <img class="am-circle am-fl " src="$!myShowCal.avatarurl" width="40px"
+                             height="40px"/>
+
+                        <div class="am-fl ml-2rem chat-txt">
+                            <i></i>
+                            $!welcome <a
+                                href="ask.vm?sId=$!myShowCal.id&avatar=$!myShowCal.avatarurl&passportid=$!passport.id">点击回复</a>
+                        </div>
+                    </li>
+                #else
+                    #foreach($!message in $!historyMessages)
+                        <li class=" am-g am-padding-sm ">
+                            #if($!message.fromUserId==$!passport.userId)
+                                <img class="am-circle am-fr " src="$!passport.avatar" width="40px"
+                                     height="40px"/>
+
+                                <div class="am-fr mr-2rem chat-txt-right"#*style="max-width: 76%;  text-align: left;"*#>
+                                    <i></i>
+                                    #if($!message.messageType=='TEXT')
+                                        $!message.content
+                                    #else
+                                        <img onload="moveToEnd()" src="$!message.url@320w_180h_0e" width=100%>
+                                    #end
+                                </div>
+                            #else
+                                <img class="am-circle am-fl " src="$!myShowCal.avatarurl" width="40px"
+                                     height="40px"/>
+
+                                <div class="am-fl ml-2rem chat-txt ">
+                                    <i></i>
+                                    #if($!message.messageType=='TEXT')
+                                        $!message.content
+                                    #else
+                                        <img src="$!message.url@320w_180h_0e" width=100%>
+                                    #end
+                                </div>
+                            #end
+                        </li>
+                    #end
+                #end
+
+            </ul>
+        ##            <div id="pullUp" class="am-text-center">
+        ##                <span class="pullUpIcon"></span><span class="pullUpLabel">.</span>
+        ##            </div>
+
+        </div>
+    </div>
+</div>
+<span id="endmessage"></span>
+
+<script type="application/javascript" src="$mobileContent.getURI("vendor/reconnecting.js")"></script>
+<script>
+var index = 0;
+$(function () {
+
+    //跳转历史记录
+    $("#history-btn").on("click", function () {
+        window.location.href = "history?sId=$!myShowCal.id" + "&avatar=$!myShowCal.avatarurl" + "&passportid=$!passport.id";
+    });
+
+    //跳转提问问题
+    $("#label-btn").on("click", function () {
+        window.location.href = "ask?sId=$!myShowCal.id" + "&avatar=$!myShowCal.avatarurl" + "&passportid=$!passport.id";
+    })
+    var currenturl = '$indexContent.getURI("/")';
+    var index = currenturl.indexOf("://");
+    var endindex = currenturl.indexOf("?v");
+    currenturl = currenturl.substring(index + 3, endindex);
+    var webSocket = new ReconnectingWebSocket('ws://' + currenturl + 'chat/message/$!passport.id/$!passport.userId');
+    webSocket.onmessage = function (event) {
+        onMessage(event)
+    };
+});
+
+var testsend = function () {
+    index = index++;
+    sendQuestion('TEXT', 'test' + index, '');
+}
+
+
+var doclick = function () {
+    window.location.href = '#'
+}
+
+
+
+var onMessage = function (event) {
+    console.log(event.data);
+
+    var el, li, i;
+    el = document.getElementById('messagelist');
+    li = document.createElement('li');
+    li.setAttribute("class", "am-g am-padding-sm");
+    li.innerHTML = "<img class=\"am-circle am-fl \" src=\"$!myShowCal.avatarurl\" width=\"40px\" height=\"40px\"/>" +
+            "<div class=\"am-fl ml-2rem chat-txt\">" +
+            "<i></i>" + event.data +
+            "</div>";
+    $(el).append(li);
+    myScroll.refresh();
+    moveToBottom();
+}
+
+//加载更多
+var myScroll,
+        pullDownEl, pullDownOffset,
+        pullUpEl, pullUpOffset,
+        generatedCount = 0;
+
+var pageNumber = 1;
+var pageSize = 10;
+var totalCount = '$totalCount';
+
+
+//下来加载页面
+var loadMessage = function () {
+    if (totalCount > -1 && pageSize > 0) {
+        if ((pageNumber - 1) * pageSize > totalCount) {
+            //没有记录了
+            return;
+        }
+    }
+    $.ajax({ url: "$serviceContent.getURI("/api.do?method=api.service.myhistorymessage.get")&passportid=$!passport.id",
+        data: "{\"showcalId\":\"" + '$!myShowCal.id' + "\",\"pageNumber\":\"" + pageNumber + "\",\"pageSize\":\"" + pageSize + "\"}",
+        contentType: "application/json",
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+            if (data.errors.length > 0) {
+                var message = data.errors[0].message
+                $("#errormsg").html(message);
+            } else {
+                totalCount = data.totalCount;
+                var el, li, i;
+                el = document.getElementById('messagelist');
+
+                $(data.result).each(function (index, item) {
+                    li = document.createElement('li');
+                    li.setAttribute("class", "am-g am-padding-sm");
+                    if (item.fromUserId == '$passport.userId') {
+                        // 自己
+                        var contentval = item.messageType == 'TEXT' ? item.content : '<img onload="moveToEnd()"  src="' + (item.url ? (item.url + '@320w_180h_0e') : '') + '" width=100%/>';
+                        li.innerHTML = "<img class=\"am-circle am-fr \" src=\"$passport.avatar\" width=\"40px\" height=\"40px\"/>" +
+                                "<div class=\"am-fr mr-2rem chat-txt-right\">" +
+                                "<i></i>" + contentval +
+                                "</div>";
+
+                    } else {
+                        // 瘦咖
+                        var contentval = item.messageType == 'TEXT' ? item.content : '<img onload="moveToEnd()" src="' + (item.url ? (item.url + '@320w_180h_0e') : '') + '" width=100%/>';
+                        li.innerHTML = "<img class=\"am-circle am-fl \" src=\"$!myShowCal.avatarurl\" width=\"40px\" height=\"40px\"/>" +
+                                "<div class=\"am-fl ml-2rem chat-txt\">" +
+                                "<i></i>" + contentval +
+                                "</div>";
+                    }
+                    el.insertBefore(li, el.childNodes[0]);
+                })
+                myScroll.refresh();
+               /* moveToBottom();*/
+            }
+        }});
+}
+
+/**
+ * 下拉刷新 （自定义实现此方法）
+ * myScroll.refresh();        // 数据加载完成后，调用界面更新方法
+ */
+function pullDownAction() {
+    setTimeout(function () {
+        pageNumber++;
+        loadMessage();
+        myScroll.refresh();
+    }, 1000);
+}
+;
+
+
+/**
+ * 初始化iScroll控件
+ */
+function loaded() {
+
+    pullDownEl = document.getElementById('pullDown');
+    pullDownOffset = pullDownEl.offsetHeight;
+    myScroll = new iScroll('wrapper', {
+        scrollbars: true,
+        mouseWheel: true,
+        interactiveScrollbars: true,
+        shrinkScrollbars: 'scale',
+        fadeScrollbars: true,
+        topOffset: pullDownOffset,
+        vScroll: true,
+        y:$("#wrapper").innerHeight()-$("#scroller").outerHeight(),
+        onRefresh: function () {
+            console.log("onRefresh");
+            if (pullDownEl.className.match('loading')) {
+                pullDownEl.className = '';
+                pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
+            }
+        },
+        onScrollMove: function () {
+            console.log("onScrollMove");
+
+            if (this.y > 5 && !pullDownEl.className.match('flip')) {
+                pullDownEl.className = 'flip';
+                pullDownEl.querySelector('.pullDownLabel').innerHTML = '松手开始更新...';
+                this.minScrollY = 0;
+            } else if (this.y < 5 && pullDownEl.className.match('flip')) {
+                pullDownEl.className = '';
+                pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
+                this.minScrollY = -pullDownOffset;
+            }
+        },
+        onScrollEnd: function () {
+            console.log("onScrollEnd");
+            if (pullDownEl.className.match('flip')) {
+                pullDownEl.className = 'loading';
+                pullDownEl.querySelector('.pullDownLabel').innerHTML = '加载中...';
+                pullDownAction(); // Execute custom function (ajax call?)
+            }
+        }
+    });
+}
+
+function moveToBottom() {
+    myScroll.scrollToElement(document.querySelector('#scroller li:last-child'),1000)
+}
+
+function moveToBottomSet() {
+    var height1=$("#wrapper").innerHeight()-$("#scroller").outerHeight();
+    $("#scroller").css("top",height1+"px");
+}
+function DownScroll(outId, innerId) {
+    $("#" + innerId).css("top", ($("#" + outId).height() - $("#" + innerId).height() - 40) + "px")
+
+}
+//初始化绑定iScroll控件
+document.addEventListener('touchmove', function (e) {
+    e.preventDefault();
+}, false);
+document.addEventListener('DOMContentLoaded', loaded, false);
+
+//名字长度截取
+$(function () {
+    var namecontent = $("#name").html();
+
+    if (namecontent != null && namecontent.length > 4) {
+        namecontent = namecontent.substring(0, 3) + "...";
+    }
+    $("#name").html(namecontent);
+})
+$(document.body).addClass("whitebg");
+var showcalId = '$!myShowCal.id';
+/**
+ * 发送问题
+ * @param type
+ * @param content
+ * @param url
+ */
+function sendQuestion(type, content, url) {
+//        alert("type:"+type+" content: "+content);
+
+    var el, li, i;
+    el = document.getElementById('messagelist');
+    li = document.createElement('li');
+    li.setAttribute("class", "am-g am-padding-sm");
+    var contentval = type == 'TEXT' ? content : '<img onload="moveToEnd()" src="' + (url ? url + '@320w_180h_0e' : '') + '" width=100%/>';
+    li.innerHTML = "<img class=\" am-circle am-fr \" src=\"$passport.avatar\" width=\"40px\" height=\"40px\"/>" +
+            "<div class=\"am-fr mr-2rem chat-txt-right\">" +
+            "<i></i>"
+            + contentval +
+            "</div>";
+    $(el).append(li);
+    myScroll.refresh();
+    moveToBottomSet();
+
+    $.ajax({
+        url: "$mobileContent.getURI("/api.do?method=api.mobile.question.send")&passportid=$!passport.id",
+        data: JSON.stringify({Content: content, tag: null, type: type, showCalId: showcalId, url: url}),
+        contentType: "application/json",
+        type: 'POST',
+        dataType: 'json',
+        success: function (msg) {
+//            if (msg.errors.length > 0) {
+//                var message = msg.errors[0].message
+//                $("#errormsg").html(message);
+//            }
+        }});
+}
+
+
+
+function moveToEnd(){
+    myScroll.refresh();
+    moveToBottomSet();
+
+}
+</script>

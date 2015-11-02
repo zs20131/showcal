@@ -1,0 +1,125 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+            <li><a   href="$platformLink.setTarget("sport/index")">运动方案</a></li>
+            <li class="active">运动方案</a></li>
+        </ul>
+    </ul>
+</div>
+
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="sportsStepController">
+    <div class="xn-width mb_10 pr_10 clearfix">
+        <a class="btn btn-primary  ml_10 mr_20 f-right" ng-click="addSportLine()" >创建运动步骤</a>
+    </div>
+    <div class="xn-table-wrap">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th class="col-sm-1">步骤</th>
+                <th class="col-sm-1">运动时长(分钟)</th>
+                <th class="col-sm-1">运动名称</th>
+                <th class="col-sm-1">类型</th>
+                <th class="col-sm-1">链接</th>
+                <th class="col-sm-1">消耗热量值</th>
+                <th class="col-sm-2">运动内容</th>
+                <th class="col-sm-1">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbody" ng-init="usershow=false">
+            <tr ng-repeat="sportLine in  lineResult" ng-class="{'unactive':!repository.isActive}">
+                <input type="hidden" ng-model="sportLine.headId"/>
+                <td>
+                    {{sportLine.step}}
+                </td>
+                <td>
+                    {{sportLine.time}}
+                </td>
+                <td>
+                    {{sportLine.sportSetting.name}}
+                </td>
+                <td>
+                    {{sportLine.sportSetting.type#*|sportUrlType*#}}
+                </td>
+                <td>
+                    {{sportLine.sportSetting.url}}
+                </td>
+                <td>
+                    {{sportLine.sportSetting.burnHeat}}
+                </td>
+                <td>
+                    {{sportLine.sportSetting.content}}
+                </td>
+                <td class="xn-center">
+                    <div type="text" ><a ng-click="editLine(sportLine)">编辑</a> <a ng-click="deleteLine(sportLine)">删除</a></div>
+                </td>
+            </tr>
+            <tr ng-if="vm.lineTotalCount == 0">
+                <td colspan="12" class="center">无法找到相应的记录</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{vm.lineTotalCount}}条</div>
+            <pagination ng-show="vm.lineTotalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                        total-items="vm.lineTotalCount"
+                        ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                        last-text="&raquo;"></pagination>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="sportStepEdit.html">
+    <form  class="form-horizontal xn-form clearfix" role="form"  xn-form-validate novalidate  name="validateForm" >
+        <div class="modal-header" ng-mousedown="mousedown($event)" ng-mousemove="mousemove($event)" ng-mouseup="mouseup()">
+            <h3 class="modal-title">{{sportLine.title}}</h3>
+            <div class="xn-close xn-cursor" ng-click="clean()">
+                <i class="icon icon-delete"></i>
+            </div>
+        </div>
+        <div class="modal-body clearfix">
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">选择方案(m)：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7 xn-padding-text xn-line">
+                        {{sportLine.name}}
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">运动步骤：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text"  name="step" ng-model="sportLine.step" ng-pattern="/^\+?[1-9][0-9]*$/" required>
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">运动时长{{sportLine.time}}(m)：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7 xn-padding-text xn-line">
+                        <select  id="sportPlace"  class="form-control"  name="sportTime" ng-model="sportLine.time"
+                                 ng-options="sportTime.name as sportTime.name for sportTime in sportTimes" required>
+                            <option value="">-- 请选择 --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">运动内容：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7 xn-padding-text xn-line">
+                        <select  id="organisation"  class="form-control"  name="sportContent" ng-model="sportLine.sportSettingId"
+                                 ng-options="organisation.id as organisation.name for organisation in organisationList" required>
+                            <option value="">-- 请选择 --</option>
+                        </select>
+                    </div>
+                    <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+                        <div class="col-sm-10">
+                            <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5" ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]}}</div>
+                        </div>
+                    </div>
+                </div>
+            <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                <div class="modal-footer">
+                    <button  class="btn btn-primary "  xn-form-submit="doSave()">保存</button>
+                    <a ng-click="clean()"  class="btn btn-default ">取消</a>
+                </div>
+                </div>
+    </form>
+</script>

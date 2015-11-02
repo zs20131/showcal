@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.foundation.dal.AttachmentMapper">
+
+    <resultMap  id="attachmentWithFilePO" type="com.showcal.foundation.po.AttachmentWithFilePO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="BUSINESS_TYPE"  jdbcType="VARCHAR" property="businessType"/>
+        <result column="BUSINESS_ID"  jdbcType="NUMERIC" property="businessId"/>
+        <result column="BUSINESS_CATEGORY"  jdbcType="VARCHAR" property="businessCategory"/>
+        <result column="FILE_ID"  jdbcType="NUMERIC" property="fileId"/>
+        <result column="NAME"  jdbcType="VARCHAR" property="name"/>
+        <result column="EXTENSION"  jdbcType="VARCHAR" property="extension"/>
+        <result column="STORAGE_PATH"  jdbcType="VARCHAR" property="storagePath"/>
+    </resultMap>
+
+    <sql id="whereForFindList">
+    </sql>
+
+    <select id="getList" resultMap="attachmentPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                SYS_ATTACHMENT
+            WHERE
+                IS_DELETED=0
+                <include refid="whereForFindList" />
+        ) AS T
+        LIMIT #{beginItemIndex}, #{endItemIndex}
+    </select>
+
+    <select id="getListCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            SYS_ATTACHMENT
+        WHERE
+            IS_DELETED=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            SYS_ATTACHMENT
+        WHERE
+            IS_DELETED=0
+            AND  ID!=#{id}
+            AND CODE=#{code}
+    </select>
+
+    <select id="getAttachmentListWithFile" resultMap="attachmentWithFilePO">
+        SELECT
+          ATTACHMENT.ID,
+          ATTACHMENT.BUSINESS_TYPE,
+          ATTACHMENT.BUSINESS_ID,
+          ATTACHMENT.BUSINESS_CATEGORY,
+          ATTACHMENT.FILE_ID,
+          FILE.NAME,
+          FILE.EXTENSION,
+          FILE.STORAGE_PATH
+        FROM
+          SYS_ATTACHMENT AS ATTACHMENT
+          JOIN SYS_FILE AS FILE
+            ON ATTACHMENT.FILE_ID = FILE.ID
+        WHERE
+          ATTACHMENT.IS_DELETED=0
+          <if test="attachment.businessType!=null">AND ATTACHMENT.BUSINESS_TYPE=#{ attachment.businessType }</if>
+          <if test="attachment.businessId!=null">AND ATTACHMENT.BUSINESS_ID=#{ attachment.businessId }</if>
+          <if test="attachment.businessCategory!=null">AND ATTACHMENT.BUSINESS_CATEGORY=#{ attachment.businessCategory }</if>
+    </select>
+
+    <update id="updateBusiness">
+        UPDATE
+            SYS_ATTACHMENT
+        SET
+            BUSINESS_ID=#{ request.businessId },
+            LAST_UPDATED_BY=#{ passport.userId },
+            LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+            ID in
+            <foreach collection="request.ids" item= "id" index ="index" open= "(" close =")" separator=",">
+                #{id}
+            </foreach >
+    </update>
+
+</mapper>

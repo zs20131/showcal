@@ -1,0 +1,38 @@
+//
+//  ${method.responseName}.h
+// ***************************************************************
+// Copyright (c) 2014 –${company}
+//  Title: ${basePackage}.${moduleName}.domain.${domain.name}
+//  Description: ${moduleName} Domain
+//  @author ${author}
+// ***************************************************************
+//
+
+#import "BaseResponse.h"
+<#if method.responseFields??>
+    <#list method.responseFields as field>
+        <#if field.isDomain>
+            <#if !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">
+            #import "${field.iostype}.h"
+            </#if>
+        </#if>
+    </#list>
+</#if>
+
+@interface ${method.responseName} : BaseResponse
+<#if method.responseFields??>
+    <#list fields as field>
+    //${field.description}
+        <#if field.isEnum>
+        @property(nonatomic) NSString* ${field.name};
+        <#else>
+        @property(nonatomic) ${field.iostype} <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">*</#if>${field.name};
+        </#if>
+    </#list>
+</#if>
+
+@property BaseResponse *baseResponse;
+
+- (instancetype)init;
+
+@end

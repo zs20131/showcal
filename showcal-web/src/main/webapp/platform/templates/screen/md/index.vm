@@ -1,0 +1,33 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+            <li class="active">瘦咖精选</a></li>
+        </ul>
+    </ul>
+</div>
+<div class="xn-main xn-setting-list  auto  xn-width  clearfix">
+    <ul class="clearfix">
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("md/mdcategory")">
+                <div class="xn-setting-img xn-setting-img-job"></div>
+                <div class="xn-setting-right">
+                    <h3>商品类别</h3>
+
+                    <p>设置商品类别... </p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("md/mditem")">
+                <div class="xn-setting-img xn-setting-img-level"></div>
+                <div class="xn-setting-right">
+                    <h3>商品主数据</h3>
+
+                    <p>设置商品主数据...</p>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>

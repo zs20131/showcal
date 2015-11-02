@@ -1,0 +1,1051 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root product="erp" productCode="com.xiniunet.distribution" function="logged" record="true" identity="employee || none">
+    <!-- 根目录 -->
+    <catalog record="false">
+        <page url="api/attachmentUpload.do" description="附件上传-服务接口"/>
+        <page url="api/fileImport.do" description="文件导入-服务接口"/>
+        <page url="api/fileUpload.do" description="文件上传-服务接口"/>
+        <page url="api/foundation.do" description="基础服务-服务接口"/>
+        <page url="api/security.do" description="安全服务-服务接口"/>
+        <page url="reporting/api.do" description="报表服务-服务接口"/>
+
+        <page url="" description="ERP-首页"/>
+        <page url="401" description="ERP-未登录错误" function="all" identity="all"/>
+        <page url="about" description="ERP-关于系统"/>
+        <page url="browser" description="ERP-浏览器兼容" function="all" identity="all"/>
+        <page url="employee_view" description="ERP-查看员工信息"/>
+        <page url="index" description="ERP-首页"/>
+        <page url="upload" description="ERP-上传文件"/>
+    </catalog>
+
+
+    <!--  人力资源管理  -->
+    <catalog baseUrl="hr" application="人力资源管理" applicationCode="com.xiniu.erp.hr">
+        <page url="index" description="人力资源-首页"/>
+        <page url="setting" description="人力资源-设置首页"/>
+        <page url="api.do" description="人事资源-服务接口"/>
+
+        <!--  员工  -->
+        <catalog baseUrl="employee" function="hr.manage.employee">
+            <page url="create" description="人力资源-员工-创建员工"/>
+            <page url="edit" description="人力资源-员工-编辑员工"/>
+            <page url="import" description="人力资源-员工-导入员工"/>
+            <page url="index" description="人力资源-员工-员工首页"/>
+            <page url="query" description="人力资源-员工-查询员工"/>
+            <page url="view" description="人力资源-员工-查看员工"/>
+        </catalog>
+
+        <!--  法律实体  -->
+        <catalog baseUrl="legalentity" function="hr.manage.legalentity">
+            <page url="create" description="人力资源-法律实体-创建法律实体"/>
+            <page url="edit" description="人力资源-法律实体-编辑法律实体"/>
+            <page url="import" description="人力资源-法律实体-导入法律实体"/>
+            <page url="index" description="人力资源-法律实体-法律实体首页"/>
+            <page url="view" description="人力资源-法律实体-查看法律实体"/>
+        </catalog>
+
+        <!--  职位  -->
+        <catalog baseUrl="job" function="hr.setting.job">
+            <page url="create" description="人力资源-职位-创建职位"/>
+            <page url="edit" description="人力资源-职位-编辑职位"/>
+            <page url="import" description="人力资源-职位-导入职位"/>
+            <page url="index" description="人力资源-职位-职位首页"/>
+            <page url="view" description="人力资源-职位-查看职位"/>
+        </catalog>
+
+        <!--  能力层级  -->
+        <catalog baseUrl="level" function="hr.setting.level">
+            <page url="create" description="人力资源-能力层级-创建能力层级"/>
+            <page url="edit" description="人力资源-能力层级-编辑能力层级"/>
+            <page url="import" description="人力资源-能力层级-导入能力层级"/>
+            <page url="index" description="人力资源-能力层级-能力层级首页"/>
+            <page url="view" description="人力资源-能力层级-查看能力层级"/>
+        </catalog>
+
+        <!--  位置  -->
+        <catalog baseUrl="location" function="hr.setting.location">
+            <page url="create" description="人力资源-位置-创建位置"/>
+            <page url="create_type" description="人力资源-位置-创建类型"/>
+            <page url="edit" description="人力资源-位置-编辑位置"/>
+            <page url="import" description="人力资源-位置-导入位置"/>
+            <page url="index" description="人力资源-位置-位置首页"/>
+            <page url="view" description="人力资源-位置-查看位置"/>
+        </catalog>
+
+        <!--  经营单元  -->
+        <catalog baseUrl="operatingunit" function="hr.manage.operatingunit">
+            <page url="create" description="人力资源-经营单元-创建经营单元"/>
+            <page url="edit" description="人力资源-经营单元-编辑经营单元"/>
+            <page url="import" description="人力资源-经营单元-导入经营单元"/>
+            <page url="index" description="人力资源-经营单元-经营单元首页"/>
+            <page url="view" description="人力资源-经营单元-查看经营单元"/>
+        </catalog>
+
+        <!--  组织  -->
+        <catalog baseUrl="organization" function="hr.manage.organization">
+            <page url="import" description="人力资源-组织-导入组织"/>
+            <page url="index" description="人力资源-组织-组织首页"/>
+        </catalog>
+
+        <!--  报表  -->
+        <catalog baseUrl="report">
+            <page url="index" description="人力资源-报表-报表首页"/>
+            <page url="query" description="人力资源-报表-员工报表" function="hr.report.employee.active"/>
+        </catalog>
+
+        <!--  门店  -->
+        <catalog baseUrl="shop" function="hr.manage.shop">
+            <page url="create" description="人力资源-门店-创建门店"/>
+            <page url="edit" description="人力资源-门店-编辑门店"/>
+            <page url="import" description="人力资源-门店-导入门店"/>
+            <page url="index" description="人力资源-门店-门店首页"/>
+            <page url="view" description="人力资源-门店-查看门店"/>
+        </catalog>
+        <!--  店员  -->
+        <catalog baseUrl="clerk" function="hr.manage.shop">
+            <page url="create" description="人力资源-店员-新建店员"/>
+            <page url="index" description="人力资源-店员-店员首页"/>
+            <page url="ouview" description="人力资源-店员-查看店员-门店维度"/>
+            <page url="view" description="人力资源-店员-查看店员"/>
+        </catalog>
+    </catalog>
+
+
+    <!--  会员管理  -->
+    <catalog baseUrl="membership" application="会员管理" applicationCode="com.xiniu.erp.membership">
+        <page url="index" description="会员管理-首页"/>
+        <page url="setting" description="会员管理-设置"/>
+        <page url="api.do" description="会员管理-服务接口"/>
+
+        <!--  消费返还  -->
+        <catalog baseUrl="cancelorder" function="membership.manage.cancelorder">
+            <page url="index" description="会员管理-消费返还"/>
+        </catalog>
+
+        <!--  充值返还  -->
+        <catalog baseUrl="cancelrecharge" function="membership.manage.cancelrecharge">
+            <page url="index" description="会员管理-充值返还"/>
+        </catalog>
+
+        <!--  级别设置  -->
+        <catalog baseUrl="level" function="membership.set.level">
+            <page url="create" description="会员管理-级别设置-创建"/>
+            <page url="edit" description="会员管理-级别设置-编辑"/>
+            <page url="index" description="会员管理-级别设置-首页"/>
+            <page url="view" description="会员管理-级别设置-查看"/>
+        </catalog>
+
+        <!--  会员  -->
+        <catalog baseUrl="member" function="membership.manage.member">
+            <page url="create" description="会员管理-会员-创建"/>
+            <page url="createByEmployee" description="会员管理-会员-创建员工会员"/>
+            <page url="edit" description="会员管理-会员-编辑"/>
+            <page url="employeeIndex" description="会员管理-会员-未创建会员的员工列表"/>
+            <page url="import" description="会员管理-会员-导入"/>
+            <page url="index" description="会员管理-会员-首页"/>
+            <page url="view" description="会员管理-会员-查看"/>
+        </catalog>
+
+        <!--  积分使用规则  -->
+        <catalog baseUrl="pointrule" function="membership.set.pointrule">
+            <page url="index" description="会员管理-设置-积分使用规则设置"/>
+        </catalog>
+
+        <!--  充值规则  -->
+        <catalog baseUrl="rechargerule" function="membership.set.rechargerule">
+            <page url="index" description="会员管理-设置-充值规则设置"/>
+        </catalog>
+
+        <!--  报表  -->
+        <catalog baseUrl="report">
+            <page url="consumptionTransaction" description="会员管理-报表-消费记录明细"
+                  function="membership.report.consumption.transaction"/>
+            <page url="index" description="会员管理-报表-首页"/>
+            <page url="memberSearch" description="会员管理-报表-会员查询报表" function="membership.report.member.search"/>
+            <page url="memberSummary" description="会员管理-报表-会员交易汇总报表" function="membership.report.member.summary"/>
+            <page url="shopTransaction" description="会员管理-报表-门店交易汇总报表" function="membership.report.shop.transaction"/>
+        </catalog>
+
+        <!--  设置  -->
+        <catalog baseUrl="setting" function="membership.set.card">
+            <page url="index" description="会员管理-设置-卡设置"/>
+        </catalog>
+
+        <!--  来源类型  -->
+        <catalog baseUrl="sourcetype" function="membership.set.sourcetype">
+            <page url="create" description="会员管理-来源类型-创建"/>
+            <page url="edit" description="会员管理-来源类型-编辑"/>
+            <page url="index" description="会员管理-来源类型-首页"/>
+            <page url="view" description="会员管理-来源类型-查看"/>
+        </catalog>
+
+        <!--  工作台  -->
+        <catalog baseUrl="worktable" function="membership.manage.worktable">
+            <page url="index" description="会员管理-工作台"/>
+        </catalog>
+
+        <!--  调整单  -->
+        <catalog baseUrl="adjustment" function="membership.manage.adjustment">
+            <page url="index" description="会员管理-调整单-首页"/>
+            <page url="create" description="会员管理-调整单-创建"/>
+            <page url="edit" description="会员管理-调整单-编辑"/>
+            <page url="view" description="会员管理-调整单-查看"/>
+        </catalog>
+    </catalog>
+
+
+    <!--  系统管理  -->
+    <catalog baseUrl="system" application="系统管理" applicationCode="com.xiniu.erp.system">
+        <page url="index" description="系统管理-首页"/>
+        <page url="api.do" description="系统管理-服务接口"/>
+
+        <catalog baseUrl="authorization" function="system.manage.auth">
+            <page url="edit" description="系统管理-用户身份-编辑用户身份"/>
+            <page url="index" description="系统管理-用户身份-用户身份首页"/>
+        </catalog>
+
+        <catalog baseUrl="report">
+            <page url="audit" description="系统管理-报表-权限审计报表" function="system.report.user.auth"/>
+            <page url="index" description="系统管理-报表-报表首页"/>
+            <page url="log" description="系统管理-报表-操作日志报表" function="system.report.user.action"/>
+            <page url="user" description="系统管理-报表-用户报表" function="system.report.user"/>
+        </catalog>
+
+        <catalog baseUrl="role" function="system.manage.role">
+            <page url="create" description="系统管理-角色-创建角色"/>
+            <page url="create_type" description="系统管理-角色-创建类型"/>
+            <page url="edit" description="系统管理-角色-编辑角色"/>
+            <page url="import" description="系统管理-角色-导入角色"/>
+            <page url="index" description="系统管理-角色-角色首页"/>
+            <page url="view" description="系统管理-角色-查看角色"/>
+        </catalog>
+
+        <catalog baseUrl="setting">
+            <page url="guide" function="system.setting.guide" description="系统管理-设置-新手指引"/>
+            <page url="index" description="系统管理-设置-设置首页"/>
+            <page url="settingdefault" function="system.setting.settingdefault" description="系统管理-设置-默认信息设置"/>
+
+            <catalog baseUrl="tenant" function="system.manage.tenant">
+                <page url="edit" description="系统管理-承租人-编辑承租人"/>
+                <page url="index" description="系统管理-承租人-承租人首页"/>
+                <page url="transfer" description="系统管理-承租人-转让管理员" function="admin"/>
+            </catalog>
+        </catalog>
+
+        <catalog baseUrl="user" function="system.manage.user">
+            <page url="create" description="系统管理-用户-创建角色"/>
+            <page url="create_by_employee" description="系统管理-用户-员工列表"/>
+            <page url="create_from_employee" description="系统管理-用户-从员工创建"/>
+            <page url="create_type" description="系统管理-用户-创建类型"/>
+            <page url="edit" description="系统管理-用户-编辑用户"/>
+            <page url="import" description="系统管理-用户-导入用户"/>
+            <page url="index" description="系统管理-用户-用户首页"/>
+            <page url="query" description="系统管理-用户-高级搜索"/>
+            <page url="view" description="系统管理-用户-查看用户"/>
+        </catalog>
+    </catalog>
+
+
+    <!--  采购管理  -->
+    <catalog baseUrl="purchasing" application="采购管理" applicationCode="com.xiniu.erp.purchasing">
+
+        <page url="index" description="采购管理-首页"/>
+        <page url="setting" description="采购管理-设置"/>
+        <page url="api.do" description="采购管理-服务接口"/>
+
+        <catalog baseUrl="backgoods" function="purchasing.return.manage">
+            <page url="approve" description="采购管理-退货单-退货单审核"/>
+            <page url="create" description="采购管理-退货单-退货单创建"/>
+            <page url="edit" description="采购管理-退货单-退货单编辑"/>
+            <page url="index" description="采购管理-退货单-退货单首页"/>
+            <page url="open" description="采购管理-退货单-退货单打开"/>
+            <page url="print" description="采购管理-退货单-退货单打印"/>
+            <page url="query" description="采购管理-退货单-退货单高级查询"/>
+            <page url="select" description="采购管理-退货单-收货单选择"/>
+            <page url="view" description="采购管理-退货单-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="inspection" function="purchasing.inspection.manage">
+            <page url="approve" description="采购管理-检验单-检验单审核"/>
+            <page url="create" description="采购管理-检验单-检验单创建"/>
+            <page url="edit" description="采购管理-检验单-检验单编辑"/>
+            <page url="index" description="采购管理-检验单-检验单首页"/>
+            <page url="open" description="采购管理-检验单-检验单打开"/>
+            <page url="print" description="采购管理-检验单-检验单打印"/>
+            <page url="query" description="采购管理-检验单-检验单高级查询"/>
+            <page url="select" description="采购管理-检验单-收货单选择"/>
+            <page url="view" description="采购管理-检验单-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="order" function="purchasing.order.manage">
+            <page url="close" description="采购管理-订单-订单关闭"/>
+            <page url="delete" description="采购管理-订单-订单删除"/>
+            <page url="create/direct" description="采购管理-订单-直接创建"/>
+            <page url="create/byRequisition" description="采购管理-订单-通过申请单创建"/>
+            <page url="edit/edit" description="采购管理-订单-订单编辑"/>
+            <page url="edit/byRequisition" description="采购管理-订单-通过申请单创建的订单编辑"/>
+            <page url="index" description="采购管理-订单-订单首页"/>
+            <page url="open" description="采购管理-订单-订单打开"/>
+            <page url="print" description="采购管理-订单-订单打印"/>
+            <page url="query" description="采购管理-订单-订单高级查询"/>
+            <page url="create/requisitionList" description="采购管理-订单-申请单选择"/>
+            <page url="create/index" description="采购管理-订单-订单类别选择"/>
+            <page url="view" description="采购管理-订单-查看详情"/>
+            <page url="submit/index" description="采购管理-订单-订单提交"/>
+            <page url="submit/submiting" description="采购管理-订单-提交中"/>
+            <page url="submit/success" description="采购管理-订单-提交成功"/>
+            <page url="submit/failure" description="采购管理-订单-提交失败"/>
+        </catalog>
+
+        <catalog baseUrl="payment" function="purchasing.paymentNotice.manage">
+            <page url="edit" description="采购管理-付款通知单-付款通知单编辑"/>
+            <page url="index" description="采购管理-付款通知单-付款通知单首页"/>
+            <page url="open" description="采购管理-付款通知单-付款通知单打开"/>
+            <page url="pay" description="采购管理-付款通知单-付款通知单付款"/>
+            <page url="payedit" description="采购管理-付款通知单-付款通知单付款编辑"/>
+            <page url="payopen" description="采购管理-付款通知单-付款通知单付款打开"/>
+            <page url="payview" description="采购管理-付款通知单-付款通知单付款查看"/>
+            <page url="prepay" description="采购管理-付款通知单-付款通知单预付款"/>
+            <page url="preprint" description="采购管理-付款通知单-付款通知单打印"/>
+            <page url="print" description="采购管理-付款通知单-付款通知单打印"/>
+            <page url="select" description="采购管理-付款通知单-订单选择"/>
+            <page url="typeselect" description="采购管理-付款通知单-订单选择"/>
+            <page url="view" description="采购管理-付款通知单-查看详情"/>
+            <page url="create" description="采购管理-付款通知单-付款通知单创建"/>
+        </catalog>
+
+        <catalog baseUrl="quotation" function="purchasing.quotation.manage">
+            <page url="approved" description="采购管理-报价单-报价单审核"/>
+            <page url="compare" description="采购管理-报价单-报价单比较"/>
+            <page url="create" description="采购管理-报价单-报价单创建"/>
+            <page url="directcreate" description="采购管理-报价单-报价单直接创建"/>
+            <page url="directedit" description="采购管理-报价单-无申请单报价单编辑"/>
+            <page url="directopen" description="采购管理-报价单-无申请单报价单打开"/>
+            <page url="directview" description="采购管理-报价单-无申请单报价单查看详情"/>
+            <page url="edit" description="采购管理-报价单-报价单编辑"/>
+            <page url="index" description="采购管理-报价单-报价单首页"/>
+            <page url="open" description="采购管理-报价单-报价单打开"/>
+            <page url="print" description="采购管理-报价单-报价单打印"/>
+            <page url="query" description="采购管理-报价单-报价单高级查询"/>
+            <page url="requisition" description="采购管理-报价单-申请单选择"/>
+            <page url="typeselect" description="采购管理-报价单-报价单类别选择"/>
+            <page url="view" description="采购管理-报价单-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="receipt" function="purchasing.receipt.manage">
+            <page url="approve" description="采购管理-收货单-收货单审核"/>
+            <page url="create" description="采购管理-收货单-收货单创建"/>
+            <page url="edit" description="采购管理-收货单-收货单编辑"/>
+            <page url="index" description="采购管理-收货单-收货单首页"/>
+            <page url="open" description="采购管理-收货单-收货单打开"/>
+            <page url="print" description="采购管理-收货单-收货单打印"/>
+            <page url="query" description="采购管理-收货单-收货单高级查询"/>
+            <page url="select" description="采购管理-收货单-订单选择"/>
+            <page url="stored" description="采购管理-收货单-订单选择"/>
+            <page url="typeselect" description="采购管理-收货单-订单类别选择"/>
+            <page url="view" description="采购管理-收货单-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="report">
+            <page url="index" description="采购管理-报表-首页"/>
+            <page url="orderLineByBuyer" description="采购管理-报表-订单明细报表按权限"/>
+            <page url="orderAmount" function="purchasing.report.orderPayment" description="采购管理-报表-订单金额报表"/>
+            <page url="orderHead" function="purchasing.report.orderSummary" description="采购管理-报表-订单报表"/>
+            <page url="orderLine" function="purchasing.report.orderTransaction" description="采购管理-报表-订单明细报表"/>
+            <page url="orderView" function="purchasing.report.orderSummary" description="采购管理-报表-订单详情页面"/>
+            <page url="receiptHead" function="purchasing.report.receiptSummary" description="采购管理-报表-收货单报表"/>
+            <page url="receiptLine" function="purchasing.report.receiptTransaction" description="采购管理-报表-收货单明细报表"/>
+            <page url="receiptView" function="purchasing.report.receiptSummary" description="采购管理-报表-收货单详情页面"/>
+            <page url="returnHead" function="purchasing.report.returnSummary" description="采购管理-报表-退货单报表"/>
+            <page url="returnLine" function="purchasing.report.returnTransaction" description="采购管理-报表-退货单明细报表"/>
+            <page url="returnView" function="purchasing.report.returnSummary" description="采购管理-报表-退货单详情页面"/>
+        </catalog>
+
+        <catalog baseUrl="requisitionhead" function="purchasing.requisition.manage">
+            <page url="approve" description="采购管理-申请单-申请单审核"/>
+            <page url="create" description="采购管理-申请单-申请单创建"/>
+            <page url="edit" description="采购管理-申请单-申请单编辑"/>
+            <page url="index" description="采购管理-申请单-申请单首页"/>
+            <page url="open" description="采购管理-申请单-申请单打开"/>
+            <page url="print" description="采购管理-申请单-申请单打印"/>
+            <page url="query" description="采购管理-申请单-申请单高级查询"/>
+            <page url="salesorderview" description="采购管理-申请单-申请单选择"/>
+            <page url="typeselect" description="采购管理-申请单-申请单类别选择"/>
+            <page url="view" description="采购管理-申请单-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="setting">
+            <catalog baseUrl="applicant" function="purchasing.setting.applicant">
+                <page url="index" description="采购管理-设置-申请人设置首页"/>
+                <page url="ouview" description="采购管理-设置-申请人经营单元设置"/>
+                <page url="view" description="采购管理-设置-申请人设置"/>
+            </catalog>
+            <catalog baseUrl="buyer" function="purchasing.setting.buyer">
+                <page url="index" description="采购管理-设置-采购员设置首页"/>
+                <page url="ouview" description="采购管理-设置-采购员经营单元设置"/>
+                <page url="view" description="采购管理-设置-采购员设置"/>
+            </catalog>
+            <catalog baseUrl="inspector" function="purchasing.setting.inspector">
+                <page url="index" description="采购管理-设置-检验员设置首页"/>
+                <page url="ouview" description="采购管理-设置-检验员经营单元设置"/>
+                <page url="view" description="采购管理-设置-检验员设置"/>
+            </catalog>
+            <page url="suppliercategory" function="purchasing.setting.suppliercategory" description="采购管理-设置-供应商类别设置"/>
+            <page url="systemconfiguration" function="purchasing.setting.systemconfiguration"
+                  description="采购管理-设置-采购系统设置"/>
+        </catalog>
+
+        <catalog baseUrl="supplier" function="purchasing.supplier.manage">
+            <page url="create" description="采购管理-供应商-供应商创建"/>
+            <page url="edit" description="采购管理-供应商-供应商编辑"/>
+            <page url="import" description="采购管理-供应商-供应商导入"/>
+            <page url="index" description="采购管理-供应商-供应商首页"/>
+            <page url="innercreate" description="采购管理-供应商-内部供应商创建"/>
+            <page url="query" description="采购管理-供应商-供应商高级查询"/>
+            <page url="select" description="采购管理-供应商-经营单元选择"/>
+            <page url="typeselect" description="采购管理-供应商-供应商类别选择"/>
+            <page url="view" description="采购管理-供应商-查看详情"/>
+        </catalog>
+
+    </catalog>
+
+    <!-- 库存管理 -->
+    <catalog baseUrl="inventory" application="库存管理" applicationCode="com.xiniu.erp.inventory">
+
+        <catalog baseUrl="adjustment" function="inventory.adjustment.manage">
+            <page url="approve" description="库存管理-调整单-审核"/>
+            <page url="create" description="库存管理-调整单-创建"/>
+            <page url="delete" description="库存管理-调整单-删除"/>
+            <page url="edit" description="库存管理-调整单-编辑"/>
+            <page url="import" description="库存管理-调整单-导入"/>
+            <page url="index" description="库存管理-调整单-主页"/>
+            <page url="print" description="库存管理-调整单-打印"/>
+            <page url="query" description="库存管理-调整单-搜索"/>
+            <page url="stored" description="库存管理-调整单-过账"/>
+            <page url="submit" description="库存管理-调整单-提交"/>
+            <page url="view" description="库存管理-调整单-查看"/>
+        </catalog>
+
+        <catalog baseUrl="adjustmenttype" function="inventory.adjustmenttype.manage">
+            <page url="create" description="库存管理-调整单类型-创建"/>
+            <page url="delete" description="库存管理-调整单类型-删除"/>
+            <page url="edit" description="库存管理-调整单类型-编辑"/>
+            <page url="index" description="库存管理-调整单类型-主页"/>
+            <page url="view" description="库存管理-调整单类型-查看"/>
+        </catalog>
+
+        <catalog baseUrl="brand" function="inventory.brand.manage">
+            <page url="create" description="库存管理-品牌-创建"/>
+            <page url="delete" description="库存管理-品牌-删除"/>
+            <page url="edit" description="库存管理-品牌-编辑"/>
+            <page url="index" description="库存管理-品牌-主页"/>
+            <page url="view" description="库存管理-品牌-查看"/>
+            <page url="query" description="库存管理-品牌-搜索"/>
+        </catalog>
+
+        <catalog baseUrl="category" function="inventory.itemcatagory.manage">
+            <page url="import" description="库存管理-物料类别-导入"/>
+            <page url="index" description="库存管理-物料类别-主页"/>
+            <page url="query" description="库存管理-物料类别-搜索"/>
+        </catalog>
+
+        <catalog baseUrl="categoryretail" function="inventory.categoryretail.manage">
+            <page url="index" description="库存管理-零售物料类别-主页"/>
+            <page url="query" description="库存管理-零售物料类别-搜索"/>
+        </catalog>
+
+        <catalog baseUrl="cyclecount" function="inventory.cyclecount.manage">
+            <page url="createhead" description="库存管理-盘点单头-创建"/>
+            <page url="entryview" description="库存管理-盘点单-实际盘点结果"/>
+            <page url="importcyclecountentry" description="库存管理-盘点单-实际盘点结果导入"/>
+            <page url="index" description="库存管理-盘点单-主页"/>
+            <page url="print" description="库存管理-盘点单-打印"/>
+            <page url="view" description="库存管理-盘点单-查看"/>
+        </catalog>
+
+        <catalog baseUrl="item" function="inventory.item.manage">
+            <page url="bulkimport" description="库存管理-物料-批量价格导入"/>
+            <page url="class" description="库存管理-物料-选择主页"/>
+            <page url="create" description="库存管理-物料-创建"/>
+            <page url="createbinding" description="库存管理-物料-创建绑定物料"/>
+            <page url="createbytemplate" description="库存管理-物料-按模版创建"/>
+            <page url="delete" description="库存管理-物料-删除"/>
+            <page url="deletebinding" description="库存管理-物料-删除绑定"/>
+            <page url="edit" description="库存管理-物料-编辑"/>
+            <page url="editbinding" description="库存管理-物料-编辑绑定"/>
+            <page url="import" description="库存管理-物料-导入"/>
+            <page url="importAttribute" description="库存管理-物料-导入属性"/>
+            <page url="importPrice" description="库存管理-物料-导入价格"/>
+            <page url="index" description="库存管理-物料-主页"/>
+            <page url="open" description="库存管理-物料-打开"/>
+            <page url="openbinding" description="库存管理-物料-打开绑定"/>
+            <page url="query" description="库存管理-物料-搜索"/>
+            <page url="selectcreate" description="库存管理-物料-创建方式"/>
+            <page url="selecttemplate" description="库存管理-物料-选择模版"/>
+            <page url="view" description="库存管理-物料-查看"/>
+            <page url="viewbinding" description="库存管理-物料-查看绑定"/>
+        </catalog>
+
+        <catalog baseUrl="report">
+            <page url="index" description="库存管理-报表-首页"/>
+            <page url="inventoryorgbalance" function="inventory.report.inventoryorgbalance"
+                  description="库存管理-报表-当前库存汇总报表"/>
+            <page url="itembalance" function="inventory.report.itembalance" description="库存管理-报表-当前库存明细报表"/>
+            <page url="itembytenantbalance" function="inventory.report.itembytenantbalance"
+                  description="库存管理-报表-当前库存明细报表（按承租人）"/>
+            <page url="itemdetail" function="inventory.report.itemdetail" description="库存管理-报表-物料明细报表"/>
+            <page url="transactiondetail" function="inventory.report.transactiondetail" description="库存管理-报表-库存交易明细报表"/>
+            <page url="itembalancespread" function="inventory.report.itembalancespread" description="库存管理-报表-库存分布报表"/>
+            <page url="itemturnover" function="inventory.report.itemturnover" description="库存管理-报表-库存周转率报表"/>
+            <page url="aging" function="inventory.report.aging" description="库存管理-报表-库龄分析报表"/>
+            <page url="cost" function="inventory.report.cost" description="库存管理-报表-物料当前成本报表"/>
+        </catalog>
+
+        <catalog baseUrl="safetystock">
+            <catalog baseUrl="safetystockcategory" function="inventory.safetystockcategory.manage">
+                <page url="create" description="库存管理-安全库存按类别-创建"/>
+                <page url="delete" description="库存管理-安全库存按类别-删除"/>
+                <page url="edit" description="库存管理-安全库存按类别-编辑"/>
+                <page url="import" description="库存管理-安全库存按类别-导入"/>
+                <page url="index" description="库存管理-安全库存按类别-主页"/>
+                <page url="view" description="库存管理-安全库存按类别-查看"/>
+            </catalog>
+            <catalog baseUrl="safetystockitem" function="inventory.safetystockitem.manage">
+                <page url="create" description="库存管理-安全库存按物料-创建"/>
+                <page url="delete" description="库存管理-安全库存按物料-删除"/>
+                <page url="edit" description="库存管理-安全库存按物料-编辑"/>
+                <page url="import" description="库存管理-安全库存按物料-导入"/>
+                <page url="index" description="库存管理-安全库存按物料-主页"/>
+                <page url="view" description="库存管理-安全库存按物料-查看"/>
+            </catalog>
+            <page url="safetystock" description="库存管理-安全库存-主页" function="inventory.safetystock.manage"/>
+        </catalog>
+
+        <catalog baseUrl="setting">
+            <catalog baseUrl="storer" function="inventory.setting.storer">
+                <page url="index" description="库存管理-仓储员-首页"/>
+                <page url="ouview" description="库存管理-仓储员-经营单元设置"/>
+                <page url="view" description="库存管理-仓储员-仓储员查看"/>
+            </catalog>
+            <catalog baseUrl="template" function="inventory.setting.template">
+                <page url="class" description="库存管理-模板-类型"/>
+                <page url="create" description="库存管理-模板-创建"/>
+                <page url="delete" description="库存管理-模板-删除"/>
+                <page url="edit" description="库存管理-模板-编辑"/>
+                <page url="index" description="库存管理-模板-首页"/>
+                <page url="view" description="库存管理-模板-查看"/>
+            </catalog>
+            <page url="systemconfiguration" description="库存管理-设置-设置" function="inventory.setting.setting"/>
+        </catalog>
+
+        <catalog baseUrl="shippingnetwork" function="inventory.shippingnetwork.manage">
+            <page url="create" description="库存管理-发运网络-创建"/>
+            <page url="delete" description="库存管理-发运网络-删除"/>
+            <page url="edit" description="库存管理-发运网络-编辑"/>
+            <page url="index" description="库存管理-发运网络-主页"/>
+            <page url="view" description="库存管理-发运网络-查看"/>
+            <page url="query" description="库存管理-发运网络-搜索"/>
+        </catalog>
+
+        <catalog baseUrl="store" function="inventory.store.manage">
+            <page url="create" description="库存管理-仓库-创建"/>
+            <page url="delete" description="库存管理-仓库-删除"/>
+            <page url="edit" description="库存管理-仓库-编辑"/>
+            <page url="index" description="库存管理-仓库-主页"/>
+            <page url="view" description="库存管理-仓库-查看"/>
+        </catalog>
+
+        <catalog baseUrl="storeroom" function="inventory.storeroom.manage">
+            <page url="create" description="库存管理-仓库-创建"/>
+            <page url="delete" description="库存管理-仓库-删除"/>
+            <page url="edit" description="库存管理-仓库-编辑"/>
+            <page url="index" description="库存管理-仓库-主页"/>
+            <page url="query" description="库存管理-仓库-查询"/>
+            <page url="view" description="库存管理-仓库-查看"/>
+            <page url="active" description="库存管理-仓库-启用"/>
+            <page url="inactive" description="库存管理-仓库-停用"/>
+        </catalog>
+
+        <catalog baseUrl="transfer" function="inventory.transfer.manage">
+            <page url="approve" description="库存管理-转移单-审核"/>
+            <page url="create" description="库存管理-转移单-创建"/>
+            <page url="delete" description="库存管理-转移单-删除"/>
+            <page url="edit" description="库存管理-转移单-编辑"/>
+            <page url="index" description="库存管理-转移单-主页"/>
+            <page url="print" description="库存管理-转移单-打印"/>
+            <page url="query" description="库存管理-转移单-搜索"/>
+            <page url="stored" description="库存管理-转移单-查看转移单"/>
+            <page url="submit" description="库存管理-转移单-提交"/>
+            <page url="view" description="库存管理-转移单-查看移库单"/>
+        </catalog>
+
+        <catalog baseUrl="transfertype" function="inventory.transfertype.manage">
+            <page url="create" description="库存管理-转移类型-创建"/>
+            <page url="delete" description="库存管理-转移类型-删除"/>
+            <page url="edit" description="库存管理-转移类型-编辑"/>
+            <page url="index" description="库存管理-转移类型-主页"/>
+            <page url="view" description="库存管理-转移类型-查看"/>
+        </catalog>
+
+        <catalog baseUrl="costupdate" function="inventory.costupdate.manage">
+            <page url="create" description="库存管理-成本调整单-创建"/>
+            <page url="delete" description="库存管理-成本调整单-删除"/>
+            <page url="index" description="库存管理-成本调整单-主页"/>
+            <page url="submit/index" description="库存管理-成本调整单-确认提交"/>
+            <page url="submit/submiting" description="库存管理-成本调整单-提交中"/>
+            <page url="submit/success" description="库存管理-成本调整单-提交成功"/>
+            <page url="submit/failure" description="库存管理-成本调整单-提交失败"/>
+            <page url="edit" description="库存管理-成本调整单-编辑"/>
+            <page url="open" description="库存管理-成本调整单-查看"/>
+        </catalog>
+
+        <page url="setting" description="库存管理-设置-首页"/>
+        <page url="index" description="库存管理-首页-首页"/>
+    </catalog>
+
+    <!--  销售管理  -->
+    <catalog baseUrl="sales" application="销售管理" applicationCode="com.xiniu.erp.sales">
+
+        <page url="index" description="销售管理-首页"/>
+        <page url="setting" description="销售管理-设置"/>
+        <page url="api.do" description="销售管理-服务接口"/>
+
+
+        <catalog baseUrl="customer" function="sales.customer.manage">
+            <page url="create" description="销售管理-客户-客户创建"/>
+            <page url="createType" description="销售管理-客户-选择类型"/>
+            <page url="edit" description="销售管理-客户-客户编辑"/>
+            <page url="import" description="销售管理-客户-导入"/>
+            <page url="index" description="销售管理-客户-客户首页"/>
+            <page url="innercreate" description="销售管理-客户-内部客户创建"/>
+            <page url="open" description="销售管理-客户-打开"/>
+            <page url="query" description="销售管理-客户-客户高级查询"/>
+            <page url="select" description="销售管理-客户-经营单元选择"/>
+            <page url="typeselect" description="销售管理-客户-客户类别选择"/>
+            <page url="view" description="销售管理-客户-查看详情"/>
+        </catalog>
+
+
+        <catalog baseUrl="order" function="sales.order.manage">
+            <page url="approve" description="销售管理-订单-审核"/>
+            <page url="create" description="销售管理-订单-订单直接创建"/>
+            <page url="edit" description="销售管理-订单-订单编辑"/>
+            <page url="index" description="销售管理-订单-订单首页"/>
+            <page url="internalcreate" description="销售管理-订单-订单创建"/>
+            <page url="internalcreatein" description="销售管理-订单-订单创建"/>
+            <page url="internaldirectcreate" description="销售管理-订单-订单创建"/>
+            <page url="internalselect" description="销售管理-订单-创建选择"/>
+            <page url="open" description="销售管理-订单-订单打开"/>
+            <page url="print" description="销售管理-订单-订单打开"/>
+            <page url="printpick" description="销售管理-订单-订单打开"/>
+            <page url="query" description="销售管理-订单-订单高级查询"/>
+            <page url="select" description="销售管理-订单-采购申请单选择"/>
+            <page url="typeselect" description="销售管理-订单-订单类别选择"/>
+            <page url="view" description="销售管理-报价单-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="receiptnotice" function="sales.receiptNotice.manage">
+            <page url="create" description="销售管理-水单-水单创建"/>
+            <page url="edit" description="销售管理-水单-水单编辑"/>
+            <page url="index" description="销售管理-水单-水单首页"/>
+            <page url="open" description="销售管理-水单-水单打开"/>
+            <page url="view" description="销售管理-水单-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="reconcile" function="sales.reconcile.manage">
+            <page url="create" description="销售管理-核销单-核销单创建"/>
+            <page url="index" description="销售管理-核销单-核销单首页"/>
+            <page url="open" description="销售管理-核销单-核销单打开"/>
+            <page url="select" description="销售管理-核销单-选择水单"/>
+            <page url="view" description="销售管理-核销单-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="report">
+            <page url="index" description="销售管理-报表-首页"/>
+
+            <page url="orderHead" function="sales.report.orderSummary" description="销售管理-报表-订单报表"/>
+            <page url="orderLine" function="sales.report.orderTransaction" description="销售管理-报表-订单明细报表"/>
+            <page url="shipmentHead" function="sales.report.shipmentSummary" description="销售管理-报表-发货单报表"/>
+            <page url="shipmentLine" function="sales.report.shipmentTransaction" description="销售管理-报表-发货单明细报表"/>
+        </catalog>
+
+        <catalog baseUrl="return" function="sales.return.manage">
+            <page url="approve" description="销售管理-退货单-退货单审核"/>
+            <page url="create" description="销售管理-退货单-退货单创建"/>
+            <page url="edit" description="销售管理-退货单-退货单编辑"/>
+            <page url="index" description="销售管理-退货单-退货单首页"/>
+            <page url="open" description="销售管理-退货单-退货单打开"/>
+            <page url="print" description="销售管理-退货单-退货单打印"/>
+            <page url="query" description="销售管理-退货单-退货单高级查询"/>
+            <page url="select" description="销售管理-退货单-发货单选择"/>
+            <page url="view" description="销售管理-退货单-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="setting">
+
+            <catalog baseUrl="customer_contact">
+                <page url="index" description="销售管理-设置-客户联系人设置首页"/>
+            </catalog>
+            <catalog baseUrl="salesperson" function="sales.setting.salesperson">
+                <page url="index" description="销售管理-设置-销售员设置首页"/>
+                <page url="ouview" description="销售管理-设置-销售员经营单元设置"/>
+                <page url="view" description="销售管理-设置-销售员设置"/>
+            </catalog>
+
+            <page url="customercategory" function="sales.setting.customercategory" description="销售管理-设置-客户类别设置"/>
+            <page url="salesconfiguration" function="sales.setting.salesconfiguration" description="销售管理-设置-销售系统设置"/>
+        </catalog>
+
+        <catalog baseUrl="shipment" function="sales.shipment.manage">
+            <page url="approve" description="销售管理-发货单-发货单审核"/>
+            <page url="create" description="销售管理-发货单-发货单创建"/>
+            <page url="directcreate" description="销售管理-发货单-发货单直接创建"/>
+            <page url="directEdit" description="销售管理-发货单-发货单直接编辑"/>
+            <page url="edit" description="销售管理-发货单-发货单编辑"/>
+            <page url="index" description="销售管理-发货单-发货单首页"/>
+            <page url="open" description="销售管理-发货单-发货单打开"/>
+            <page url="print" description="销售管理-发货单-发货单打印"/>
+            <page url="query" description="销售管理-发货单-发货单高级查询"/>
+            <page url="select" description="销售管理-发货单-订单选择"/>
+            <page url="typeselect" description="销售管理-发货单-订单类别选择"/>
+            <page url="view" description="销售管理-发货单-查看详情"/>
+        </catalog>
+
+    </catalog>
+
+    <!-- 零售管理 -->
+    <catalog baseUrl="retail" application="零售管理" applicationCode="com.xiniu.erp.retail">
+        <page url="index" description="零售管理-首页-首页"/>
+        <page url="report" description="零售管理-报表中心-首页"/>
+
+        <catalog baseUrl="cashnote" function="retail.cashnote.manage">
+            <page url="create" description="零售模块-现金缴款单-创建"/>
+            <page url="index" description="零售模块-现金缴款单-首页"/>
+            <page url="open" description="零售模块-现金缴款单-打开"/>
+            <page url="view" description="零售模块-现金缴款单-查看"/>
+        </catalog>
+
+        <catalog baseUrl="dailyexpense" function="retail.dailyexpense.manage">
+            <page url="create" description="零售模块-日常费用单-创建"/>
+            <page url="index" description="零售模块-日常费用单-首页"/>
+            <page url="open" description="零售模块-日常费用单-打开"/>
+            <page url="selectshop" description="零售模块-日常费用单-选择门店"/>
+            <page url="view" description="零售模块-日常费用单-查看"/>
+        </catalog>
+
+        <catalog baseUrl="dailypurchase" function="retail.dailypurchase.manage">
+            <page url="approve" description="零售模块-日常采购单-审批"/>
+            <page url="create" description="零售模块-日常采购单-创建"/>
+            <page url="index" description="零售模块-日常采购单-主页"/>
+            <page url="post" description="零售模块-日常采购单-过账"/>
+            <page url="selectshop" description="零售模块-日常采购单-选择门店"/>
+            <page url="submit" description="零售模块-日常采购单-提交"/>
+            <page url="update" description="零售模块-日常采购单-更新"/>
+            <page url="view" description="零售模块-日常采购单-查看"/>
+        </catalog>
+
+        <catalog baseUrl="order" function="retail.order.manage">
+            <page url="index" description="零售模块-订单-首页"/>
+            <page url="sync" description="零售模块-订单-同步"/>
+            <page url="view" description="零售模块-订单-查看"/>
+        </catalog>
+
+        <catalog baseUrl="pos" function="retail.pos.manage">
+            <page url="active" description="零售模块-POS-激活"/>
+            <page url="cancelbind" description="零售模块-POS-取消绑定"/>
+            <page url="create" description="零售模块-POS-创建"/>
+            <page url="delete" description="零售模块-POS-删除"/>
+            <page url="editp" description="零售模块-POS-编辑"/>
+            <page url="inactive" description="零售模块-POS-失效"/>
+            <page url="index" description="零售模块-POS-主页"/>
+            <page url="view" description="零售模块-POS-查看"/>
+        </catalog>
+
+        <catalog baseUrl="report">
+            <page url="incomestatement" description="零售模块-报表中心-损益表"/>
+            <page url="itemsumdetail" description="零售模块-报表中心-零售物料汇总报表"/>
+            <page url="totalcost" description="零售模块-报表中心-门店成本费用报表"/>
+            <page url="totalrevenues" description="零售模块-报表中心-门店营业合计表"/>
+        </catalog>
+
+        <catalog baseUrl="setting" function="retail.setting.setting">
+            <page url="index" description="零售模块-设置-主页"/>
+        </catalog>
+
+        <catalog baseUrl="settlement" function="retail.settlement.manage">
+            <page url="commit" description="零售模块-结算-提交"/>
+            <page url="create" description="零售模块-结算-创建"/>
+            <page url="index" description="零售模块-结算-主页"/>
+            <page url="info" description="零售模块-结算-信息"/>
+            <page url="selectshop" description="零售模块-结算-选择门店"/>
+            <page url="view" description="零售模块-结算-查看"/>
+        </catalog>
+
+        <catalog baseUrl="template" function="retail.template.manage">
+            <page url="create" description="零售模块-打印模板-主页"/>
+            <page url="delete" description="零售模块-打印模板-主页"/>
+            <page url="edit" description="零售模块-打印模板-主页"/>
+            <page url="index" description="零售模块-打印模板-主页"/>
+            <page url="view" description="零售模块-打印模板-主页"/>
+        </catalog>
+
+    </catalog>
+
+    <!-- 财务管理-应收 -->
+    <catalog baseUrl="receivable" application="财务管理-应收" applicationCode="com.xiniu.erp.receivable">
+        <page url="index" description="财务管理应收模块-首页"/>
+        <page url="setting" description="财务管理应收模块-设置"/>
+        <page url="api.do" description="财务管理应收模块-服务接口"/>
+        <page url="ledger" description="财务管理应收模块-跳转"/>
+
+        <catalog baseUrl="invoice" function="receivable.invoice.manage">
+            <page url="approve" description="财务管理应收模块-发票-审批"/>
+            <page url="create" description="财务管理应收模块-发票-创建"/>
+            <page url="createhead" description="财务管理应收模块-发票-创建"/>
+            <page url="createpreline" description="财务管理应收模块-发票-创建"/>
+            <page url="edit" description="财务管理应收模块-发票-编辑"/>
+            <page url="index" description="财务管理应收模块-发票-首页"/>
+            <page url="open" description="财务管理应收模块-发票-打开"/>
+            <page url="query" description="财务管理应收模块-发票-高级查询"/>
+            <page url="selecttype" description="财务管理应收模块-发票-选择发票类型"/>
+            <page url="view" description="财务管理应收模块-发票-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="receipt" function="receivable.receipt.manage">
+            <page url="create" description="财务管理应收模块-收款单-创建"/>
+            <page url="edit" description="财务管理应收模块-收款单-编辑"/>
+            <page url="index" description="财务管理应收模块-收款单-首页"/>
+            <page url="open" description="财务管理应收模块-收款单-打开"/>
+            <page url="view" description="财务管理应收模块-收款单-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="reconcile" function="receivable.reconcile.manage">
+            <page url="cancel" description="财务管理应收模块-核销-取消"/>
+            <page url="create" description="财务管理应收模块-核销-创建"/>
+            <page url="index" description="财务管理应收模块-核销-首页"/>
+            <page url="open" description="财务管理应收模块-核销-打开"/>
+            <page url="select" description="财务管理应收模块-核销-选择"/>
+            <page url="view" description="财务管理应收模块-核销-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="setting">
+            <catalog baseUrl="holdchart" function="receivable.hold.set">
+                <page url="create" description="财务管理应收模块-暂挂-创建"/>
+                <page url="index" description="财务管理应收模块-暂挂-首页"/>
+                <page url="view" description="财务管理应收模块-暂挂-查看详情"/>
+            </catalog>
+            <catalog baseUrl="receiptmethodchart" function="receivable.receipt.method.set">
+                <page url="create" description="财务管理应收模块-收款方式-创建"/>
+                <page url="index" description="财务管理应收模块-收款方式-首页"/>
+                <page url="view" description="财务管理应收模块-收款方式-查看详情"/>
+            </catalog>
+            <catalog baseUrl="receipttermchart" function="receivable.receipt.term.set">
+                <page url="create" description="财务管理应收模块-收款条款-创建"/>
+                <page url="index" description="财务管理应收模块-收款条款-首页"/>
+                <page url="view" description="财务管理应收模块-收款条款-查看详情"/>
+            </catalog>
+            <catalog baseUrl="taxchart" function="receivable.tax.set">
+                <page url="create" description="财务管理应收模块-销项税-创建"/>
+                <page url="index" description="财务管理应收模块-销项税-首页"/>
+                <page url="view" description="财务管理应收模块-销项税-查看详情"/>
+            </catalog>
+        </catalog>
+
+        <catalog baseUrl="report">
+            <catalog baseUrl="invoice" function="receivable.invoice.report">
+                <page url="index" description="财务管理应收模块-报表-应收发票查询报表"/>
+            </catalog>
+            <catalog baseUrl="receipt" function="receivable.receipt.report">
+                <page url="index" description="财务管理应收模块-报表-应收收款查看报表"/>
+            </catalog>
+            <page url="index" description="财务管理应收模块-报表-首页"/>
+            <page url="customerreport" function="receivable.customer.report" description="财务管理应收模块-报表-应收账款汇总报表"/>
+        </catalog>
+    </catalog>
+
+    <!-- 财务管理-应付 -->
+    <catalog baseUrl="payable" application="财务管理-应付" applicationCode="com.xiniu.erp.payable">
+        <page url="index" description="财务管理应付模块-首页"/>
+        <page url="setting" description="财务管理应付模块-设置"/>
+        <page url="api.do" description="财务管理应付模块-服务接口"/>
+        <page url="report" description="财务管理应付模块-报表-首页"/>
+        <page url="ledger" description="财务管理应付模块-跳转"/>
+
+        <catalog baseUrl="invoice" function="payable.invoice.manage">
+            <page url="create" description="财务管理应付模块-发票-创建"/>
+            <page url="createhead" description="财务管理应付模块-发票-创建头"/>
+            <page url="createline" description="财务管理应付模块-发票-创建行"/>
+            <page url="createpreline" description="财务管理应付模块-发票-创建"/>
+            <page url="edit" description="财务管理应付模块-发票-编辑"/>
+            <page url="index" description="财务管理应付模块-发票-首页"/>
+            <page url="open" description="财务管理应付模块-发票-打开"/>
+            <page url="query" description="财务管理应付模块-发票-高级查询"/>
+            <page url="selecttype" description="财务管理应付模块-发票-选择发票类型"/>
+            <page url="updateline" description="财务管理应付模块-发票-更新行"/>
+            <page url="view" description="财务管理应付模块-发票-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="payment" function="payable.payment.manage">
+            <page url="create" description="财务管理应付模块-收款单-创建"/>
+            <page url="edit" description="财务管理应付模块-收款单-编辑"/>
+            <page url="index" description="财务管理应付模块-收款单-首页"/>
+            <page url="open" description="财务管理应付模块-收款单-打开"/>
+            <page url="query" description="财务管理应付模块-收款单-查询"/>
+            <page url="select" description="财务管理应付模块-收款单-选择"/>
+            <page url="view" description="财务管理应付模块-收款单-查看详情"/>
+        </catalog>
+
+        <catalog baseUrl="setting">
+            <catalog baseUrl="holdchart" function="payable.hold.set">
+                <page url="index" description="财务管理应付模块-暂挂-首页"/>
+                <page url="view" description="财务管理应付模块-暂挂-查看详情"/>
+            </catalog>
+            <catalog baseUrl="paymentmethodchart" function="payable.payment.method.set">
+                <page url="index" description="财务管理应付模块-付款方式-首页"/>
+                <page url="view" description="财务管理应付模块-付款方式-查看详情"/>
+            </catalog>
+            <catalog baseUrl="paymenttermchart" function="payable.payment.term.set">
+                <page url="index" description="财务管理应付模块-付款条款-首页"/>
+                <page url="view" description="财务管理应付模块-付款条款-查看详情"/>
+            </catalog>
+            <catalog baseUrl="taxchart" function="payable.tax.set">
+                <page url="index" description="财务管理应付模块-进项税-首页"/>
+                <page url="view" description="财务管理应付模块-进项税-查看详情"/>
+            </catalog>
+        </catalog>
+
+        <catalog baseUrl="report">
+            <page url="invoicedetail" description="财务管理应付模块-报表-应付发票查询报表" function="payable.invoicedetail.report"/>
+            <page url="paymentdetail" description="财务管理应付模块-报表-付款单查看报表" function="payable.paymentdetail.report"/>
+            <page url="supplierdetail" description="财务管理应付模块-报表-应付账款汇总报表" function="payable.supplierdetail.report"/>
+        </catalog>
+    </catalog>
+
+    <!-- 财务管理-总账 -->
+    <catalog baseUrl="ledger" application="财务管理-总账" applicationCode="com.xiniu.erp.ledger">
+        <catalog baseUrl="capitalAdjustment" function="ledger.capital.adjustment.manage">
+            <page url="create" description="财务管理-总账-资金调整-创建"/>
+            <page url="edit" description="财务管理-总账-资金调整-编辑"/>
+            <page url="index" description="财务管理-总账-资金调整-首页"/>
+            <page url="query" description="财务管理-总账-资金调整-查询"/>
+            <page url="view" description="财务管理-总账-资金调整-查看"/>
+        </catalog>
+
+        <catalog baseUrl="capitalTransfer" function="ledger.capital.transfer.manage">
+            <page url="create" description="财务管理-总账-资金调拨-创建"/>
+            <page url="edit" description="财务管理-总账-资金调拨-编辑"/>
+            <page url="index" description="财务管理-总账-资金调拨-首页"/>
+            <page url="open" description="财务管理-总账-资金调拨-打开"/>
+            <page url="view" description="财务管理-总账-资金调拨-查看"/>
+        </catalog>
+
+        <catalog baseUrl="journal" function="ledger.journal.manage">
+            <page url="allocationcreate" description="财务管理-总账-凭证-创建分摊凭证"/>
+            <page url="create" description="财务管理-总账-凭证-创建"/>
+            <page url="createhead" description="财务管理-总账-凭证-创建选项"/>
+            <page url="edit" description="财务管理-总账-凭证-编辑"/>
+            <page url="index" description="财务管理-总账-凭证-首页"/>
+            <page url="query" description="财务管理-总账-凭证-查询"/>
+            <page url="view" description="财务管理-总账-凭证-查看"/>
+        </catalog>
+
+        <catalog baseUrl="report">
+            <catalog baseUrl="accountingBalance" function="ledger.accounting.balance.report">
+                <page url="index" description="财务管理-总账-报表-总账余额报表"/>
+            </catalog>
+            <catalog baseUrl="accountingTransaction" function="ledger.accounting.transaction.report">
+                <page url="accounting" description="财务管理-总账-报表-总账交易报表"/>
+            </catalog>
+            <catalog baseUrl="allocationBalance" function="ledger.allocation.balance.report">
+                <page url="index" description="财务管理-总账-报表-分摊余额报表"/>
+            </catalog>
+            <catalog baseUrl="allocationTransaction" function="ledger.allocation.transaction.report">
+                <page url="allocation" description="财务管理-总账-报表-分摊交易报表"/>
+            </catalog>
+            <catalog baseUrl="capitalBalance" function="ledger.capital.balance.report">
+                <page url="index" description="财务管理-总账-报表-资金帐户余额报表"/>
+            </catalog>
+            <catalog baseUrl="incomestatement" function="ledger.income.statement.report">
+                <page url="index" description="财务管理-总账-报表-损益表"/>
+            </catalog>
+            <catalog baseUrl="balanceSheet" function="ledger.balance.sheet.report">
+                <page url="index" description="财务管理-总账-报表-资产负债表"/>
+            </catalog>
+            <catalog baseUrl="totalCost" function="ledger.total.cost.report">
+                <page url="index" description="财务管理-总账-报表-门店成本费用报表"/>
+            </catalog>
+            <catalog baseUrl="totalRevenues" function="ledger.total.revenues.report">
+                <page url="index" description="财务管理-总账-报表-门店营业合计表"/>
+            </catalog>
+        </catalog>
+
+        <catalog baseUrl="setting">
+            <catalog baseUrl="accountant" function="ledger.accountant.set">
+                <page url="create" description="财务管理-总账-会计人员-创建"/>
+                <page url="index" description="财务管理-总账-会计人员-首页"/>
+                <page url="ouview" description="财务管理-总账-会计人员-经营单元查看"/>
+                <page url="view" description="财务管理-总账-会计人员-会计人员查看"/>
+            </catalog>
+            <catalog baseUrl="accountChart" function="ledger.account.set">
+                <page url="create" description="财务管理-总账-会计科目-创建"/>
+                <page url="index" description="财务管理-总账-会计科目-首页"/>
+                <page url="view" description="财务管理-总账-会计科目-查看"/>
+            </catalog>
+            <catalog baseUrl="accountDetail" function="ledger.account.detail.set">
+                <page url="create" description="财务管理-总账-明细科目-创建"/>
+                <page url="edit" description="财务管理-总账-明细科目-编辑"/>
+                <page url="index" description="财务管理-总账-明细科目-首页"/>
+                <page url="view" description="财务管理-总账-明细科目-查看"/>
+            </catalog>
+            <catalog baseUrl="capitalAccount" function="ledger.capital.account.set">
+                <page url="create" description="财务管理-总账-资金帐户-创建"/>
+                <page url="edit" description="财务管理-总账-资金帐户-编辑"/>
+                <page url="index" description="财务管理-总账-资金帐户-首页"/>
+                <page url="query" description="财务管理-总账-资金帐户-查询"/>
+                <page url="view" description="财务管理-总账-资金帐户-查看"/>
+            </catalog>
+            <catalog baseUrl="center" function="ledger.center.set">
+                <page url="create" description="财务管理-总账-中心段-创建"/>
+                <page url="edit" description="财务管理-总账-中心段-编辑"/>
+                <page url="index" description="财务管理-总账-中心段-首页"/>
+                <page url="view" description="财务管理-总账-中心段-查看"/>
+            </catalog>
+            <catalog baseUrl="currencyChart" function="ledger.currency.set">
+                <page url="create" description="财务管理-总账-会计货币-创建"/>
+                <page url="index" description="财务管理-总账-会计货币-首页"/>
+                <page url="view" description="财务管理-总账-会计货币-查看"/>
+            </catalog>
+            <catalog baseUrl="period" function="ledger.calendar.set">
+                <page url="edit" description="财务管理-总账-期间-编辑"/>
+                <page url="index" description="财务管理-总账-期间-首页"/>
+            </catalog>
+            <catalog baseUrl="product" function="ledger.product.set">
+                <page url="create" description="财务管理-总账-产品段-创建"/>
+                <page url="edit" description="财务管理-总账-产品段-编辑"/>
+                <page url="index" description="财务管理-总账-产品段-首页"/>
+                <page url="view" description="财务管理-总账-产品段-查看"/>
+            </catalog>
+            <catalog baseUrl="project" function="ledger.project.set">
+                <page url="create" description="财务管理-总账-项目段-创建"/>
+                <page url="edit" description="财务管理-总账-项目段-编辑"/>
+                <page url="index" description="财务管理-总账-项目段-首页"/>
+                <page url="view" description="财务管理-总账-项目段-查看"/>
+            </catalog>
+            <catalog baseUrl="region" function="ledger.region.set">
+                <page url="create" description="财务管理-总账-区域段-创建"/>
+                <page url="edit" description="财务管理-总账-区域段-编辑"/>
+                <page url="index" description="财务管理-总账-区域段-首页"/>
+                <page url="view" description="财务管理-总账-区域段-查看"/>
+            </catalog>
+            <catalog baseUrl="setting" function="ledger.setting.set">
+                <page url="index" description="财务管理-总账-总账设置"/>
+            </catalog>
+        </catalog>
+
+        <page url="index" description="财务管理-总账-首页"/>
+        <page url="setting" description="财务管理-总账-设置"/>
+        <page url="report" description="财务管理-总账-报表-首页"/>
+        <page url="api.do" description="财务管理-总账-服务接口"/>
+    </catalog>
+
+</root>

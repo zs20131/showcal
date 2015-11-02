@@ -1,0 +1,256 @@
+$page.setTitle("我的收藏")
+<div class="discover">
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border am-no-layout">
+        <div class="am-header-left am-header-nav">
+            <a href="index?passportid=$!passport.id" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+        <h5 class="am-header-title">我的收藏</h5>
+
+        <div class="am-header-right am-header-nav">
+            <a href="#right-link" class="info-ico ">
+
+            </a>
+        </div>
+    </header>
+
+    <!--tab 内容 -->
+    <div class="am-g clearfix tabcontent mt-10 am-text-sm ">
+        <!--tab1 -->
+        <div class="am-tab-panel">
+            <ul class="tablist am-padding-0 am-margin-0 tabul1" id="common">
+                #foreach($article in $articles)
+                    <li class="whitebg top-bottom-border">
+                        <div class="head-title pl_10 pr-10">
+                            <img class="am-circle am-fl " src="$!article.useravatarurl"/>
+                            <span class="am-text-middle am-padding-left-xs ">$!article.submitUserName</span>
+                            <span class="f-right lighter-gray-txt am-text-xs ">$!base.reduceTimes($!base.formatDate($article.submitTime,
+                                "yyyy-MM-dd HH:mm:ss"))</span>
+                        </div>
+                        <div class="imgcon">
+                            <div onclick="detail('$article.id')">
+
+                                #if($!article.avatarurl)
+                                    <img src="$article.avatarurl@320w_240h_0e" class="width"/>
+                                #else
+                                    <img class="listimg width" src="$mobileContent.getURI("images/listimg1.jpg")"/>
+                                #end
+                            </div>
+                        </div>
+                        <div class="listp bottom-border pl_10">$!article.title</div>
+                        <div class="listp am-g">
+                            <div class="am-u-sm-4 am-text-center">
+                                <img class="praise praise-num" id="praise2_$!article.id"  onclick="praise('$!article.id',2)"
+                                    #if($!article.isPraise)
+                                     choose="true"
+                                     src="$mobileContent.getURI("images/praise-click.png")"
+                                    #else
+                                     choose="false"
+                                     src="$mobileContent.getURI("images/praise.png")"
+                                    #end />
+                                <span class="am-text-middle am-padding-left-xs">$!article.countLink</span>
+                            </div>
+                            <div class="am-u-sm-4 am-text-center">
+                                <img class="praise comment-num" onclick="detail('$article.id')"
+                                     src="$mobileContent.getURI("images/comment.png")"/>
+                                <span class="am-text-middle am-padding-left-xs">$!article.countComment</span>
+                            </div>
+                            <div class="am-u-sm-4 am-text-center">
+                                <img class="praise collect-num" id="collect2_$!article.id"
+                                     onclick="collection('$!article.id',2)"
+                                    #if($!article.isCollection)
+                                     choose="true"
+                                     src="$mobileContent.getURI("images/collect-click.png")"
+                                    #else
+                                     choose="false"
+                                     src="$mobileContent.getURI("images/collect.png")"
+                                    #end />
+                                <span class="am-text-middle am-padding-left-xs">$!article.countConnection</span>
+                            </div>
+                        </div>
+                        <ul class="am-margin-0 am-padding-left-sm">
+                            #if($!article.countComment>0 && $!article.countComment<=3)
+                                #foreach($!articleComment in $!article.countComment)
+                                    <li class="am-u-sm-12 am-margin-0 am-padding-0">
+                                        <div class=" am-padding-xm am-margin-right-sm">
+                                            <span class="color-pink">$!articleComment.userName:</span>
+                                            <span>$!articleComment.content</span>
+                                        </div>
+                                    </li>
+                                #end
+                            #end
+                            #if($article.commentPost.length()>3)
+                                #foreach($articleComent in $article.commentPost)
+                                    #if($i<3)
+                                        <li class="am-u-sm-12 am-margin-0 am-padding-0">
+                                            <div class=" am-padding-xm am-margin-right-sm">
+                                                <span class="color-pink">$articleComent.userName:</span>
+                                                <span>$$articleComent.content</span>
+                                            </div>
+                                        </li>
+                                    #end
+                                #end
+                                <li class="am-u-sm-12 am-margin-0  color-pink am-padding-0">
+                                    <span onclick="detail('$article.id')">查看全部评论$article.countComment 条</span>
+                                </li>
+                            #end
+                            <div class="clearfix"></div>
+                        </ul>
+                    </li>
+                #end
+##                    <li class="whitebg top-bottom-border">
+##                        <div class="head-title pl_10 pr-10">
+##                            <img class="am-circle am-fl " src="$mobileContent.getURI("images/touxiang.png")"/>
+##                            <span class="am-text-middle am-padding-left-xs ">$!article.submitUserName</span>
+##                            <span class="f-right lighter-gray-txt am-text-xs ">$!base.reduceTimes($!base.formatDate($article.submitTime,
+##                                "yyyy-MM-dd HH:mm:ss"))</span>
+##                        </div>
+##                        <div class="imgcon">
+##                        <a onclick="detail('$article.id')">
+##
+##                                <img class="listimg" src="$mobileContent.getURI("images/listimg1.jpg")"/>
+##
+##                        </div>
+##                        <div class="listp bottom-border pl_10">1111111</div>
+##                        <div class="listp am-g">
+##                            <div class="am-u-sm-4 am-text-center">
+##                                <img class="praise praise-num" id="praise1_$!article.id"
+##                                     onclick="praise('$!article.id',1)"
+##
+##                                     choose="true"
+##                                     src="$mobileContent.getURI("images/praise-click.png")"
+##
+##                                     choose="false"
+##                                     src="$mobileContent.getURI("images/praise.png")"
+##
+##                                <span class="am-text-middle am-padding-left-xs">$!article.countLink</span>
+##                            </div>
+##                            <div class="am-u-sm-4 am-text-center">
+##                                <img class="praise comment-num" onclick="detail('$article.id')" src="$mobileContent.getURI("images/comment.png")"/>
+##                                <span class="am-text-middle am-padding-left-xs">$!article.countComment</span>
+##                            </div>
+##                            <div class="am-u-sm-4 am-text-center">
+##                                <img class="praise collect-num" id="collect1_$!article.id"
+##                                     onclick="collection('$!article.id',1)"
+##
+##                                     choose="true"
+##                                     src="$mobileContent.getURI("images/collect-click.png")"
+##
+##                                     choose="false"
+##                                     src="$mobileContent.getURI("images/collect.png")"
+##
+##                                <span class="am-text-middle am-padding-left-xs">$!article.countConnection</span>
+##                            </div>
+##                        </div>
+##                    </li>
+
+            </ul>
+
+##                <button href="javascript:void(0)" class="click-more" id="show-more">点击更多</button>
+
+        </div>
+
+    </div>
+</div>
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">瘦咖提醒您</div>
+        <div class="am-modal-bd" id="errormsg">
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn">确定</span>
+        </div>
+    </div>
+</div>
+<script>
+    var width=document.body.clientWidth;
+    $(".width").attr("width",width);
+    $(".width").attr("height",width);
+    function collection(id, index) {
+        var param = {
+            id: id
+        };
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "../discover/Collection.do?passportid=$!passport.id",
+            error: function () {
+                $("#errormsg").html("程序错误");
+                $('#my-alert').modal({
+                    relatedTarget: this
+                })
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                if (arr.errors.length == 0) {
+                    if (arr.success) {
+                        $("#collect2_"+id).attr('src', '$mobileContent.getURI("images/collect-click.png")');
+                        var num = $("#collect2_"+id).next("span").text();
+                        $("#collect2_"+id).next("span").text(parseInt(num) + 1);
+                        $("#collect2_"+id).attr("choose", "true");
+                    }
+                    else {
+                        $("#collect2_"+id).attr('src', '$mobileContent.getURI("images/collect.png")');
+                        var num = $("#collect2_"+id).next("span").text();
+                        $("#collect2_"+id).next("span").text(parseInt(num) - 1);
+                        $("#collect2_"+id).attr("choose", "false");
+                    }
+                    window.location.reload();
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    }
+    function praise(id, index) {
+
+        var param = {
+            id: id
+        };
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "../discover/Praise.do?passportid=$!passport.id",
+            error: function () {
+                alert("程序错误")
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                if (arr.errors.length == 0) {
+                    if (arr.success) {
+
+                        $("#praise2_" + id).attr('src', '$mobileContent.getURI("images/praise-click.png")');
+                        var num1 = $("#praise2_" + id).next("span").text();
+                        $("#praise2_" + id).next("span").text(parseInt(num1) + 1);
+                        $("#praise2_" + id).attr("choose", "true");
+                    }
+                    else {
+
+                        $("#praise2_" + id).attr('src', '$mobileContent.getURI("images/praise.png")');
+                        var num1 = $("#praise2_" + id).next("span").text();
+                        $("#praise2_" + id).next("span").text(parseInt(num1) - 1);
+                        $("#praise2_" + id).attr("choose", "false");
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    }
+    function detail(id) {
+        window.location.href = "../discover/detail?id=" + id+"&passportId=$!passport.id";
+    };
+</script>

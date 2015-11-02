@@ -1,0 +1,94 @@
+.loginwrapper{
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+.loginwrapper .login-header{
+    width: 100%;
+    height: 100px;
+    overflow: hidden;
+    display: block
+ }
+ .login-box{
+     height:500px;
+     width: 100%;
+     background: #67c3c2;
+     overflow: hidden;
+ }
+ .login-action-box{
+     position: relative;
+     width:500px;
+     height:350px;
+     margin:100px auto;
+     border: 1px solid #dcdcdc;
+     background-color: #fff;
+     text-align: center;
+
+ }
+.login-action-box .login-img{
+  position: absolute;
+    top: -60px;
+    left: 195px
+ }
+
+.login-account-input{
+    position: relative;
+    width: 260px;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;
+    margin-top: 120px;
+    padding-left: 30px;
+}
+.login-password-input{
+    width:260px;
+    height: 44px ;
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;
+    margin-top: 20px;
+    padding-left: 30px;
+}
+.login-home-button{
+    width:260px;
+    height: 44px ;
+    border-radius: 10px;
+    border: 1px solid #67c3c2;
+    margin-top: 20px;
+    background-color:#67c3c2;
+    color:#fff
+}
+.person-img{
+    position: absolute;
+    top: 132px;
+    left: 120px;
+    z-index: 99;
+    padding-left: 5px;
+}
+.password-img{
+    position: absolute;
+    top: 30px;
+    left: 120px;
+    z-index: 99;
+    padding-left: 5px;
+}
+.ml-100 {
+    margin-left: 100px;
+}
+.relative{
+position: relative;
+}
+/*
+.account-name{
+    position: absolute;
+    top: 132px;
+    left: 150px;
+    z-index: 99;
+    padding-left: 5px;
+}
+.password-name{
+    position: absolute;
+    top: 195px;
+    left: 150px;
+    z-index: 99;
+    padding-left: 5px;
+}*/

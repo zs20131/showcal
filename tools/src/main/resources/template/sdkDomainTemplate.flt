@@ -1,0 +1,41 @@
+package ${class.packageName};
+<#if imports??>
+    <#list imports as import>
+import ${import};
+    </#list>
+</#if>
+
+/**
+ * <p>
+ * <pre>
+ * ***************************************************************
+ *  Copyright (c) 2014 –${annotation.company}
+ *  Title: ${class.packageName}.${class.name}
+ *  Description:${annotation.description}
+ *  @since ${annotation.version}
+ *  @author ${annotation.authorName}
+ * ***************************************************************
+ * </pre>
+ */
+public class ${class.name} {
+<#if fields??>
+    <#list fields as field>
+    /**
+     * ${field.description}
+     */
+    private ${field.type} ${field.name};
+    </#list>
+</#if>
+<#if fields??>
+    <#list fields as field>
+
+    public ${field.type} get${field.name?cap_first}() {
+        return ${field.name};
+    }
+
+    public void set${field.name?cap_first}(${field.type} ${field.name}) {
+        this.${field.name} = ${field.name};
+    }
+    </#list>
+</#if>
+}

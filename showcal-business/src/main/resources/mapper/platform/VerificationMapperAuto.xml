@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.VerificationMapper">
+
+    <resultMap id="verificationPO" type="com.showcal.platform.po.VerificationPO">
+        <id column="ID" jdbcType="NUMERIC" property="id"/>
+        <result column="USER_ID" jdbcType="VARCHAR" property="userId"/>
+        <result column="TYPE" jdbcType="VARCHAR" property="type"/>
+        <result column="OBJECT" jdbcType="VARCHAR" property="object"/>
+        <result column="CODE" jdbcType="VARCHAR" property="code"/>
+        <result column="ACTIVE_DATE" jdbcType="TIMESTAMP" property="activeDate"/>
+        <result column="INACTIVE_DATE" jdbcType="TIMESTAMP" property="inactiveDate"/>
+        <result column="IS_DELETED" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="CREATED_BY" jdbcType="NUMERIC" property="createdBy"/>
+        <result column="CREATION_TIME" jdbcType="TIMESTAMP" property="creationTime"/>
+        <result column="LAST_UPDATED_BY" jdbcType="NUMERIC" property="lastUpdatedBy"/>
+        <result column="LAST_UPDATE_TIME" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+    </resultMap>
+
+    <sql id="entityColumnList">
+        ID,USER_ID,TYPE,OBJECT,CODE,ACTIVE_DATE,INACTIVE_DATE,IS_DELETED,CREATED_BY,CREATION_TIME,LAST_UPDATED_BY,LAST_UPDATE_TIME
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+        PL_SYS_VERIFICATION
+        (
+        ID,USER_ID,TYPE,OBJECT,CODE,ACTIVE_DATE,INACTIVE_DATE,IS_DELETED,CREATED_BY,CREATION_TIME,LAST_UPDATED_BY,LAST_UPDATE_TIME
+        )
+        VALUES
+        (
+        #{ verification.id },
+        #{ verification.userId },
+        #{ verification.type },
+        #{ verification.object },
+        #{ verification.code },
+        #{ verification.activeDate },
+        #{ verification.inactiveDate },
+        0,0,sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+        PL_SYS_VERIFICATION
+        (
+        ID,USER_ID,TYPE,OBJECT,CODE,ACTIVE_DATE,INACTIVE_DATE,IS_DELETED,CREATED_BY,CREATION_TIME,LAST_UPDATED_BY,LAST_UPDATE_TIME
+        )
+        VALUES
+        <foreach collection="list" item="verification" index="index" separator=",">
+            (
+            #{ verification.id },
+            #{ verification.userId },
+            #{ verification.type },
+            #{ verification.object },
+            #{ verification.code },
+            #{ verification.activeDate },
+            #{ verification.inactiveDate },
+            0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+        PL_SYS_VERIFICATION
+        SET
+        IS_DELETED = 1
+        ,LAST_UPDATED_BY=#{ passport.userId }
+        ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+        IS_DELETED=0
+        AND ID = #{id}
+    </update>
+
+    <update id="deleteBatch">
+        UPDATE
+        PL_SYS_VERIFICATION
+        SET
+        IS_DELETED = 1
+        ,LAST_UPDATED_BY=#{ passport.userId }
+        ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+        IS_DELETED=0
+        AND ID in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="update">
+        UPDATE
+        PL_SYS_VERIFICATION
+        SET
+        <if test="userId!=null">USER_ID=#{ verification.userId },</if>
+        <if test="type!=null">TYPE=#{ verification.type },</if>
+        <if test="object!=null">OBJECT=#{ verification.object },</if>
+        <if test="code!=null">CODE=#{ verification.code },</if>
+        <if test="activeDate!=null">ACTIVE_DATE=#{ verification.activeDate },</if>
+        <if test="inactiveDate!=null">INACTIVE_DATE=#{ verification.inactiveDate },</if>
+        LAST_UPDATED_BY=#{ passport.userId }
+        ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+        IS_DELETED=0
+        AND ID = #{id}
+    </update>
+
+    <update id="updateBatch">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE
+            PL_SYS_VERIFICATION
+            SET
+            <if test="item.userId!=null">USER_ID=#{ item.userId },</if>
+            <if test="item.type!=null">TYPE=#{ item.type },</if>
+            <if test="item.object!=null">OBJECT=#{ item.object },</if>
+            <if test="item.code!=null">CODE=#{ item.code },</if>
+            <if test="item.activeDate!=null">ACTIVE_DATE=#{ item.activeDate },</if>
+            <if test="item.inactiveDate!=null">INACTIVE_DATE=#{ item.inactiveDate },</if>
+            LAST_UPDATED_BY=#{ passport. }
+            ,LAST_UPDATE_TIME=SYSDATE()
+            WHERE
+            IS_DELETED=0
+            AND ID=#{item.id}
+        </foreach>
+    </update>
+
+    <select id="getById" resultMap="verificationPO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        PL_SYS_VERIFICATION
+        WHERE
+        ID = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="verificationPO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        PL_SYS_VERIFICATION
+        WHERE
+        ID in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getAllList" resultMap="verificationPO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        PL_SYS_VERIFICATION
+        WHERE
+        IS_DELETED=0
+    </select>
+
+    <select id="existById" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        PL_SYS_VERIFICATION
+        WHERE
+        ID=#{id}
+    </select>
+</mapper>

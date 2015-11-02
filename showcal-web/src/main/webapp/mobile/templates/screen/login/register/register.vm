@@ -1,0 +1,47 @@
+<div class="showcal">
+    <!--header-->
+    <header data-am-widget="header" class="am-header am-no-layout am-header-fixed showcal--mobile-header">
+        <div class="am-header-left am-header-nav">
+            <a href="../login" class="">
+                <img class="showcal-left-arrow" src="$mobileContent.getURI("images/grayleftarrow.png")"
+                     width="10" height="24" alt="">
+            </a>
+        </div>
+        <h1 class="am-header-title">注册</h1>
+
+        <div class="am-header-right am-header-nav">
+            <a href="../login" class="">
+               <span class="color-gray">
+                 取消
+               </span>
+
+            </a>
+        </div>
+    </header>
+    <form id="register" action="#">
+        <div class="mt-10 am-u-sm-12 xn-text-center">
+            <input type="text" class="login-input" id="mobilePhone" name="mobilePhone"  placeholder="手机号码">
+        </div>
+        <div class="am-u-sm-12 xn-text-center mt-10">
+            <div class="am-u-sm-8 am-padding-left-0">
+                <input type="text" class="login-input" id="validatecode" name="validatecode" placeholder="请输入短信验证码">
+            </div>
+            <a class="am-u-sm-4 am-padding-0 validate-code" id="getVerifiyCode">
+                获取验证码
+            </a>
+        </div>
+        <div class="mt-10 am-u-sm-12 xn-text-center">
+            <input type="password" class="login-input" id="password" name="password" placeholder="设置密码">
+        </div>
+        <div id="messageBox" style="color: red;font-size: 1.4rem;margin:1%"></div>
+        <div class="am-u-sm-12  mt-20 xn-text-center">
+            <button class="btn  login-button-default login-button-gray" disabled id="regbutton">
+                注册
+            </button>
+        </div>
+    </form>
+</div>
+<script src="$mobileContent.getURI('vendor/md5/md5.js')"></script>
+<script type="text/javascript" src="$mobileContent.getURI('scripts/controllers/register.js')"></script>
+<script type="text/javascript" src="$mobileContent.getURI('vendor/validate/jquery.validate.js')"></script>
+<script type="text/javascript" src="$mobileContent.getURI('vendor/json2.js')"></script>

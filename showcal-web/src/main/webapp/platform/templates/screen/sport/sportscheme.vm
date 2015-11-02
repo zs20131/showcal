@@ -1,0 +1,263 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+            <li><a   href="$platformLink.setTarget("sport/index")">运动方案</a></li>
+            <li class="active">运动方案</a></li>
+        </ul>
+    </ul>
+</div>
+
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="sportSchemeIndexController">
+    <div class="xn-width mb_10 pr_10 clearfix">
+        <a class="btn btn-primary  ml_10 mr_20 f-right"
+           ng-href="$platformLink.setTarget("sport/import")">运动方案导入</a>
+        <a class="btn btn-primary  ml_10 mr_20 f-right"
+           ng-href="$platformLink.setTarget("sport/importLine")">运动明细导入</a>
+        <a class="btn btn-primary  ml_10 mr_20 f-right" ng-click="addSportHead()" >创建运动方案</a>
+    </div>
+    <div class="xn-table-wrap">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th class="col-sm-2">运动方案名称</th>
+                <th class="col-sm-1">总时长</th>
+                <th class="col-sm-1">强度</th>
+                <th class="col-sm-2">地点</th>
+                <th class="col-sm-1">BMI起始值</th>
+                <th class="col-sm-1">BMI结束值</th>
+                <th class="col-sm-1">损伤能参与</th>
+                <th class="col-sm-2">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <tr ng-repeat="sportHead in  headResult" style="{{sportHead.showColor}}">
+                <td>
+                    {{sportHead.name}}
+                </td>
+                <td>
+                    {{sportHead.totalTime}} 分钟
+                </td>
+                <td>
+                    {{sportHead.intensity|intensity}}
+                </td>
+                <td>
+                    {{sportHead.address|address}}
+                </td>
+                <td>
+                    {{sportHead.startBmi}}
+                </td>
+                <td>
+                    {{sportHead.endBmi}}
+                </td>
+                <td ng-if="sportHead.isInjuryJoin" colspan="1" class="center">是</td>
+                <td ng-if="!sportHead.isInjuryJoin" colspan="1" class="center">否</td>
+                <td class="xn-center">
+                    <div type="text" >
+                    <a ng-click="edit(sportHead)">编辑</a>
+                    <a ng-click="showLine(sportHead,$index)">查看明细</a>
+                    <a ng-click="delete(sportHead)">删除</a>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-if="vm.totalCount == 0">
+                <td colspan="12" class="xn-text-center">无法找到相应的记录</td>
+            </tr>
+            </tbody>
+
+        </table>
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{vm.headTotalCount}}条</div>
+            <pagination ng-show="vm.headTotalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                        total-items="vm.headTotalCount"
+                        ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                        last-text="&raquo;"></pagination>
+        </div>
+    </div>
+
+    <div class="xn-width mb_10 pr_10 clearfix">
+        <button class="btn btn-primary btn-sm f-right" ng-click="createline()" >创建方案明细</button>
+    </div>
+    <div class="xn-table-wrap">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th class="col-sm-1">运动步骤</th>
+                <th class="col-sm-1">运动时长</th>
+                <th class="col-sm-1">消耗热量</th>
+                <th class="col-sm-1">运动数据类型</th>
+                <th class="col-sm-2">说明</th>
+                <th class="col-sm-1">封面</th>
+                <th class="col-sm-1">连接地址</th>
+                <th class="col-sm-2">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <tr ng-repeat="sportline in  sportlines">
+                <td>
+                    {{sportline.step}}
+                </td>
+                <td>
+                    {{sportline.time}} 分钟
+                </td>
+                <td>
+                    {{sportline.sportSetting.burnHeat}}
+                </td>
+                <td>
+                    {{sportline.sportSetting.type|sportUrlType}}
+                </td>
+                <td>
+                    {{sportline.sportSetting.content}}
+                </td>
+                <td>
+                    {{sportline.sportSetting.coverurl}}
+                </td>
+                <td>
+                    {{sportline.sportSetting.url}}
+                </td>
+                <td class="xn-center">
+                    <div type="text" >
+                     <a ng-click="editline(sportline)">编辑</a>
+                     <a ng-click="deleteline(sportline.id)">删除</a></div>
+                </td>
+            </tr>
+            <tr ng-if="vm.linetotalCount == 0">
+                <td colspan="12" class="xn-text-center">无法找到相应的记录</td>
+            </tr>
+            </tbody>
+
+        </table>
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{vm.linetotalCount}}条</div>
+            <pagination ng-show="vm.linetotalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                        total-items="vm.linetotalCount"
+                        ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                        last-text="&raquo;"></pagination>
+        </div>
+    </div>
+    <script type="text/ng-template" id="sportHeadEidt.html">
+        <form  class="form-horizontal xn-form clearfix" role="form"  xn-form-validate novalidate  name="validateForm" >
+            <div class="modal-header" ng-mousedown="mousedown($event)" ng-mousemove="mousemove($event)" ng-mouseup="mouseup()">
+                <h3 class="modal-title"> {{sportHead.title}}</h3>
+                <div class="xn-close xn-cursor" ng-click="clean()">
+                    <i class="icon icon-delete"></i>
+                </div>
+            </div>
+            <div class="modal-body clearfix">
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">运动方案名称：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text"  name="organizationtag" ng-model="sportHead.name">
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">强度：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7 xn-padding-text xn-line">
+                        <select  id="sportIntensity"  class="form-control"  name="sportIntensity" ng-model="sportHead.intensity"
+                                 ng-options="sportIntensity.id as sportIntensity.name for sportIntensity in sportIntensities">
+                            <option value="">-- 请选择 --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">地点：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7 xn-padding-text xn-line">
+                        <select  id="sportPlace"  class="form-control"  name="sportPlaces" ng-model="sportHead.address"
+                                 ng-options="sportPlace.id as sportPlace.name for sportPlace in sportPlaces">
+                            <option value="">-- 请选择 --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">时长：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7 xn-padding-text xn-line">
+                        <select  id="totalTime"  class="form-control"  name="totalTime" ng-model="sportHead.totalTime"
+                                 ng-options="time.id as time.name for time in sportTimes">
+                            <option value="">-- 请选择 --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">BMI起始值：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text"  name="startBmi"  ng-pattern="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" ng-model="sportHead.startBmi">
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">BMI结束值：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text"  name="endBmi"  ng-pattern="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" ng-model="sportHead.endBmi">
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">损伤是否可参与：</label>
+                    <label for="yes">
+                        <input id="yes" type="radio" name="pmOpenType" value="1"
+                               ng-model="sportHead.isInjuryJoin">是</label>
+                    <label for="no">
+                        <input id="no" type="radio" name="pmOpenType" value="0" ng-model="sportHead.isInjuryJoin">否</label>
+##                    <div class="col-sm-3 mt_7"  ng-repeat="join in couldJoin">
+##                          <input class="form-control" type="radio" ng-model="sportHead.isInjuryJoin" value="{{join.value}}" /><span class="l-h-34 ml_5">{{ join.name }}</span>
+##                    </div>
+                </div>
+                <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+                    <div class="col-sm-10">
+                        <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5" ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button  class="btn btn-primary"  xn-form-submit="doSave()">保存</button>
+                <a ng-click="clean()"  class="btn btn-default ">取消</a>
+            </div>
+        </form>
+    </script>
+    <script type="text/ng-template" id="sportStepEdit.html">
+        <form  class="form-horizontal xn-form clearfix" role="form"  xn-form-validate novalidate  name="validateForm" >
+            <div class="modal-header" ng-mousedown="mousedown($event)" ng-mousemove="mousemove($event)" ng-mouseup="mouseup()">
+                <h3 class="modal-title">{{sportline.title}}</h3>
+                <div class="xn-close xn-cursor" ng-click="clean()">
+                    <i class="icon icon-delete"></i>
+                </div>
+            </div>
+            <div class="modal-body clearfix">
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">运动步骤：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text"  name="step" ng-model="sportline.step" ng-pattern="/^\+?[1-9][0-9]*$/" required>
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">运动时长{{sportline.time}}(m)：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7 xn-padding-text xn-line">
+                        <input class="form-control" type="text"  name="step" ng-model="sportline.time" ng-pattern="/^\+?[1-9][0-9]*$/" required>
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <label class="col-sm-5 control-label"><span class="f-right">运动内容：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                    <div class="col-sm-7 xn-padding-text xn-line">
+                        <select  id="organisation"  class="form-control"  name="sportContent" ng-model="sportline.sportSettingId"
+                                 ng-options="sportsetting.id as sportsetting.name for sportsetting in sportsettings" required>
+                            <option value="">-- 请选择 --</option>
+                        </select>
+                    </div>
+                    <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+                        <div class="col-sm-10">
+                            <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5" ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                    <div class="modal-footer">
+                        <button  class="btn btn-primary "  xn-form-submit="dolineSave()">保存</button>
+                        <a ng-click="clean()"  class="btn btn-default ">取消</a>
+                    </div>
+                </div>
+        </form>
+    </script>
+</div>

@@ -1,0 +1,79 @@
+$page.setTitle("平台设置")
+<div class="xn-breadcrumb xn-width auto clearfix">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+        <li class="active">设置</li>
+    </ul>
+</div>
+<div class="xn-main xn-setting-list  auto  xn-width  clearfix">
+    <ul class="clearfix">
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("setting/usertag/index")">
+                <div class="xn-setting-img xn-setting-img-job"></div>
+                <div class="xn-setting-right">
+                    <h3>用户标签</h3>
+
+                    <p>可以给用户设置相应的标签... </p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("setting/questiontag/index")">
+                <div class="xn-setting-img xn-setting-img-level"></div>
+                <div class="xn-setting-right">
+                    <h3>问题标签</h3>
+
+                    <p>可以给用户设置标签信息...</p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("setting/keyword/index")">
+                <div class="xn-setting-img xn-setting-rchannel"></div>
+                <div class="xn-setting-right">
+                    <h3>关键字</h3>
+
+                    <p>设置相应的关键字便于系统解析</p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("setting/disease/index")">
+                <div class="xn-setting-img xn-setting-img-location"></div>
+                <div class="xn-setting-right">
+                    <h3>特殊状况</h3>
+
+                    <p>设置相应的特殊状况，便于平台给出方案</p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("setting/evaluate/index")">
+                <div class="xn-setting-img xn-setting-mall"></div>
+                <div class="xn-setting-right">
+                    <h3>评价与建议</h3>
+
+                    <p>维护相关的评价与建议信息</p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("setting/integralrule/index")">
+                <div class="xn-setting-img xn-setting-mall"></div>
+                <div class="xn-setting-right">
+                    <h3>积分规则</h3>
+                    <p>设置相关的积分规则</p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("setting/repository/index")">
+                <div class="xn-setting-img xn-setting-mall"></div>
+                <div class="xn-setting-right">
+                    <h3>知识库</h3>
+                    <p>设置相关知识库</p>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>

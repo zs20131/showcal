@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setting>
+     <tablePrefix>TC_</tablePrefix>
+     <developerName>顾志雄</developerName>
+     <applicationCode>Thermalcontrol</applicationCode>
+     <applicationName>热控</applicationName>
+     <companyCode>xiniunet</companyCode>
+     <companyName>苏州犀牛网络科技有限公司</companyName>
+</setting>

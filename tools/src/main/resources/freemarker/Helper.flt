@@ -1,0 +1,29 @@
+package ${basePackage}.${moduleName?uncap_first}.helper;
+
+/**
+* <p/>
+* <pre>
+ * ***************************************************************
+ *  Copyright (c) 2014 –${company}
+    *  Title: ${basePackage}.${moduleName}.helper.${moduleName ?cap_first}Helper
+    *  Description: ${moduleName} Helper 接口
+    *  @since
+    *  @author ${author}
+    * ***************************************************************
+ * </pre>
+*/
+public interface ${moduleName ?cap_first}Helper {
+<#if methods??>
+    <#list methods as method>
+    /**
+    * ${method.description}
+    * @param request
+    * @param passport 用户护照
+    * @return
+    */
+    ${method.responseName} ${method.name}(${method.requestName} request, Passport passport);
+    </#list>
+</#if>
+
+
+}

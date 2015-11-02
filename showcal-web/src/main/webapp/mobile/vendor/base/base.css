@@ -1,0 +1,347 @@
+
+body {
+    font-size: 1.6rem;
+    background: #f4f4f4;
+    height: 100%;
+    color: #333;
+}
+
+body, div, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.xn-main {
+    position: relative;
+    /*  margin-bottom: 4.2rem;*/
+    padding-bottom: 4.2rem;
+    clear: both;
+}
+
+.xn-text-left {
+    text-align: left;
+}
+
+.xn-text-right{
+    text-align: right;
+}
+
+.xn-text-center {
+    text-align: center;
+}
+
+.none {
+    display: none
+}
+
+.am-form input[type=password].none {
+    display: none
+}
+
+/* Remember to define your own focus styles! */
+:focus {
+    outline: 0;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.f-left {
+    float: left;
+}
+
+.f-right {
+    float: right;
+}
+
+.auto {
+    margin: 0 auto
+}
+
+ul, ol, li {
+    list-style: none;
+}
+
+.footer-layout {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 4rem;
+}
+
+.footer-layout a {
+    height: inherit;
+    display: inline-block;
+    text-align: center;
+    color: #fff;
+    padding: 1rem;
+    border-right: 1px solid #fff;
+    line-height: 2rem;
+}
+
+.footer-layout a:last-child {
+
+    border-right: none;
+}
+
+.footer-layout a.edit {
+    background: #ff5555;
+}
+
+.footer-layout a.back {
+    background: #7ab5ff;
+}
+
+.xn-pop[xn-open~="location"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    overflow: hidden;
+    background: #efeff4;
+    display: none;
+}
+
+.xn-pop[xn-open~="location"] .am-city-select {
+    position: relative;
+    height: 100%;
+    display: none;
+
+}
+
+.xn-pop[xn-open~="location"] .am-city-select-sub {
+    height: 30px;
+    line-height: 30px;
+    background: #333;
+    color: #fff;
+    text-align: center;
+    opacity: 0.3;
+}
+
+.xn-pop[xn-open~="location"] .am-city-select-list {
+    position: absolute;
+    left: 0;
+    top: 30px;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 1rem;
+    margin: 0;
+}
+
+.xn-pop[xn-open~="location"] .am-city-select-list li {
+    border-bottom: 1px dashed #dcdcdc;
+    padding: 0.5rem;
+}
+
+.xn-text-right {
+    text-align: right;
+}
+.w_80{
+    width: 80%;
+}
+.mt-10 {
+    margin-top: 10px;
+}
+.mr-10 {
+    margin-right: 10px;
+}
+
+.mt-12 {
+    margin-top: 12px;
+}
+
+.mb-12 {
+    margin-bottom: 12px;
+}
+
+.pt-15 {
+    padding-top: 15px;
+}
+
+.pb-70 {
+    padding-bottom: 70px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+.mt-50 {
+    margin-top: 50px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+
+.pr-10 {
+    padding-right: 10px;
+}
+.mr-15 {
+    margin-right: 15px;
+}
+
+.ml-30 {
+    margin-left: 30px;
+}
+.ml-10 {
+    margin-left: 10px;
+}
+.ml-12 {
+    margin-left: 12px;
+}
+.pl-6 {
+  padding-left: 6px;
+}
+
+.text-gray {
+    color: #999;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
+}
+
+.letter-12 {
+    letter-spacing: 1.2rem;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+.l-h-34{
+    line-height: 34px;
+}
+.l-h-30{
+    line-height: 30px;
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+.dark-gray{
+    color: #333;
+}
+.light-gray-txt{
+    color: #666;
+}
+.lighter-gray-txt{
+    color: #999;
+}
+
+.btn-approve{
+    width: 120px;
+    height: 30px;
+    background-color: #0fc40f;
+    line-height: 12px;
+    margin: 10px;
+    border: none;
+}
+.btn-denied{
+    width: 120px;
+    height: 30px;
+    line-height: 12px;
+    margin: 10px;
+    border-radius: 0px;
+    background-color: #f04c19;
+    border: none;
+}
+.btn-gray{
+    width: 120px;
+    height: 30px;
+    line-height: 12px;
+    margin: 10px;
+    border-radius: 0px;
+    background-color: #d2d2d2;
+    border: none;
+}
+
+.approve-button-box{
+    width: 100%;
+    margin-top: 10px ;
+    padding: 5px;
+    border-radius: 0px;
+    background-color: #fff;
+    border: 1px solid #dcdcdc
+}
+.approve-button-box{
+    width: 100%;
+    margin-top: 10px ;
+    padding: 5px;
+    border-radius: 0px;
+    background-color: #fff;
+    border: 1px solid #dcdcdc
+}
+
+.border-t-1{
+    border-top: 1px solid #dcdcdc;
+}
+
+.color-pink{
+    color: #f25a81;
+}
+.font-14{
+    font-size: 14px;
+}
+.font-15{
+    font-size: 15px;
+}
+.order-hotel-footer{
+    width: 100% ;
+    padding: 5px;
+    text-align: center;
+    background-color: #fff;
+    margin-bottom:0px;
+    margin-top: 30px;
+}
+
+.select-time{
+    padding: 0px 10px;
+    border-radius: 4px;
+    height: 30px;
+/*    border: none;*/
+}
+.pl_10{
+    padding-left: 10px;
+}
+.pr-10{
+    padding-right: 10px;
+}
+.pb-5{
+    padding-bottom: 5px;
+}
+.pt-2{
+    padding-top: 2px;
+}
+.p-l-r-20{
+   padding-left: 20px;
+   padding-right: 20px;
+}
+.block{
+    display:block;
+}

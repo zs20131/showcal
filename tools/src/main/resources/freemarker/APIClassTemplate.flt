@@ -1,0 +1,59 @@
+package ${basePackage}.api.${moduleName?uncap_first};
+
+import com.xiniunet.apiframework.AbstractApiRequest;
+import com.xiniunet.apiframework.annotation.HttpAction;
+import com.xiniunet.apiframework.annotation.NeedInSessionType;
+import com.xiniunet.apiframework.annotation.ServiceMethod;
+import com.xiniunet.apiframework.annotation.ServiceMethodBean;
+import com.xiniunet.apiframework.response.ErrorResponse;
+import com.xiniunet.api.tool.RequestConverter;
+import com.xiniunet.framework.security.Passport;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+* <p/>
+* <pre>
+ * ***************************************************************
+ *  Copyright (c) 2014 –${company}
+    *  Title: ${basePackage}.${moduleName}.module.screen.Api
+    *  Description: ${moduleName} 的API信息
+    *  @since
+    *  @author ${author}
+    * ***************************************************************
+ * </pre>
+*/
+@ServiceMethodBean
+public class ${moduleName}Api {
+    @Autowired
+    private ${moduleName ?cap_first} ${moduleName?uncap_first};
+    @Autowired
+    private RequestConverter requestConverter;
+<#if methods??>
+    <#list methods as method>
+
+    /**
+     * ${method.description}
+     */
+    @ServiceMethod(title = "${method.description}",method = "${moduleName?lower_case}${method.apiName}",httpAction = HttpAction.POST,version = "1.0" ${method.needPassport?string("",",needInSession = NeedInSessionType.NO")})
+    public Object ${method.name}(AbstractApiRequest apirequest){
+        <#if method.needPassport>
+        Passport passport = requestConverter.requestToPassport(apirequest);
+        </#if>
+        ${method.requestName} ${method.requestName?uncap_first} = requestConverter.converter(${method.requestName}.class,apirequest);
+        HttpServletRequest request = (HttpServletRequest) apirequest.getApiRequestContext().getRawRequestObject();
+        ErrorResponse response = requestConverter.doValidate(request, ${method.requestName?uncap_first});
+        if(response != null) {
+           return response;
+        } else {
+        <#if method.needPassport>
+            return ${moduleName?uncap_first}.${method.name}(${method.requestName?uncap_first}, passport);
+        <#else>
+            return ${moduleName?uncap_first}.${method.name}(${method.requestName?uncap_first});
+        </#if>
+        }
+    }
+    </#list>
+}
+</#if>

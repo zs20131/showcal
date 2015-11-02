@@ -1,0 +1,50 @@
+//
+//  ${class.name}.h
+//
+//
+//  Created by ${annotation.authorName} on ${annotation.date}
+//  Copyright (c) 2014-2015 –苏州犀牛网络科技有限公司
+//
+
+#import "BaseResponse.h"
+<#list fields as field>
+    <#if field.isDomain>
+        <#if !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">
+#import "${field.iostype}.h"
+        </#if>
+    </#if>
+</#list>
+
+@interface ${class.name} : BaseResponse
+<#if fields??>
+    <#list fields as field>
+#pragma mark - ${field.description}
+        <#if field.isDomain>
+            <#if field.isEnum>
+@property(nonatomic,readonly) NSString* ${field.name};
+            <#elseif field.iostype=="NSArray*" || field.iostype=="NSDictionary*">
+@property(nonatomic,readonly) ${field.iostype} ${field.name};
+            <#else>
+@property(nonatomic,readonly) ${field.iostype}* ${field.name};
+            </#if>
+            <#if field.parentName!="null">
+#pragma mark - ${field.name}游标
+@property(atomic) NSInteger ${field.name}_cursor;
+            </#if>
+        <#else>
+@property(nonatomic,readonly) ${field.iostype} ${field.name};
+        </#if>
+
+#pragma mark - 判断${field.description}是否存在
+-(BOOL)has${field.name?cap_first};
+
+    </#list>
+</#if>
+
+#pragma mark - base
+@property BaseResponse *baseResponse;
+
+#pragma mark - 初始化
+- (instancetype)init;
+
+@end

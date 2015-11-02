@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.thermalcontrol.dal.SportHeadMapper">
+
+    <sql id="whereForFindList">
+        <if test="request.id!=null"> AND `ID` LIKE CONCAT ('%',#{ request.id },'%')</if>
+        <if test="request.name!=null"> AND `NAME` LIKE CONCAT ('%',#{ request.name },'%')</if>
+        <if test="request.intensity!=null"> AND `INTENSITY` = #{ request.intensity }</if>
+        <if test="request.address!=null"> AND `ADDRESS` = #{ request.address }</if>
+        <if test="request.sportTime!=null">AND TOTAL_TIME = #{request.sportTime}</if>
+        <if test="request.BMI!=null">AND START_BMI <![CDATA[<=]]> #{request.BMI} AND END_BMI>= #{request.BMI} </if>
+        ORDER  BY  ID DESC,CONVERT(`NAME` USING gbk) DESC
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           `NAME` LIKE CONCAT ('%',#{ request.keyword },'%')  OR  
+           `INTENSITY` LIKE CONCAT ('%',#{ request.keyword },'%')  OR  
+           `ADDRESS` LIKE CONCAT ('%',#{ request.keyword },'%')  OR  
+           )
+    </sql>
+
+    <select id="find" resultMap="sportHeadPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `TC_SPORT_HEAD`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_SPORT_HEAD`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="sportHeadPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `TC_SPORT_HEAD`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_SPORT_HEAD`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_SPORT_HEAD`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `TC_SPORT_HEAD`
+        SET
+        <if test="request.name!=null and request.name!=''">
+            NAME = #{request.name},
+        </if>
+        <if test="request.totalTime!=null and request.totalTime!=''">
+            TOTAL_TIME = #{request.totalTime},
+        </if>
+        <if test="request.intensity!=null and request.intensity!=''">
+            INTENSITY = #{request.intensity},
+        </if>
+        <if test="request.address!=null and request.address!=''">
+            ADDRESS = #{request.address},
+        </if>
+        <if test="request.startBmi!=null and request.startBmi!=''">
+            START_BMI = #{request.startBmi},
+        </if>
+        <if test="request.endBmi!=null and request.endBmi!=''">
+           END_BMI = #{request.endBmi},
+        </if>
+        <if test="request.isInjuryJoin!=null and request.isInjuryJoin!=''">
+            IS_INJURY_JOIN = #{request.isInjuryJoin},
+        </if>
+        <if test="passport.userId!=null and passport.userId!=''">
+            LAST_UPDATED_BY = #{passport.userId},
+        </if>
+        <if test="request.rowVersion!=null and request.rowVersion!=''">
+            ROW_VERSION = #{ request.rowVersion }+1,
+        </if>
+            LAST_UPDATE_TIME = SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+        <if test="request.rowVersion!=null and request.rowVersion!=''">
+            AND `ROW_VERSION` = #{ request.rowVersion }
+        </if>
+
+    </update>
+
+    <update id="updateTotalTime">
+        UPDATE
+         `TC_SPORT_HEAD`
+        SET
+        `TOTAL_TIME`=#{ request.totalTime },
+        `LAST_UPDATE_TIME`=SYSDATE(),
+        `ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+        `IS_DELETED`=0
+        AND `ID` = #{ request.id }
+        AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+
+</mapper>

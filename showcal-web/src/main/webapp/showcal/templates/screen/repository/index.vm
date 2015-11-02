@@ -1,0 +1,250 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$showcalLink.setTarget("index")">首页</a></li>
+        <li class="active">我的知识库</a></li>
+    </ul>
+</div>
+
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="RepositoryIndexController">
+
+    <!--搜索部分-->
+<form class="form-horizontal clearfix xn-form ng-valid ng-valid-required ng-dirty" name="searchForm" xn-form-validate  novalidate="" role="form">
+    <div class="xn_search_box auto">
+        <div class="xn-input-line clearfix">
+            <label class="xn-label">标&nbsp;&nbsp;&nbsp;&nbsp;签：</label>
+            <div class="xn-input-sm">
+                <select  id="questionTag"  class="form-control"  name="questionTagId" ng-model="vm.tagObj"
+                         ng-options="questionTag.id as questionTag.tag for questionTag in questionTagList" >
+                    <option value="">-- 请选择 --</option>
+                </select>
+            </div>
+            <div class="tip"></div>
+            <label class="xn-label">关键字：</label>
+            <div class="xn-input-sm">
+                <select  id="keyword"  class="form-control"  name="keywordId" ng-model="vm.keywordObj"
+                         ng-options="keyword.id as keyword.keyword for keyword in keywordList" >
+                    <option value="">-- 请选择 --</option>
+                </select>
+            </div>
+            <div class="tip"></div>
+            <label class="xn-label">是否发布：</label>
+            <div class="xn-input-sm">
+                <select class="xn-click-input form-control" name="place" ng-model="vm.state">
+                    <option value="" selected="selected">--请选择--</option>
+                    <option value="RELEASE">已发布</option>
+                    <option value="UNPUBLISHED">未发布</option>
+                </select>
+            </div>
+        </div>
+        <div class="xn-input-line clearfix">
+            <label for="orderdate" class="xn-label">发布时间：</label>
+
+            <div class="xn-input-sm">
+                <div class="input-group openData">
+                    <input type="text" class="form-control" id="startDate" ng-model="vm.startDate"
+                           name="regularDate"
+                           datepicker-popup="yyyy-MM-dd" is-open="startDate" max-date="maxDate"
+                           datepicker-options="dateOptions"
+                           date-disabled="disabled(date, mode)" close-text="关闭" current-text="今天" clear-text="清除">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="openStartDate($event)"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                </div>
+            </div>
+            <div class="tip"></div>
+            <label for="number" class="xn-label">到：</label>
+
+            <div class="xn-input-sm">
+                <div class="input-group openData">
+                    <input type="text" class="form-control" id="endDate" ng-model="vm.endDate" name="regularDate"
+                           datepicker-popup="yyyy-MM-dd" is-open="endDate" min-date="minDate"
+                           datepicker-options="dateOptions"
+                           date-disabled="disabled(date, mode)" close-text="关闭" current-text="今天" clear-text="清除">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="openEndDate($event)"><i
+                                        class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                </div>
+            </div>
+            <a class="btn btn-success btn-sm w_80 f-right" href="javascript:void(0)"
+               xn-submit-enter="doSearch()">查询</a>
+        </div>
+    </div>
+</form>
+    <!--搜索部分结束-->
+        <div class="showcal-service-tab-title position-relative" ng-init="tab=1">
+            <ul class="clearfix showcal-bottom-ul">
+                <li ng-click="tab=1" ng-class="tab==1?'on':''">我的知识库</li>
+                <li ng-click="tab=2"  ng-class="tab==2?'on':''">系统知识库</li>
+            </ul>
+        </div>
+        <div class="showcal-service-tab-con mt_10">
+            <div class="land-detail" ng-show="tab==1">
+                <div class="xn-width mb_10 pr_10 clearfix">
+                    <button class="btn btn-primary btn-sm f-right" ng-click="addRepository()" >创建知识库</button>
+                    <a class="btn btn-primary btn-sm f-right mr_10" href="import.vm">批量导入</a>
+                </div>
+                <div class="xn-table-wrap">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th class="col-sm-1">发布时间</th>
+                            <th class="col-sm-2">知识库标签</th>
+                            <th class="col-sm-2">知识库关键字</th>
+##                            <th class="col-sm-1">知识库类型</th>
+                            <th class="col-sm-2">知识库内容</th>
+                            <th class="col-sm-1">状态</th>
+                            <th class="col-sm-1">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody" ng-init="usershow=false">
+                        <tr ng-repeat="repository in  myRepository" ng-class="{'unactive':!repository.isActive}">
+                            <td>
+                                {{repository.activeDate | date:"yyyy-MM-dd hh:MM:ss"}}
+                            </td>
+                            <td>
+                                {{repository.tagName}}
+                            </td>
+                            <td>
+                                {{repository.keywordName}}
+                            </td>
+##                            <td>
+##                                {{repository.type}}
+##                            </td>
+                            <td>
+                                {{repository.content}}
+                            </td>
+                            <td>
+                                {{repository.isActive | isActive}}
+                            </td>
+                            <td class="xn-center">
+                                <div type="text" >
+                                    <a ng-if="repository.isActive" ng-click="inactive(repository)">取消发布</a>
+                                    <a ng-if="!repository.isActive" ng-click="active(repository)">发布</a>
+                                    <a ng-click="edit(repository)">编辑</a>
+                                    <a ng-click="delete(repository)">删除</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-if="mytotalCount == 0">
+                            <td colspan="12" class="center">无法找到相应的记录</td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                    <div class="clearfix">
+                        <div class="f-left mt_20 mb_10">共{{mytotalCount}}条</div>
+                        <pagination ng-show="mytotalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                                    total-items="mytotalCount"
+                                    ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                                    boundary-links="true"
+                                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                    last-text="&raquo;"></pagination>
+                    </div>
+                </div>
+            </div>
+
+            <div class="land-detail" ng-show="tab==2">
+                <div class="xn-table-wrap">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th class="col-sm-1">发布时间</th>
+                            <th class="col-sm-2">知识库标签</th>
+                            <th class="col-sm-2">知识库关键字</th>
+                            <th class="col-sm-1">知识库问题</th>
+##                            <th class="col-sm-1">知识库类型</th>
+                            <th class="col-sm-2">知识库内容</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody" ng-init="usershow=false">
+                        <tr ng-repeat="sysrep in  sysRepository" ng-class="{'unactive':!sysRepository.isActive}">
+                            <td>
+                                {{sysrep.activeDate | date:"yyyy-MM-dd hh:MM:ss"}}
+                            </td>
+                            <td>
+                                {{sysrep.tagName}}
+                            </td>
+                            <td>
+                                {{sysrep.keywordName}}
+                            </td>
+                            <td>
+                                {{sysrep.question}}
+                            </td>
+##                            <td>
+##                                {{sysRepository.type}}
+##                            </td>
+
+                            <td>
+                                {{sysrep.content}}
+                            </td>
+                        </tr>
+                        <tr ng-if="sysTotalCount == 0">
+                            <td colspan="12" class="center">无法找到相应的记录</td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                    <div class="clearfix">
+                        <div class="f-left mt_20 mb_10">共{{sysTotalCount}}条</div>
+                        <pagination ng-show="sysTotalCount>vm.pageSize" ng-change="getSysList()" max-size="maxPageSize"
+                                    total-items="sysTotalCount"
+                                    ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                                    boundary-links="true"
+                                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                    last-text="&raquo;"></pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script type="text/ng-template" id="repositoryEidt.html">
+    <form  class="form-horizontal xn-form clearfix" role="form"  xn-form-validate novalidate  name="validateForm" >
+        <div class="modal-header" ng-mousedown="mousedown($event)" ng-mousemove="mousemove($event)" ng-mouseup="mouseup()">
+            <h3 class="modal-title"> {{repository.title}}</h3>
+            <div class="xn-close xn-cursor" ng-click="clean()">
+                <i class="icon icon-delete"></i>
+            </div>
+        </div>
+        <div class="modal-body clearfix">
+            <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                <label class="col-sm-5 control-label">知识库标签：</label>
+                <div class="col-sm-7 xn-padding-text xn-line">
+                    <select  id="questionTag"  class="form-control"  name="questionTagId" ng-model="repository.tag"
+                             ng-options="questionTag.id as questionTag.tag for questionTag in questionTagList" required="required">
+                        <option value="">-- 请选择 --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                <label class="col-sm-5 control-label">知识库关键字：</label>
+                <div class="col-sm-7 xn-padding-text xn-line">
+                    <select  id="keyword"  class="form-control"  name="keywordId" ng-model="repository.keyword"
+                             ng-options="keyword.id as keyword.keyword for keyword in keywordList" required="required">
+                        <option value="">-- 请选择 --</option>
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" type="text"  name="organizationtype" ng-model="repository.type">
+            <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                <label class="col-sm-5 control-label">知识库内容：</label>
+                <div class="col-sm-7">
+                    <textarea class="form-control" rows="5"  ng-model="repository.content"  name="organizationcontent" ></textarea>
+                </div>
+            </div>
+            <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+                <div class="col-sm-10">
+                    <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5" ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button  class="btn btn-primary "  xn-form-submit="doSave()">保存</button>
+            <a ng-click="clean()"  class="btn btn-default ">取消</a>
+        </div>
+    </form>
+</script>
+

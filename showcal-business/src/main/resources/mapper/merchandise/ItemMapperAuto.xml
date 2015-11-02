@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.merchandise.dal.ItemMapper">
+
+    <resultMap  id="itemPO" type="com.showcal.merchandise.po.ItemPO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="CLASS_ID"  jdbcType="NUMERIC" property="classId"></result>
+        <result column="NUMBER"  jdbcType="VARCHAR" property="number"></result>
+        <result column="BARCODE"  jdbcType="VARCHAR" property="barcode"></result>
+        <result column="NAME"  jdbcType="VARCHAR" property="name"></result>
+        <result column="PINYIN"  jdbcType="VARCHAR" property="pinyin"></result>
+        <result column="PY"  jdbcType="VARCHAR" property="py"></result>
+        <result column="TYPE"  jdbcType="VARCHAR" property="type"></result>
+        <result column="BASIS"  jdbcType="VARCHAR" property="basis"></result>
+        <result column="QUICK_CODE"  jdbcType="VARCHAR" property="quickCode"></result>
+        <result column="SHORT_NAME"  jdbcType="VARCHAR" property="shortName"></result>
+        <result column="ORDER_SORT"  jdbcType="NUMERIC" property="orderSort"></result>
+        <result column="URL"  jdbcType="VARCHAR" property="url"></result>
+        <result column="INVOICED_NAME"  jdbcType="VARCHAR" property="invoicedName"></result>
+        <result column="DESCRIPTION"  jdbcType="VARCHAR" property="description"></result>
+        <result column="BRAND_ID"  jdbcType="VARCHAR" property="brandId"></result>
+        <result column="CATEGORY_ID"  jdbcType="NUMERIC" property="categoryId"></result>
+        <result column="UOM"  jdbcType="VARCHAR" property="uom"></result>
+        <result column="SPEC_CODE"  jdbcType="VARCHAR" property="specCode"></result>
+        <result column="SPEC_NAME"  jdbcType="VARCHAR" property="specName"></result>
+        <result column="IS_ACTIVE"  jdbcType="TINYINT" property="isActive"></result>
+        <result column="IS_ALL_OU_OPENED"  jdbcType="TINYINT" property="isAllOuOpened"></result>
+        <result column="IS_BY_OU_CONTROL"  jdbcType="TINYINT" property="isByOuControl"></result>
+        <result column="KEYWORDS"  jdbcType="VARCHAR" property="keywords"></result>
+        <result column="COMMODITY_ID"  jdbcType="NUMERIC" property="commodityId"></result>
+        <result column="PICTURE_ID"  jdbcType="NUMERIC" property="pictureId"></result>
+        <result column="VALIDITY_TERM"  jdbcType="NUMERIC" property="validityTerm"></result>
+        <result column="SPEC1_ATTRIBUTE_ID"  jdbcType="NUMERIC" property="spec1AttributeId"></result>
+        <result column="SPEC1_ATTRIBUTE_NAME"  jdbcType="VARCHAR" property="spec1AttributeName"></result>
+        <result column="SPEC1_VALUE_ID"  jdbcType="NUMERIC" property="spec1ValueId"></result>
+        <result column="SPEC1_VALUE_NAME"  jdbcType="VARCHAR" property="spec1ValueName"></result>
+        <result column="SPEC2_ATTRIBUTE_ID"  jdbcType="NUMERIC" property="spec2AttributeId"></result>
+        <result column="SPEC2_ATTRIBUTE_NAME"  jdbcType="VARCHAR" property="spec2AttributeName"></result>
+        <result column="SPEC2_VALUE_ID"  jdbcType="NUMERIC" property="spec2ValueId"></result>
+        <result column="SPEC2_VALUE_NAME"  jdbcType="VARCHAR" property="spec2ValueName"></result>
+        <result column="SPEC3_ATTRIBUTE_ID"  jdbcType="NUMERIC" property="spec3AttributeId"></result>
+        <result column="SPEC3_ATTRIBUTE_NAME"  jdbcType="VARCHAR" property="spec3AttributeName"></result>
+        <result column="SPEC3_VALUE_ID"  jdbcType="NUMERIC" property="spec3ValueId"></result>
+        <result column="SPEC3_VALUE_NAME"  jdbcType="VARCHAR" property="spec3ValueName"></result>
+        <result column="WEIGHT"  jdbcType="NUMERIC" property="weight"></result>
+        <result column="VOLUME"  jdbcType="NUMERIC" property="volume"></result>
+        <result column="COUNT_READ"  jdbcType="NUMERIC" property="countRead"></result>
+        <result column="COUNT_CONNECTION"  jdbcType="NUMERIC" property="countConnection"></result>
+        <result column="IS_SUBMIT"  jdbcType="TINYINT" property="isSubmit"></result>
+        <result column="SUBMIT_USER_ID"  jdbcType="NUMERIC" property="submitUserId"></result>
+        <result column="SUBMIT_USER_NAME"  jdbcType="VARCHAR" property="submitUserName"></result>
+        <result column="SUBMIT_TIME"  jdbcType="TIMESTAMP" property="submitTime"></result>
+        <result column="IS_APPROVED"  jdbcType="TINYINT" property="isApproved"></result>
+        <result column="IS_FEE_FREE"  jdbcType="TINYINT" property="isFeeFree"></result>
+        <result column="APPROVE_USER_ID"  jdbcType="NUMERIC" property="approveUserId"></result>
+        <result column="APPROVE_USER_NAME"  jdbcType="VARCHAR" property="approveUserName"></result>
+        <result column="APPROVE_TIME"  jdbcType="TIMESTAMP" property="approveTime"></result>
+        <result column="APPROVE_RESULT"  jdbcType="VARCHAR" property="approveResult"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`CLASS_ID`,`NUMBER`,`BARCODE`,IS_FEE_FREE,`NAME`,`PINYIN`,`PY`,`ORDER_SORT`,`URL`,`TYPE`,`BASIS`,`QUICK_CODE`,`SHORT_NAME`,`INVOICED_NAME`,`DESCRIPTION`,`BRAND_ID`,`CATEGORY_ID`,`UOM`,`SPEC_CODE`,`SPEC_NAME`,`IS_ACTIVE`,`IS_ALL_OU_OPENED`,`IS_BY_OU_CONTROL`,`KEYWORDS`,`COMMODITY_ID`,`PICTURE_ID`,`VALIDITY_TERM`,`SPEC1_ATTRIBUTE_ID`,`SPEC1_ATTRIBUTE_NAME`,`SPEC1_VALUE_ID`,`SPEC1_VALUE_NAME`,`SPEC2_ATTRIBUTE_ID`,`SPEC2_ATTRIBUTE_NAME`,`SPEC2_VALUE_ID`,`SPEC2_VALUE_NAME`,`SPEC3_ATTRIBUTE_ID`,`SPEC3_ATTRIBUTE_NAME`,`SPEC3_VALUE_ID`,`SPEC3_VALUE_NAME`,`WEIGHT`,`VOLUME`,`COUNT_READ`,`COUNT_CONNECTION`,`IS_SUBMIT`,`SUBMIT_USER_ID`,`SUBMIT_USER_NAME`,`SUBMIT_TIME`,`IS_APPROVED`,`APPROVE_USER_ID`,`APPROVE_USER_NAME`,`APPROVE_TIME`,`APPROVE_RESULT`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `MD_ITEM`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ item.id },
+        
+        #{ item.classId },
+        #{ item.number },
+        #{ item.barcode },
+        #{ item.isFeeFree },
+        #{ item.name },
+        #{ item.pinyin },
+        #{ item.py },
+        #{ item.orderSort },
+        #{ item.url },
+        #{ item.type },
+        #{ item.basis },
+        #{ item.quickCode },
+        #{ item.shortName },
+        #{ item.invoicedName },
+        #{ item.description },
+        #{ item.brandId },
+        #{ item.categoryId },
+        #{ item.uom },
+        #{ item.specCode },
+        #{ item.specName },
+        #{ item.isActive },
+        #{ item.isAllOuOpened },
+        #{ item.isByOuControl },
+        #{ item.keywords },
+        #{ item.commodityId },
+        #{ item.pictureId },
+        #{ item.validityTerm },
+        #{ item.spec1AttributeId },
+        #{ item.spec1AttributeName },
+        #{ item.spec1ValueId },
+        #{ item.spec1ValueName },
+        #{ item.spec2AttributeId },
+        #{ item.spec2AttributeName },
+        #{ item.spec2ValueId },
+        #{ item.spec2ValueName },
+        #{ item.spec3AttributeId },
+        #{ item.spec3AttributeName },
+        #{ item.spec3ValueId },
+        #{ item.spec3ValueName },
+        #{ item.weight },
+        #{ item.volume },
+        #{ item.countRead },
+        #{ item.countConnection },
+        #{ item.isSubmit },
+        #{ item.submitUserId },
+        #{ item.submitUserName },
+        #{ item.submitTime },
+        #{ item.isApproved },
+        #{ item.approveUserId },
+        #{ item.approveUserName },
+        #{ item.approveTime },
+        #{ item.approveResult },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `MD_ITEM`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "item" index ="index" separator=",">
+            (
+            #{ item.id },
+            
+            #{ item.classId },
+            #{ item.number },
+            #{ item.barcode },
+            #{ item.isFeeFree },
+            #{ item.name },
+            #{ item.pinyin },
+            #{ item.py },
+            #{ item.orderSort },
+            #{ item.url },
+            #{ item.type },
+            #{ item.basis },
+            #{ item.quickCode },
+            #{ item.shortName },
+            #{ item.invoicedName },
+            #{ item.description },
+            #{ item.brandId },
+            #{ item.categoryId },
+            #{ item.uom },
+            #{ item.specCode },
+            #{ item.specName },
+            #{ item.isActive },
+            #{ item.isAllOuOpened },
+            #{ item.isByOuControl },
+            #{ item.keywords },
+            #{ item.commodityId },
+            #{ item.pictureId },
+            #{ item.validityTerm },
+            #{ item.spec1AttributeId },
+            #{ item.spec1AttributeName },
+            #{ item.spec1ValueId },
+            #{ item.spec1ValueName },
+            #{ item.spec2AttributeId },
+            #{ item.spec2AttributeName },
+            #{ item.spec2ValueId },
+            #{ item.spec2ValueName },
+            #{ item.spec3AttributeId },
+            #{ item.spec3AttributeName },
+            #{ item.spec3ValueId },
+            #{ item.spec3ValueName },
+            #{ item.weight },
+            #{ item.volume },
+            #{ item.countRead },
+            #{ item.countConnection },
+            #{ item.isSubmit },
+            #{ item.submitUserId },
+            #{ item.submitUserName },
+            #{ item.submitTime },
+            #{ item.isApproved },
+            #{ item.approveUserId },
+            #{ item.approveUserName },
+            #{ item.approveTime },
+            #{ item.approveResult },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `MD_ITEM`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `MD_ITEM`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="itemPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `MD_ITEM`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="itemPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `MD_ITEM`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="itemPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `MD_ITEM`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `MD_ITEM`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

@@ -1,0 +1,514 @@
+.showcal{
+
+}
+.showcal .showcal--mobile-header{
+   background-color:  #fff;
+    color: #333;
+}
+.showcal .showcal--mobile-header-borderbottom{
+    border: 1px solid #dcdcdc;
+}
+.showcal .am-header .am-header-nav .goodsdetail-header-img{
+    width: 37px;
+    height:37px;
+    border-radius: 50%;
+}
+.showcal .am-header .showcal-header-right{
+    position: absolute;
+    top: 0px;
+
+}
+.showcal .classify-search-box{
+    padding:5px 0px 10px 5px;
+    background-color: #f4f4f4;
+
+}
+.showcal .classify-search-box .showcal-goodsdetail-input{
+    border-radius: 5px;
+    border: 1px solid #dcdcdc;
+    width: 85%;
+    margin: 0px 10px 0px 10px;
+    height: 30px;
+}
+.showcal .am-offcanvas-bar {
+    position: fixed;
+    top: 49px;
+    bottom: 0;
+    left: 0;
+    z-index: 1091;
+    width: 200px;
+    background: #fff;
+    border-top: 1px solid #dcdcdc;
+    border-right:1px solid #dcdcdc;
+
+}
+.showcal .am-offcanvas-bar:after {
+
+    background: #fff;
+}
+.showcal .am-offcanvas-content {
+    padding:0;
+    color: #999;
+}
+.showcal .am-offcanvas-content a{
+    color: #999;
+}
+.showcal .showcal-detail-box{
+    position: relative;
+    width: 100%;
+    border-top:1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
+    background: #fff;
+    text-align: center;
+}
+.showcal .showcal-detail-box .description-img{
+    position: relative;
+   display: inline-block;
+    width: 100%;
+}
+.showcal .showcal-detail-box .showcal-detail-bottom-description{
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    bottom: 0px ;
+    background: url("../images/back.png")  no-repeat left top;
+    z-index: 10;
+}
+.showcal .showcal-detail-box .description{
+    position: absolute;
+    top: 0px;
+    z-index: 1006;
+    color: #333;
+    float: left;
+    font-size: 14px;
+    padding: 10px;
+}
+.showcal .showcal-detail-box .price{
+    position: absolute;
+    right: 70px;
+    top: 10px;
+    padding: 5px;
+    font-size: 16px;
+    color: #f25a81;
+}
+
+.showcal .showcal-detail-box .right-arrows{
+    position: absolute;
+    float: right;
+    right: 25px;
+    top: 10px;
+}
+
+.showcal footer {
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background: #fff;
+    text-align: center;
+    border-top: 1px solid #dcdcdc;
+}
+
+.showcal footer a {
+    display: block;
+    width: 100%;
+}
+
+.showcal footer .footericon {
+    width: 25px;
+    height: 22px;
+    display: block;
+}
+
+.showcal footer .footericon img {
+    display: block;
+    width: 100%;
+}
+
+.showcal footer .foottitle {
+     display: block;
+     height: 1.2rem;
+     line-height: 1.2rem;
+     color: #666;
+ }
+
+
+.showcal .am-header .am-header-nav .showcal-left-arrow {
+  height: 24px;
+ }
+
+.showcal .goodsdetail-box{
+    position: relative;
+    width: 100%;
+    height: auto;
+    text-align: center;
+    background-color: #fff;
+    border-top: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.showcal .goodsdetail-box .goodsdetail-description-box{
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    bottom: 0px ;
+    background: url("../images/back.png")  no-repeat left top;
+    z-index: 10;
+}
+.showcal .goodsdetail-box .goodsdetail-description-box .goodsdetail-description{
+    position: absolute;
+    top: 0px;
+    z-index: 1006;
+    color: #333;
+    float: left;
+    font-size: 14px;
+    padding: 13px;
+}
+
+.showcal .goodsdetail-description-listcontainer{
+    width: 100%;
+    margin-top: 20px;
+
+    font-size: 14px;
+}
+.showcal .am-offcanvas{
+    background: rgba(0,0,0,0.13);
+}
+.showcal .goodsdetail-description-listcontainer .detail-list{
+    display: inline-block;
+    padding: 0px;
+    font-size: 14px;
+    line-height: 38px;
+    color: #999;
+    background-color: #fff;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.showcal .goodsdetail-description-listcontainer .detail-list-1{
+    color:  #f25a81;
+    background-color: #fff;
+
+}
+
+
+.showcal .goodsdetail-description-listcontainer .block-img{
+    display: inline-block;
+    width: 100%;
+    margin-top: 20px;
+}
+
+
+.showcal .showcal-index-box{
+     width: 100%;
+    background-color: #fff;
+    text-align: center;
+}
+.showcal .showcal-index-box img{
+     width: 100%;
+    display: inline-block;
+}
+
+.showcal .footer-opa{
+    opacity: 0.9;
+}
+.showcal .login-button{
+    display: inline-block;
+    text-decoration: none;
+    background-color: #f25a81;
+    color: #ffffff;
+    height: 60px;
+    line-height: 60px;
+    font-size: 18px;
+}
+
+.showcal .register-button{
+    display: inline-block;
+    text-decoration: none;
+    background-color:#ffffff;
+    color: #000;
+    line-height: 60px;
+    height: 60px;
+    font-size: 18px;
+}
+.showcal .color-gray{
+    color: #666;
+}
+
+
+.showcal .login-input{
+    width:100%;
+    height: 40px;
+    border: 1px solid #dcdcdc;
+    border-radius: 1px;
+}
+.showcal .validate-code{
+    display: inline-block;
+    color: #666;
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid #dcdcdc;
+    line-height: 40px
+}
+
+.showcal .login-button-default{
+    width: 100%;
+    height: 40px;
+    line-height: 12px;
+    border: none;
+}
+.showcal .login-button-gray{
+    background-color: #cccccc;
+    color: #fff;
+}
+.showcal .login-button-pink{
+    background-color: #f25a81;
+}
+
+
+.showcal .third-login-line{
+    width: 100%;
+    margin-top: 100px;
+    border-top: 1px solid #dcdcdc;
+    position: relative
+}
+.showcal .third-login-description{
+    position: absolute;
+    top: -12px;
+    padding-left: 10px;
+    left: 25%;
+    font-size: 14px;
+    background-color: #f4f4f4;
+    padding-right: 10px;
+}
+
+.showcal .border-bottom-1{
+border-bottom: 1px solid #dcdcdc;
+}
+.showcal .message-person-img{
+    width: 30px ;
+    height: 30px ;
+    border-radius: 50%;
+    border: 1px solid #dcdcdc;
+    margin: 10px
+}
+.showcal .relative-box{
+position: relative;
+}
+.showcal .relative-box .cycle-img{
+    position: absolute;
+    left: -16px;
+    top: 8px;
+}
+
+.showcal .message-description{
+   font-size: 14px;
+   line-height: 30px;
+   color: #999;
+}
+
+.showcal .message-list-img{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+}
+.showcal .message-list-box{
+   background-color: #fff;
+    padding: 15px ;
+    border: 1px solid #dcdcdc
+}
+#showcal-detail-box{
+    padding:0 0 80px 0;
+    position: relative;
+    top:0px;
+}
+.h-20{
+    height: 30px;
+}
+
+#bg{
+    position: fixed;
+    background: rgba(0,0,0,0.8);
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    z-index: 1020;
+}
+.dialog-popup{
+    width: 100%;
+    min-height: 60px;
+    position: absolute;
+    display: none;
+    z-index: 1110;
+    bottom: 0;
+    border-radius: 0;
+    text-align: center;
+
+    background-color: #FFF;
+}
+.dialog-popup a{
+    color:#f25a81;
+}
+
+.bg-opacity-1{
+     height:10px;
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+}
+
+.action-comfirm{
+    position:relative;
+    bottom:0;
+    width:100%;
+    height: 45px;
+    line-height:45px;
+    color: #f25a81;
+    background:#fff;
+    text-align: center;
+}
+.action-comfirm span{
+    cursor: pointer;
+}
+
+
+
+.lineform .tabcon {
+    width: 100%;
+    padding-top: 49px;
+    height: auto;
+    overflow: hidden;
+    background: #f4f4f4;
+}
+.lineform .tabgroup {
+    width: 60%;
+    height: 34px;
+    line-height: 30px;
+    border: 1px solid #f25a81;
+    border-radius: 20px;
+    padding: 0;
+    overflow: hidden;
+    margin: 0 auto;
+}
+.lineform .tabgroup .active {
+    color: #fff;
+    background: #f25a81;
+}
+
+.lineform .tabgroup li {
+    width: 33.333%;
+    float: left;
+    height: 34px;
+    float: left;
+    color: #f25a81;
+}
+.lineform .tabgroup li a {
+    color: #fff;
+}
+.lineform .border-right-link {
+    border-right: 1px solid  #f25a81;
+}
+
+
+.pt-10 {
+    padding-top: 10px;
+}
+#myChart1 ,#myChart2,#myChart3 {
+    background: #fff;
+    width: 300px;
+    height: 300px;
+    background: #fff;
+    margin: 10px auto;
+    border: 1px solid #dcdcdc;
+}
+
+
+.am-modal-dialog-1{
+     width: 100px;
+     height: 100px;
+     padding: 0px;
+     margin-left: 15%;
+     background-color: #fff;
+ }
+
+#pre{
+    background-color: #fff;
+    border: 1px solid #dcdcdc;
+    height: 34px;
+    width: 50px;
+    left: 6px;
+    line-height: 34px;
+    position: absolute;
+}
+#next{
+    background-color: #fff;
+    border: 1px solid #dcdcdc;
+    height: 34px;
+    width: 50px;
+    right: 3px;
+    line-height: 34px;
+    position: absolute;
+}
+
+.aboutme-cycle-img{
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+}
+.showcal .search-goods{
+    position: absolute;
+    left: 15%;
+    top: 65px;
+    height: 2.6rem;
+    line-height: 2.6rem;
+    text-align: center;
+    z-index: 10;
+    display: block;
+}
+.goods-absolute-img{
+    float:right;
+    position: absolute;
+    right: 5px;
+}
+/*
+.dialog-popup-1{
+    width: 270px;
+    position: fixed;
+    display: none;
+    z-index: 1110;
+    left: 50%;
+    margin-left: -135px;
+    margin-top: 0;
+    top: 30%;
+    text-align: center;
+    border-radius: 0;
+    background-color: rgba(0,0,0,0.5);
+}
+*/
+
+
+/*
+.my-modal-dialog {
+    border-radius: 0;
+    background: #f8f8f8;
+}
+
+ .am-modal-hd-1 {
+     background-color: #3bb4f2;
+     position: relative;
+     height: 36px;
+     color: #fff;
+     font-size: 16px;
+     line-height: 8px;
+}
+
+.modal-close{
+    position: absolute;
+    right: 10px;
+    top: 2px;
+    color: #fff;
+    font-size: 18px;
+}*/

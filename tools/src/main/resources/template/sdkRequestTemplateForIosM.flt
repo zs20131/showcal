@@ -1,0 +1,98 @@
+//
+//  ${class.name}.h
+//
+//
+//  Created by ${annotation.authorName} on ${annotation.date}
+//  Copyright (c) 2014-2015 –苏州犀牛网络科技有限公司
+//
+
+#import "${class.name}.h"
+
+@implementation ${class.name}
+
+<#if fields??>
+    <#list fields as field>
+        <#if field.name!="sortKey">
+//${field.description}
+            <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*" && (field.name=="baseDomain" || field.name=="baseRequest" || field.name=="baseResponse")>
+@synthesize ${field.name};
+            <#else>
+                <#if field.name=="uuid">
+static NSString * const  f_uuid = @"id";
+                <#else>
+static NSString * const  f_${field.name} = @"${field.name}";
+                </#if>
+            </#if>
+        </#if>
+    </#list>
+</#if>
+
+
+- (instancetype)init {
+    self = [super init];
+    if(self) {
+        _baseRequest = [[BaseRequest alloc]init];
+    }
+    return self;
+}
+
+#pragma getter/setter
+<#if fields??>
+    <#list fields as field>
+        <#if field.name!="sortKey">
+
+#pragma mark - 判断${field.description}是否存在
+-(BOOL)has${field.name?cap_first} {
+    for(NSString *key in [_baseRequest.fields allKeys]) {
+        if ([key isEqualToString:f_${field.name}]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+#pragma mark - 获取${field.description}
+-(${field.iostype}<#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">*</#if>)${field.name} {
+            <#if field.isDomain>
+                <#if field.iostype=="NSArray*" || field.iostype=="NSDictionary*">
+    return (${field.iostype})[_baseRequest.fields objectForKey:f_${field.name}];
+                <#elseif field.isEnum>
+    return [_baseRequest.fields objectForKey:f_${field.name}];
+                <#else>
+    return (${field.iostype}*)[_baseRequest.fields objectForKey:f_${field.name}];
+                </#if>
+            <#else >
+                <#if field.iostype=="NSDate*">
+    return (${field.iostype})[_baseRequest.fields objectForKey:f_${field.name}];
+        <#elseif field.iostype=="NSString*">
+    return (NSString*)[_baseRequest.fields objectForKey:f_${field.name}];
+                <#else>
+    return [[_baseRequest.fields objectForKey:f_${field.name}] ${field.iostypeValue}Value];
+                </#if>
+            </#if>
+}
+
+#pragma mark - 设置${field.description}
+-(void)set${field.name?cap_first}:(${field.iostype} <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">*</#if>)${field.name} {
+            <#if field.isDomain>
+    [_baseRequest.fields setObject:${field.name} forKey:f_${field.name}];
+            <#else>
+                <#if field.iostype=="NSDate*">
+    [_baseRequest.fields setObject:${field.name} forKey:f_${field.name}];
+                <#elseif field.iostype=="UInt64">
+    [_baseRequest.fields setObject:[NSString stringWithFormat:@"%lld",${field.name}] forKey:f_${field.name}];
+                <#elseif field.iostype=="NSInteger">
+    [_baseRequest.fields setObject:[NSString stringWithFormat:@"%ld",${field.name}] forKey:f_${field.name}];
+                <#elseif field.iostype=="float">
+    [_baseRequest.fields setObject:[NSString stringWithFormat:@"%lf",${field.name}] forKey:f_${field.name}];
+                <#elseif field.iostype=="BOOL">
+    [_baseRequest.fields setObject:[NSString stringWithFormat:@"%d",${field.name}] forKey:f_${field.name}];
+                <#else>
+    [_baseRequest.fields setObject:${field.name} forKey:f_${field.name}];
+                </#if>
+            </#if>
+}
+        </#if>
+    </#list>
+</#if>
+@end

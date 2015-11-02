@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.cms.dal.ArticleMapper">
+
+    <resultMap  id="articlePO" type="com.showcal.cms.po.ArticlePO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="TITLE"  jdbcType="VARCHAR" property="title"></result>
+        <result column="IS_ORIGINAL"  jdbcType="TINYINT" property="isOriginal"></result>
+        <result column="AUTHOR_NAME"  jdbcType="VARCHAR" property="authorName"></result>
+        <result column="COVER_ID"  jdbcType="NUMERIC" property="coverId"></result>
+        <result column="IS_COVER_IN_BODY"  jdbcType="TINYINT" property="isCoverInBody"></result>
+        <result column="SUMMARY"  jdbcType="VARCHAR" property="summary"></result>
+        <result column="ORIGINAL_URL"  jdbcType="VARCHAR" property="originalUrl"></result>
+        <result column="CATEGORY_ID"  jdbcType="VARCHAR" property="categoryId"></result>
+        <result column="KEYWORDS"  jdbcType="VARCHAR" property="keywords"></result>
+        <result column="COUNT_READ"  jdbcType="NUMERIC" property="countRead"></result>
+        <result column="COUNT_LINK"  jdbcType="NUMERIC" property="countLink"></result>
+        <result column="COUNT_COMMENT"  jdbcType="NUMERIC" property="countComment"></result>
+        <result column="COUNT_CONNECTION"  jdbcType="NUMERIC" property="countConnection"></result>
+        <result column="WEIGHT"  jdbcType="NUMERIC" property="weight"></result>
+        <result column="IS_SUBMIT"  jdbcType="TINYINT" property="isSubmit"></result>
+        <result column="SUBMIT_USER_ID"  jdbcType="NUMERIC" property="submitUserId"></result>
+        <result column="SUBMIT_USER_NAME"  jdbcType="VARCHAR" property="submitUserName"></result>
+        <result column="SUBMIT_TIME"  jdbcType="TIMESTAMP" property="submitTime"></result>
+        <result column="IS_APPROVED"  jdbcType="TINYINT" property="isApproved"></result>
+        <result column="APPROVE_USER_ID"  jdbcType="NUMERIC" property="approveUserId"></result>
+        <result column="APPROVE_USER_NAME"  jdbcType="VARCHAR" property="approveUserName"></result>
+        <result column="APPROVE_TIME"  jdbcType="TIMESTAMP" property="approveTime"></result>
+        <result column="APPROVE_RESULT"  jdbcType="VARCHAR" property="approveResult"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`TITLE`,`IS_ORIGINAL`,`AUTHOR_NAME`,`COVER_ID`,`IS_COVER_IN_BODY`,`COUNT_CONNECTION`,`SUMMARY`,`WEIGHT`,`ORIGINAL_URL`,`CATEGORY_ID`,`KEYWORDS`,`COUNT_READ`,`COUNT_LINK`,`COUNT_COMMENT`,`IS_SUBMIT`,`SUBMIT_USER_ID`,`SUBMIT_USER_NAME`,`SUBMIT_TIME`,`IS_APPROVED`,`APPROVE_USER_ID`,`APPROVE_USER_NAME`,`APPROVE_TIME`,`APPROVE_RESULT`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `CMS_ARTICLE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ article.id },
+        
+        #{ article.title },
+        #{ article.isOriginal },
+        #{ article.authorName },
+        #{ article.coverId },
+        #{ article.isCoverInBody },
+        #{ article.countConnection },
+        #{ article.summary },
+        #{ article.weight },
+        #{ article.originalUrl },
+        #{ article.categoryId },
+        #{ article.keywords },
+        #{ article.countRead },
+        #{ article.countLink },
+        #{ article.countComment },
+        #{ article.isSubmit },
+        #{ article.submitUserId },
+        #{ article.submitUserName },
+        #{ article.submitTime },
+        #{ article.isApproved },
+        #{ article.approveUserId },
+        #{ article.approveUserName },
+        #{ article.approveTime },
+        #{ article.approveResult },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `CMS_ARTICLE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "article" index ="index" separator=",">
+            (
+            #{ article.id },
+            
+            #{ article.title },
+            #{ article.isOriginal },
+            #{ article.authorName },
+            #{ article.coverId },
+            #{ article.isCoverInBody },
+            #{ article.countConnection },
+            #{ article.summary },
+            #{ article.weight },
+            #{ article.originalUrl },
+            #{ article.categoryId },
+            #{ article.keywords },
+            #{ article.countRead },
+            #{ article.countLink },
+            #{ article.countComment },
+            #{ article.isSubmit },
+            #{ article.submitUserId },
+            #{ article.submitUserName },
+            #{ article.submitTime },
+            #{ article.isApproved },
+            #{ article.approveUserId },
+            #{ article.approveUserName },
+            #{ article.approveTime },
+            #{ article.approveResult },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `CMS_ARTICLE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `CMS_ARTICLE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="articlePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `CMS_ARTICLE`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="articlePO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `CMS_ARTICLE`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="articlePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `CMS_ARTICLE`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `CMS_ARTICLE`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

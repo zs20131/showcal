@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.thermalcontrol.dal.FoodMapper">
+
+    <sql id="whereForFindList">
+        <if test="request.name!=null and request.name!=''">AND `NAME` LIKE CONCAT ('%',#{ request.name },'%')</if>
+        <if test="request.weight!=null and request.weight!=''">AND `WEIGHT` LIKE CONCAT ('%',#{ request.weight },'%')
+        </if>
+        <if test="request.heat!=null and request.heat!=''">AND `HEAT` LIKE CONCAT ('%',#{ request.heat },'%')</if>
+        <if test="request.unitheat!=null and request.unitheat!=''">AND `UNITHEAT` LIKE CONCAT
+            ('%',#{ request.unitheat },'%')
+        </if>
+        <if test="request.protein!=null and request.protein!=''">AND `PROTEIN` LIKE CONCAT
+            ('%',#{ request.protein },'%')
+        </if>
+        <if test="request.fat!=null and request.fat!=''">AND `FAT` LIKE CONCAT ('%',#{ request.fat },'%')</if>
+        <if test="request.carbohydrate!=null and request.carbohydrate!=''">AND `CARBOHYDRATE` LIKE CONCAT
+            ('%',#{ request.carbohydrate },'%')
+        </if>
+        <if test="request.df!=null and request.df!=''">AND `DF` LIKE CONCAT ('%',#{ request.df },'%')</if>
+        <if test="request.barCode!=null and request.barCode!=''">AND `BAR_CODE` LIKE CONCAT
+            ('%',#{ request.barCode },'%')
+        </if>
+        <if test="request.brand!=null and request.brand!=''">AND `BRAND` LIKE CONCAT ('%',#{ request.brand },'%')</if>
+        <if test="request.foodExchange!=null and request.foodExchange!=''">AND `FOOD_EXCHANGE` LIKE CONCAT
+            ('%',#{ request.foodExchange },'%')
+        </if>
+        <if test="request.edubleUnit!=null and request.edubleUnit!=''">AND `EDUBLE_UNIT` LIKE CONCAT
+            ('%',#{ request.edubleUnit },'%')
+        </if>
+        <if test="request.unitWeight!=null and request.unitWeight!=''">AND `UNIT_WEIGHT` LIKE CONCAT
+            ('%',#{ request.unitWeight },'%')
+        </if>
+        <if test="request.foodLargeCategory!=null and request.foodLargeCategory!=''">AND `FOOD_LARGE_CATEGORY` = #{ request.foodLargeCategory }
+        </if>
+        <if test="request.foodCategoryId!=null and request.foodCategoryId!=''">AND `FOOD_CATEGORY_ID` = #{ request.foodCategoryId }
+        </if>
+        <if test="request.isLose!=null and request.isLose!=''">AND `IS_LOSE` =#{ request.isLose }</if>
+        <if test="request.isAddMuscle!=null and request.isAddMuscle!=''">AND `IS_ADD_MUSCLE` =#{ request.isAddMuscle }
+        </if>
+        <if test="request.isCommon!=null and request.isCommon!=''">AND `IS_COMMON` =#{ request.isCommon }
+        </if>
+        <if test="request.sourceId!=null and request.sourceId!=''">AND `MENU_ID` LIKE CONCAT
+            ('%',#{ request.sourceId },'%')
+        </if>
+        <if test="request.isActive!=null ">AND `IS_ACTIVE` = #{ request.isActive }</if>
+        <if test="request.activeDate!=null and request.activeDate!=''">AND `ACTIVE_DATE` LIKE CONCAT
+            ('%',#{ request.activeDate },'%')
+        </if>
+        <if test="request.activeUser!=null and request.activeUser!=''">AND `ACTIVE_USER` LIKE CONCAT
+            ('%',#{ request.activeUser },'%')
+        </if>
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           )
+    </sql>
+
+    <select id="find" resultMap="foodPO">
+        SELECT * FROM
+        (
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `TC_FOOD`
+        WHERE
+        `IS_DELETED`=0
+        <include refid="whereForFindList"/>
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        `TC_FOOD`
+        WHERE
+        `IS_DELETED`=0
+        <include refid="whereForFindList"/>
+    </select>
+
+    <select id="search" resultMap="foodPO">
+        SELECT * FROM
+        (
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `TC_FOOD`
+        WHERE
+        `IS_DELETED`=0
+        <if test="request.keyword !=null">
+            AND
+            <include refid="whereForSearchList"/>
+        </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        `TC_FOOD`
+        WHERE
+        `IS_DELETED`=0
+        AND
+        <include refid="whereForSearchList"/>
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_FOOD`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `TC_FOOD`
+        SET
+        `NAME`=#{ request.name },
+        `WEIGHT`=#{ request.weight },
+        `HEAT`=#{ request.heat },
+        `UNITHEAT`=#{ request.unitheat },
+        `PROTEIN`=#{ request.protein },
+        `FAT`=#{ request.fat },
+        `CARBOHYDRATE`=#{ request.carbohydrate },
+        `DF`=#{ request.df },
+        `BAR_CODE`=#{ request.barCode },
+        `BRAND`=#{ request.brand },
+        `FOOD_EXCHANGE`=#{ request.foodExchange },
+        `EDUBLE_UNIT`=#{ request.edubleUnit },
+        `UNIT`=#{ request.unit },
+        `UNIT_WEIGHT`=#{ request.unitWeight },
+        `FOOD_LARGE_CATEGORY`=#{ request.foodLargeCategory },
+        `FOOD_CATEGORY_ID`=#{ request.foodCategoryId },
+        `IS_LOSE`=#{ request.isLose },
+        `IS_ADD_MUSCLE`=#{ request.isAddMuscle },
+        `IS_COMMON`=#{ request.isCommon },
+        `SOURCE_ID`=#{ request.sourceId },
+        `MENU_ID`=#{ request.menuId },
+        `MENU_CATEGORY`=#{ request.menuCategory },
+        `PICTURE_URL`=#{ request.pictureUrl },
+        `IS_ACTIVE`=#{ request.isActive },
+        `ACTIVE_DATE`=#{ request.activeDate },
+        `ACTIVE_USER`=#{ request.activeUser },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+    </update>
+
+
+    <update id="inactive">
+        UPDATE
+            `TC_FOOD`
+        SET
+            `IS_ACTIVE` = 0
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `IS_ACTIVE`=1
+            AND `ID` = #{id}
+    </update>
+
+    <update id="active">
+        UPDATE
+            TC_FOOD
+        SET
+            `IS_ACTIVE` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `IS_ACTIVE`=0
+            AND `ID` = #{id}
+    </update>
+
+</mapper>

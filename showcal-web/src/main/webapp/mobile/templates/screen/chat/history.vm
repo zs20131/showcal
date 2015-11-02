@@ -1,0 +1,223 @@
+$page.setTitle("历史记录")
+<style>
+    body {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+    }
+</style>
+<div class="discover discover-detail  chooseShowcal chat">
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="index?passportid=$!passport.id" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+        <h5 class="am-header-title">历史记录</h5>
+
+        <div class="am-header-right am-header-nav">
+            <a href="#right-link" class="info-ico ">
+
+            </a>
+        </div>
+    </header>
+    <!--搜索 -->
+    <div class="am-cf am-margin-xs">
+        <div class="history-search am-text-sm ">
+            <input class="input-con" value="" id="searchHistory"/>
+
+            <div class="search"><img class="am-margin-right-xs" src="$mobileContent.getURI("images/search-gray.png")"
+                                     width="14px" height="14px"/><span class="lighter-gray-txt am-text-xs">搜索</span>
+            </div>
+        </div>
+    </div>
+    <!--聊天列表 -->
+    <div id="wrapper" class="whitebg">
+        <div class="am-cf top-border" id="scroller">
+            <div id="pullDown" class="am-text-center">
+                <span class="pullDownIcon"></span><span class="pullDownLabel">查看更多消息</span>
+            </div>
+            <ul class="am-padding-0 am-text-sm" id="thelist">
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(function () {
+
+        $(".input-con").focus(function () {
+            $(this).next(".search").hide();
+        });
+
+        $(".search").on("click", function () {
+            $(this).hide();
+            $(this).prev(".input-con").focus();
+        });
+
+        $(".input-con").blur(function () {
+            if (!$(this).val()) {
+                $(this).next(".search").show();
+            } else {
+                return;
+            }
+        });
+        $('#searchHistory').bind('input propertychange', function () {
+            keyword = $('#searchHistory').val();
+            pageSize = 0;
+            getMessage(true);
+        })
+    });
+    var pageNumber = 1;
+    var pageSize = 10;
+    var totalCount = -1;
+    var keyword = '';
+    var getMessage = function (isclear) {
+        if (totalCount > -1 && pageSize > 0) {
+            if ((pageNumber - 1) * pageSize > totalCount) {
+                return;
+            }
+        }
+        if(!keyword){
+            keyword='';
+        }
+        $.ajax({ url: "$serviceContent.getURI("/api.do?method=api.service.myhistorymessage.get")&passportid=$!passport.id",
+            data: "{\"keyword\":\"" + keyword + "\",\"showcalId\":\"" + '$sId' + "\",\"pageNumber\":\"" + pageNumber + "\",\"pageSize\":\"" + pageSize + "\"}",
+            contentType: "application/json",
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                if (data.errors.length > 0) {
+                    var message = data.errors[0].message
+                    $("#errormsg").html(message);
+                } else {
+                    totalCount = data.totalCount;
+                    var el, li, i;
+                    el = document.getElementById('thelist');
+                    if (isclear) {
+                        // 清空节点下所有数据
+                        $(el).empty();
+                    }
+                    $(data.result).each(function (index, item) {
+                        li = document.createElement('li');
+                        li.setAttribute("class", "am-g am-padding-sm");
+                        if (item.fromUserId == '$passport.userId') {
+                            // 瘦咖
+                            var contentval = item.messageType == 'TEXT' ? item.content : '<img src="' + (item.url ? item.url : '') + '@320w_180h_0e" width=100%/>';
+                            li.innerHTML = "<img class=\"am-circle am-fr \" src=\"$passport.avatar\" width=\"40px\" height=\"40px\"/>" +
+                                    "<div class=\"am-fr mr-2rem chat-txt-right\">" +
+                                    "<i></i> <span>" + contentval +
+                                    "<span></div>";
+                        } else {
+                            // 自己
+                            var contentval = item.messageType == 'TEXT' ? item.content : '<img src="' + (item.url ? item.url : '') + '@320w_180h_0e" width=100%/>';
+                            li.innerHTML = "<img class=\"am-circle am-fl \" src=\"$!showcalavatar\" width=\"40px\" height=\"40px\"/>" +
+                                    "<div class=\"am-fl ml-2rem chat-txt\">" +
+                                    "<i></i>" + contentval +
+                                    "</div>";
+                        }
+                        if (isclear) {
+                            //append
+                            $(el).append(li);
+                            myScroll.refresh()
+                            moveToBottom();
+                        } else {
+                            el.insertBefore(li, el.childNodes[0]);
+                            myScroll.refresh();
+                        }
+                    })
+                }
+            }});
+    }
+
+
+    var h = $(window).height();
+    var hnew = h - 90;
+    $("#wrapper").css("height", hnew + "px");
+    $(window).resize(function () {
+        var h = $(window).height();
+        var hnew = h - 90;
+        $("#wrapper").css("height", hnew + "px");
+    });
+
+
+    //xiala
+    var myScroll, pullDownEl, pullDownOffset, generatedCount = 0;
+
+    function pullDownAction() {
+        setTimeout(function () {
+            pageNumber++;
+            pageSize = 10;
+            getMessage(false)
+            myScroll.refresh();
+        }, 1000);
+    }
+
+    function moveToBottom() {
+        myScroll.scrollToElement('li:last-child', 200);
+    }
+    var initMessage = function(){
+        getMessage(true);
+//        myScroll.refresh();
+//        moveToBottom();
+    }
+
+
+
+    /**
+     * 初始化iScroll控件
+     */
+    function loaded() {
+        pullDownEl = document.getElementById('pullDown');
+        pullDownOffset = pullDownEl.offsetHeight;
+        // console.log(pullDownOffset);
+        myScroll = new iScroll('wrapper', {
+            scrollbarClass: 'myScrollbar',
+            useTransition: false,
+            topOffset: pullDownOffset,
+            onRefresh: function () {
+                if (pullDownEl.className.match('loading')) {
+                    pullDownEl.className = '';
+                    pullDownEl.querySelector('.pullDownLabel').innerHTML = '查看更多消息';
+                }
+            },
+            onScrollMove: function () {
+                if (this.y > 5 && !pullDownEl.className.match('flip')) {
+                    pullDownEl.className = 'flip';
+                    pullDownEl.querySelector('.pullDownLabel').innerHTML = '松手开始加载';
+                    this.minScrollY = 0;
+                } else if (this.y < 5 && pullDownEl.className.match('flip')) {
+                    pullDownEl.className = '';
+                    pullDownEl.querySelector('.pullDownLabel').innerHTML = '查看更多消息';
+                    this.minScrollY = -pullDownOffset;
+                }
+            },
+            onScrollEnd: function () {
+                if (pullDownEl.className.match('flip')) {
+                    pullDownEl.className = 'loading';
+                    pullDownEl.querySelector('.pullDownLabel').innerHTML = '更多消息加载中';
+                    pullDownAction();
+                }
+            }
+        });
+        myScroll.refresh()
+        setTimeout(function () {
+            document.getElementById('wrapper').style.left = '0';
+        }, 800);
+        initMessage();
+    }
+
+    //初始化绑定iScroll控件
+    document.addEventListener('touchmove', function (e) {
+        e.preventDefault();
+    }, false);
+    document.addEventListener('DOMContentLoaded', loaded, false);
+
+
+</script>

@@ -1,0 +1,76 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+        <li><a   href="$platformLink.setTarget("setting/index")">设置</a></li>
+        <li class="active">积分规则</li>
+    </ul>
+
+</div>
+
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="IntegralIndexController">
+    <form class="form-horizontal xn-form" role="form" xn-form-validate novalidate name="validateForm">
+        <div class="xn-form-table-wrap">
+            <div class="xn-input-line clearfix" ng-show="validateForm.$errors.length > 0 ">
+                <div class="col-sm-12">
+                    <div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign mr_5"
+                                                       ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]
+                        }}
+                    </div>
+                </div>
+            </div>
+    <div class="xn-table-wrap">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th class="col-sm-2">项次</th>
+                <th class="col-sm-2">积分类型</th>
+                <th class="col-sm-3">积分状态</th>
+                <th class="col-sm-2">积分值</th>
+                <th class="col-sm-2">操作</th>
+
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <tr ng-repeat="integral in  rules" ng-class="{'unactive':!evaluate.isActive}">
+                <td class="xn-center column"> {{$index+1}}</td>
+                <td class="column">
+                   {{integral.type | integralType}}
+                </td>
+
+                <td class="column  ">
+                    <div ng-show="integral.edit"> <span ng-if="integral.status==1">增加</span><span ng-if="integral.status==0">消费</span></div>
+                    <select ng-model="integral.status" class="form-control mr_10 w_130 f-left ml_10 "
+                            ng-show="!integral.edit"
+                            ng-options="rule.value as rule.key for rule in integrals">
+                    </select>
+                </td>
+                <td class="column xn-text-center">
+                    <div ng-show="integral.edit">{{integral.value}}</div>
+                    <input ng-show="!integral.edit" type="text" class="form-control w_200" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " ng-model="integral.value"/>
+                </td>
+                <td class="column    ">
+                    <a class="btn btn-primary btn-sm mr_10 " ng-show="integral.edit"
+                       ng-click="edit($index)">编辑</a>
+                    <a class="btn btn-primary btn-sm mr_10  " ng-show="!integral.edit"
+                       ng-click="save(integral,$index)">确定</a>
+                </td>
+            </tr>
+            <tr ng-if="vm.totalCount == 0">
+                <td colspan="12" class="center">无法找到相应的记录</td>
+            </tr>
+            </tbody>
+
+        </table>
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{vm.totalCount}}条</div>
+            <pagination ng-show="vm.totalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                        total-items="vm.totalCount"
+                        ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                        last-text="&raquo;"></pagination>
+        </div>
+    </div>
+        </form>
+</div>

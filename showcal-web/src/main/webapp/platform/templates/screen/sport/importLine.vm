@@ -1,0 +1,52 @@
+$page.setTitle("运动明细导入")
+<div class="xn-breadcrumb auto  xn-width clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")"></a></li>
+        <li><a  href="$platformLink.setTarget("sport/sportscheme")">运动明细导入</a></li>
+        <li class="active">导入</li>
+    </ul>
+</div>
+
+<div class="xn-main  auto xn-width  clearfix" ng-controller="SportLineImportController">
+    <div class="col-sm-offset-2  xn-import">
+        <div class="form-group mb_40 clearfix ">
+            <label for="inputFile" class="col-sm-2 control-label">选择导入文件：</label>
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <input type="text" class="form-control  " id="upImportFile"  placeholder="导入文件" name="textFile"  >
+                    <input type="file" class="none" id="upImportFileId" name="upImportFileId"  ng-click="upFileClick()"    contentEditable="false" accept="textml" />
+                    <span class="input-group-addon xn-cursor"  onclick="upImportFileId.click()">上传</span>
+                </div>
+            </div>
+            <a class="col-md-offset-1  xn-up-a" href="javascript:;" ng-click="downloadTemplate()"><i></i>下载模板</a>
+        </div>
+        <div class="form-group  clearfix">
+            <button type="button" class="btn btn-primary xn-btn-green  col-sm-2 col-md-offset-2 "  ng-click="upFileSave()">保存</button>
+            <a  class="btn btn-default  xn-btn-gray col-sm-2 col-md-offset-1"  href="$platformLink.setTarget("sport/sportscheme")?tabShow={{tabShow}}">取消</a>
+        </div>
+        <div class="form-group clearfix">
+            <div  class="hint col-md-9">注意！导入前请仔细检查导入数据的准确性！</div>
+            <div  class="hint col-md-9" ><span style="color: red">注意！导入时，Excel 中的日期请设置日期格式！</span></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="errors.html">
+    <form class="form-horizontal xn-form clearfix" role="form" novalidate name="validateForm">
+        <div class="modal-header">
+            <h3 class="modal-title">错误详情</h3>
+            <div class="xn-close xn-cursor" ng-click="cancel()">
+                <i class="icon icon-delete"></i>
+            </div>
+        </div>
+        <div class="modal-body clearfix">
+            <ul ng-repeat="error in errors">
+                <li >{{error.message}}</li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" ng-click="cancel()">关闭</button>
+##            <button class="btn btn-warning" ng-click="download()" ng-if="url">下载检测结果</button>
+        </div>
+    </form>
+</script>

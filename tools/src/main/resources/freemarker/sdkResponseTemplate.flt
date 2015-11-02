@@ -1,0 +1,43 @@
+package ${basePackage}.api.response.${moduleName?uncap_first};
+
+import com.xiniunet.api.XiniuResponse;
+import java.util.List;
+import com.xiniunet.api.domain.${moduleName?uncap_first}.*;
+
+/**
+* <p/>
+* <pre>
+ * ***************************************************************
+ *  Copyright (c) 2014 –${company}
+    *  Title: ${basePackage}.${moduleName}.helper.${moduleName ?cap_first}HelperImpl
+    *  Description: ${moduleName} Response
+    *  @since
+    *  @author ${author}
+    * ***************************************************************
+ * </pre>
+*/
+public class ${method.responseName} extends XiniuResponse{
+private static final long serialVersionUID = 1L;
+<#if method.responseFields??>
+    <#list method.responseFields as field>
+    /**
+     * ${field.description}
+     */
+    private ${field.type} ${field.name};
+    </#list>
+</#if>
+<#if method.responseFields??>
+    <#list method.responseFields as field>
+
+    public ${field.type} get${field.name?cap_first}(){
+        return ${field.name};
+    }
+
+    public void set${field.name?cap_first}(${field.type} ${field.name}){
+        this.${field.name}=${field.name};
+    }
+    </#list>
+</#if>
+
+
+}

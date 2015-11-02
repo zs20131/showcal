@@ -1,0 +1,92 @@
+<div class="showcal">
+    <!--header-->
+    <header data-am-widget="header" class="am-header am-no-layout am-header-fixed showcal--mobile-header
+    showcal--mobile-header-borderbottom">
+        <div class="am-header-left am-header-nav">
+            <a onclick="doBack()" class="">
+                <img class="showcal-left-arrow" src="$mobileContent.getURI("images/leftarrrow.png")"
+                     width="10" height="24" alt="">
+            </a>
+        </div>
+        <h1 class="am-header-title">系统消息</h1>
+    </header>
+
+   <!--消息列表-->
+    #foreach($message in $sysMessageList)
+   <div class="mt-10"onclick="detail('$!message.id')">
+         <div class="message-list-box">
+             <div class="am-u-sm-12 border-bottom-1">
+                  <div class="f-left">
+                   <img class="message-list-img" src="$mobileContent.getURI('images/picture.png')" width="30" height="30">
+                  </div>
+                 <div class="f-right light-gray-txt">
+                     $!base.formatDate($message.sendTime,"yyyy-MM-dd HH:mm:ss")</div>
+             </div>
+             <div class="clearfix"></div>
+             <p class="font-14 mt-10 mb-0">
+                 $!message.messageTitle
+             </p>
+         </div>
+   </div>
+    #end
+</div>
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">瘦咖提醒您</div>
+        <div class="am-modal-bd" id="errormsg">
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn">确定</span>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        strs = str.split("&");
+        console.log(strs);
+        for (var i = 0; i < strs.length; i++) {
+            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+        }
+        console.log(theRequest);
+    }
+    function doBack() {
+        window.location.href="index?type="+theRequest.type+"&passportid=$!passport.id";
+    }
+
+   function detail(id){
+       var param={
+           id:id
+       }
+       $.ajax({
+           type: "post",
+           data:param,
+           url: "Update.do?passportid=$!passport.id",
+           error: function () {
+               $("#errormsg").html("程序错误");
+               $('#my-alert').modal({
+                   relatedTarget: this
+               });
+           },
+           success: function (msg) {
+               var arr = eval("(" + msg + ")");
+               console.log(arr);
+               if (arr.errors.length == 0) {
+                   window.location.href="detail?id="+id+"&type="+theRequest.type+"&passportid=$!passport.id";
+               }
+               else {
+                   var errors = [];
+                   for (var i = 0; i < arr.errors.length; i++) {
+                       errors.push(arr.errors[i].message);
+                   }
+                   alert(errors);
+               }
+           }
+       })
+   }
+
+</script>

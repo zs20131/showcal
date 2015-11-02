@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.service.dal.AnswerMapper">
+
+    <sql id="whereForFindList">
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           )
+    </sql>
+
+    <select id="find" resultMap="answerPO">
+        SELECT * FROM
+        (
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `SER_ANSWER`
+        WHERE
+        `IS_DELETED`=0
+        <include refid="whereForFindList"/>
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        `SER_ANSWER`
+        WHERE
+        `IS_DELETED`=0
+        <include refid="whereForFindList"/>
+    </select>
+
+    <select id="search" resultMap="answerPO">
+        SELECT * FROM
+        (
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `SER_ANSWER`
+        WHERE
+        `IS_DELETED`=0
+        <if test="request.keyword !=null">
+            AND
+            <include refid="whereForSearchList"/>
+        </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        `SER_ANSWER`
+        WHERE
+        `IS_DELETED`=0
+        AND
+        <include refid="whereForSearchList"/>
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_ANSWER`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `SER_ANSWER`
+        SET
+        `QUESTION_ID`=#{ request.questionId },
+        `IS_ANSWERED`=#{ request.isAnswered },
+        `ANSWERED_TIME`=#{ request.answeredTime },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+    <select id="getAnswersByQuestionIds" resultMap="answerPO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `SER_ANSWER`
+        WHERE
+        `IS_DELETED`=0
+        <if test="ids!=null and ids.size>0">
+            AND `QUESTION_ID` IN
+            <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+    <update id="closeBatch">
+        UPDATE
+        `SER_ANSWER`
+        SET
+        `IS_ANSWERED`=true,
+        `ANSWERED_TIME`=SYSDATE(),
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        <where>
+            `IS_DELETED`=0
+            <choose>
+                <when test="ids!=null and ids.size>0">
+                    AND `ID` IN
+                    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                        #{id}
+                    </foreach>
+                </when>
+                <otherwise>
+                    AND 1!=1
+                </otherwise>
+            </choose>
+        </where>
+    </update>
+
+</mapper>

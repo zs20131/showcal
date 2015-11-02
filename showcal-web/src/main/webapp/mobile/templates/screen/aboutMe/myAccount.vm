@@ -1,0 +1,81 @@
+$page.setTitle("我的账号")
+<div class="discover discover-detail  chooseShowcal aboutme">
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="index?passportid=$!passport.id" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+        <h5 class="am-header-title">我的账号</h5>
+
+        <div class="am-header-right am-header-nav">
+            <a href="#right-link" class="info-ico ">
+
+            </a>
+        </div>
+    </header>
+
+    <!--列表 -->
+    <div class="am-g am-cf myaccount">
+        <ul class="am-padding-0 clearfix aboutmeul am-text-sm  top-border bottom-border am-margin-top-sm  whitebg">
+##            <li class="am-u-sm-12 am-g-collapse am-padding-0">
+##                <a href="#">
+##                    <div class="am-u-sm-2 am-text-center"><img src="$mobileContent.getURI("images/QQ.png")" width="34px"
+##                                                               height="34px">
+##                    </div>
+##                    <div class="am-u-sm-4 bottom-border">
+##                        <span>QQ账号</span>
+##                    </div>
+##                    <div class="am-u-sm-6 bottom-border am-text-right">
+##                        <input type="checkbox" id="checkbox-10-1"/><label for="checkbox-10-1"></label>
+##                    </div>
+##                </a>
+##            </li>
+##            <li class="am-u-sm-12 am-g-collapse am-padding-0">
+##                <a href="#">
+##                    <div class="am-u-sm-2 am-text-center"><img src="$mobileContent.getURI("images/weixin.png")"
+##                                                               width="34px" height="34px">
+##                    </div>
+##                    <div class="am-u-sm-4 bottom-border">
+##                        <span>微信</span>
+##                    </div>
+##                    <div class="am-u-sm-6 bottom-border am-text-right">
+##                        <input type="checkbox" id="checkbox-10-2" checked/><label for="checkbox-10-2"></label>
+##                    </div>
+##                </a>
+##            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0">
+                <a href="editPhone?passportid=$!passport.id">
+                    <div class="am-u-sm-2 am-text-center"><img src="$mobileContent.getURI("images/phone.png")"
+                                                               width="34px" height="34px">
+                    </div>
+                    <div class="am-u-sm-10">
+                        <span>手机号</span>
+                        <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+                        <span class="am-fr am-padding-right-sm lighter-gray-txt">$!userInfo.mobilePhone</span>
+                    </div>
+                </a>
+            </li>
+
+        </ul>
+        #*<ul class="am-padding-0 clearfix aboutmeul am-text-sm  top-border bottom-border am-margin-top-sm  whitebg">
+            <li class="am-u-sm-12 am-g-collapse">
+                <a href="changePwd?passportid=$!passport.id">
+                    <span>修改密码</span>
+                    <i class="am-icon-angle-right am-icon-sm  lighter-gray-txt am-fr "></i>
+                </a>
+            </li>
+        </ul>*#
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+
+    });
+
+
+</script>

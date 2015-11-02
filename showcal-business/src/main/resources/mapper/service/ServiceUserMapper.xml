@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.service.dal.ServiceUserMapper">
+
+    <sql id="whereForFindList">
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           )
+    </sql>
+
+    <select id="find" resultMap="serviceUserPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `SER_SERVICE_USER`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_SERVICE_USER`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="serviceUserPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `SER_SERVICE_USER`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_SERVICE_USER`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_SERVICE_USER`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `SER_SERVICE_USER`
+        SET
+        `USER_ID`=#{ request.userId },
+        `SERVICE_ID`=#{ request.serviceId },
+        `IS_ACTIVE`=#{ request.isActive },
+        `ACTIVE_DATE`=#{ request.activeDate },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+
+    <update id="inactive">
+        UPDATE
+            `SER_SERVICE_USER`
+        SET
+            `IS_ACTIVE` = 0
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `IS_ACTIVE`=1
+            AND `ID` = #{id}
+    </update>
+
+    <update id="active">
+        UPDATE
+            SER_SERVICE_USER
+        SET
+            `IS_ACTIVE` =1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `IS_ACTIVE`=0
+            AND `ID` = #{id}
+    </update>
+    <select id="existMySelectShowCal"  resultMap="serviceUserPO">
+        SELECT <include refid="entityColumnList"/>
+        FROM
+        `SER_SERVICE_USER`
+        WHERE
+        `IS_DELETED`=0
+        AND  `USER_ID` = #{userId}
+        AND `SERVICE_ID` = #{serviceId}
+    </select>
+    <select id="findMyShowCal"  resultMap="serviceUserPO">
+        SELECT <include refid="entityColumnList"/>
+        FROM
+        `SER_SERVICE_USER`
+        WHERE
+        `IS_DELETED`=0
+        AND  `USER_ID` = #{userId}
+        AND    `IS_ACTIVE` =TRUE
+    </select>
+    <select id="getShowcalServiceUsers" resultMap="serviceUserPO">
+        SELECT <include refid="entityColumnList"/> FROM SER_SERVICE_USER WHERE `IS_DELETED`=0
+        AND `IS_ACTIVE` = TRUE AND SERVICE_ID  =#{passport.userId}
+        AND `USER_ID` IN (
+        SELECT PSU.ID FROM PL_SYS_USER PSU WHERE PSU.`IS_DELETED`=0
+        <if test="request.userName!=null">
+            AND PSU.NICK_NAME LIKE
+        </if>
+        <if test="request.mobile!=null">
+            AND PSU.`MOBILE_PHONE` LIKE CONCAT ('%',#{ request.mobile },'%')
+        </if>
+        <if test="request.sexs!=null and request.sexs.size>0">
+            AND `SEX` IN
+            <foreach collection="request.sexs" item="sex" open="(" close=")" separator="," index="index">
+                #{sex}
+            </foreach>
+        </if>
+        <if test="request.account != null">
+            AND PSU.ACCOUNT LIKE CONCAT ('%', #{request.account},'%')
+        </if>
+        <if test="request.nickName != null">
+            AND PSU.NICK_NAME LIKE CONCAT ('%', #{request.nickName},'%')
+        </if>
+        <if test="request.userTags!=null and request.userTags.size>0">
+            AND PSU.ID IN
+            (SELECT put.USER_ID FROM pl_sys_user_tags put WHERE put.USER_TAG_ID
+            IN
+            <foreach collection="request.userTags" item="usertag" open="(" close=")" separator="," index="index">
+                #{usertag}
+            </foreach>
+            )
+        </if>
+        )
+        <if test="request.startDate!=null"> AND `ACTIVE_DATE` >= #{request.startDate}</if>
+        <if test="request.endDate!=null"> AND `ACTIVE_DATE` <![CDATA[ <= ]]> #{request.endDate}</if>
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+    <select id="getShowcalServiceUsersCount" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM SER_SERVICE_USER WHERE `IS_DELETED`=0
+        AND `IS_ACTIVE` = 1 AND SERVICE_ID  =#{passport.userId}
+        AND `USER_ID` IN (
+          SELECT PSU.ID FROM PL_SYS_USER PSU WHERE PSU.`IS_DELETED`=0
+          <if test="request.userName!=null">
+             AND PSU.NICK_NAME LIKE
+          </if>
+          <if test="request.mobile!=null">
+              AND PSU.`MOBILE_PHONE` LIKE CONCAT ('%',#{ request.mobile },'%')
+          </if>
+        <if test="request.sexs!=null and request.sexs.size>0">
+            AND `SEX` IN
+            <foreach collection="request.sexs" item="sex" open="(" close=")" separator="," index="index">
+                #{sex}
+            </foreach>
+        </if>
+        <if test="request.account != null">
+            AND PSU.ACCOUNT LIKE CONCAT ('%', #{request.account},'%')
+        </if>
+        <if test="request.nickName != null">
+            AND PSU.NICK_NAME LIKE CONCAT ('%', #{request.nickName},'%')
+        </if>
+          <if test="request.userTags!=null and request.userTags.size>0">
+            AND PSU.ID IN
+            (SELECT put.USER_ID FROM pl_sys_user_tags put WHERE put.USER_TAG_ID
+              IN
+              <foreach collection="request.userTags" item="usertag" open="(" close=")" separator="," index="index">
+                  #{usertag}
+              </foreach>
+              )
+          </if>
+        )
+        <if test="request.startDate!=null"> AND `ACTIVE_DATE` >= #{request.startDate}</if>
+        <if test="request.endDate!=null"> AND `ACTIVE_DATE` <![CDATA[ <= ]]> #{request.endDate}</if>
+    </select>
+    <select id="getshowcalHistoryService" resultMap="serviceUserPO">
+        SELECT <include refid="entityColumnList"/> FROM SER_SERVICE_USER WHERE `IS_DELETED`=0
+        AND `IS_ACTIVE` = 0 AND SERVICE_ID  =#{passport.userId}
+        AND `USER_ID` IN (
+        SELECT PSU.ID FROM PL_SYS_USER PSU WHERE PSU.`IS_DELETED`=0
+        <if test="request.userName!=null">
+            AND PSU.NICK_NAME LIKE
+        </if>
+        <if test="request.mobile!=null">
+            AND PSU.`MOBILE_PHONE` LIKE CONCAT ('%',#{ request.mobile },'%')
+        </if>
+        <if test="request.sexs!=null and request.sexs.size>0">
+            AND `SEX` IN
+            <foreach collection="request.sexs" item="sex" open="(" close=")" separator="," index="index">
+                #{sex}
+            </foreach>
+        </if>
+        <if test="request.account != null">
+            AND PSU.ACCOUNT LIKE CONCAT ('%', #{request.account},'%')
+        </if>
+        <if test="request.nickName != null">
+            AND PSU.NICK_NAME LIKE CONCAT ('%', #{request.nickName},'%')
+        </if>
+        <if test="request.userTags!=null and request.userTags.size>0">
+            AND PSU.ID IN
+            (SELECT put.USER_ID FROM pl_sys_user_tags put WHERE put.USER_TAG_ID
+            IN
+            <foreach collection="request.userTags" item="usertag" open="(" close=")" separator="," index="index">
+                #{usertag}
+            </foreach>
+            )
+        </if>
+        )
+        <if test="request.startDate!=null"> AND `ACTIVE_DATE` >= #{request.startDate}</if>
+        <if test="request.endDate!=null"> AND `ACTIVE_DATE` <![CDATA[ <= ]]> #{request.endDate}</if>
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+    <select id="getshowcalHistoryServiceCount" resultType="java.lang.Long">
+        SELECT COUNT(1) FROM SER_SERVICE_USER WHERE `IS_DELETED`=0
+        AND `IS_ACTIVE` = 0 AND SERVICE_ID  =#{passport.userId}
+        AND `USER_ID` IN (
+        SELECT PSU.ID FROM PL_SYS_USER PSU WHERE PSU.`IS_DELETED`=0
+        <if test="request.userName!=null">
+            AND PSU.NICK_NAME LIKE
+        </if>
+        <if test="request.mobile!=null">
+            AND PSU.`MOBILE_PHONE` LIKE CONCAT ('%',#{ request.mobile },'%')
+        </if>
+        <if test="request.sexs!=null and request.sexs.size>0">
+            AND `SEX` IN
+            <foreach collection="request.sexs" item="sex" open="(" close=")" separator="," index="index">
+                #{sex}
+            </foreach>
+        </if>
+        <if test="request.account != null">
+            AND PSU.ACCOUNT LIKE CONCAT ('%', #{request.account},'%')
+        </if>
+        <if test="request.nickName != null">
+            AND PSU.NICK_NAME LIKE CONCAT ('%', #{request.nickName},'%')
+        </if>
+        <if test="request.userTags!=null and request.userTags.size>0">
+            AND PSU.ID IN
+            (SELECT put.USER_ID FROM pl_sys_user_tags put WHERE put.USER_TAG_ID
+            IN
+            <foreach collection="request.userTags" item="usertag" open="(" close=")" separator="," index="index">
+                #{usertag}
+            </foreach>
+            )
+        </if>
+        )
+        <if test="request.startDate!=null"> AND `ACTIVE_DATE` >= #{request.startDate}</if>
+        <if test="request.endDate!=null"> AND `ACTIVE_DATE` <![CDATA[ <= ]]> #{request.endDate}</if>
+    </select>
+    <select id="getUserShowcal" resultMap="serviceUserPO">
+        SELECT * FROM SER_SERVICE_USER WHERE `IS_DELETED`=0
+        AND `IS_ACTIVE` = TRUE AND USER_ID = #{userId}
+
+    </select>
+
+    <select id="getHistoryShowcal" resultMap="serviceUserPO">
+        SELECT SSU.* FROM SER_SERVICE_USER SSU
+        LEFT JOIN PL_SYS_USER PSU
+        ON SSU.SERVICE_ID=PSU.ID
+        WHERE `IS_DELETED`=0
+        AND `IS_ACTIVE` = TRUE AND USER_ID = #{userId}
+        <if test="request.userName!=null">
+            AND PSU.`NICK_NAME` LIKE CONCAT ('%',#{ request.userName },'%')
+        </if>
+    </select>
+</mapper>

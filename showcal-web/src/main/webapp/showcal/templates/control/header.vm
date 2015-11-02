@@ -1,0 +1,29 @@
+<div class="showcal-header">
+    <div class="f-left ml_10 mt_5">您好，$!passport.nickName 欢迎来到瘦咖</div>
+    <div class="f-right mt_5">
+        <a class="name_a" href="javascript:" ng-init="showSetting=false"
+           ng-click="showSetting=!showSetting;" ng-mouseenter="showSetting=true;">
+            <img class="showcal-header-img" src="$!passport.avatar">
+        </a>
+        <a ng-click="loginout()"><img  class="f-right mr_45" src="$showcalContent.getURI('images/close.png')"></a>
+        <span class="f-right mr_18">$!passport.nickName</span>
+    </div>
+    <div class="hideSetting" ng-class="showSetting?'showSetting':''" ng-mouseenter="showSetting=true;"
+         ng-mouseleave="showSetting=false;">
+        <div class="hideSetting-top">
+        </div>
+        <div class="hideSetting-content clearfix">
+            <ul>
+                <li>
+                    <a title="修改密码" href="$showcalLink.setTarget("password/change")">
+                        <i class="icon icon-tubiaoxiugaimima01"></i>修改密码
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+ #*   <script type="application/javascript">
+        function loginout() {
+        }
+    </script>*#
+</div>

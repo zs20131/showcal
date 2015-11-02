@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.SysUserExtentMapper">
+
+    <sql id="whereForFindList">
+
+    </sql>
+
+    <sql id="whereForSearchList">
+        <if test="request.ids!=null and request.ids.size>0">
+            AND `ID` in
+            <foreach collection="request.ids" item="id" open="(" close=")" separator="," index="index">
+                #{id}
+            </foreach>
+        </if>
+    </sql>
+
+    <select id="find" resultMap="sysUserExtentPO">
+        SELECT * FROM
+        (
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `PL_SYS_USER_EXTENT`
+        WHERE
+        `IS_DELETED`=0
+        <include refid="whereForFindList"/>
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        `PL_SYS_USER_EXTENT`
+        WHERE
+        `IS_DELETED`=0
+        <include refid="whereForFindList"/>
+    </select>
+
+    <select id="search" resultMap="sysUserExtentPO">
+        SELECT * FROM
+        (
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `PL_SYS_USER_EXTENT`
+        WHERE
+        `IS_DELETED`=0
+        <if test="request.keyword !=null">
+            AND
+            <include refid="whereForSearchList"/>
+        </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        `PL_SYS_USER_EXTENT`
+        WHERE
+        `IS_DELETED`=0
+        AND
+        <include refid="whereForSearchList"/>
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SYS_USER_EXTENT`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+        `PL_SYS_USER_EXTENT`
+        SET
+        <if test="request.height!=null">
+            `HEIGHT`=#{ request.height },
+        </if>
+        <if test="request.birthday!=null">
+            `BIRTHDAY`=#{ request.birthday },
+        </if>
+        <if test="request.age!=null">
+            `AGE`=#{ request.age },
+        </if>
+        <if test="request.weight!=null">
+            `WEIGHT`=#{ request.weight },
+        </if>
+        <if test="request.waistLine!=null">
+            `WAIST_LINE`=#{ request.waistLine },
+        </if>
+        <if test="request.hipline!=null">
+            `HIPLINE`=#{ request.hipline },
+        </if>
+        <if test="request.bmi!=null">
+            `BMI`=#{ request.bmi },
+        </if>
+        <if test="request.setting!=null">
+            `SETTING`=#{ request.setting },
+        </if>
+        <if test="request.countService!=null">
+            `COUNT_SERVICE`=#{ request.countService },
+        </if>
+        <if test="request.responseTime!=null">
+            `RESPONSE_TIME`=#{ request.responseTime },
+        </if>
+        <if test="request.successRate!=null">
+            `SUCCESS_RATE`=#{ request.successRate },
+        </if>
+        <if test="request.integral!=null">
+            INTEGRAL = #{request.integral},
+        </if>
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+        `IS_DELETED`=0
+        AND `ID` = #{ request.id }
+    </update>
+    <update id="updateServiceCount">
+        UPDATE
+        `PL_SYS_USER_EXTENT`
+        SET
+        `COUNT_SERVICE`=COUNT_SERVICE+1,
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+        `IS_DELETED`=0
+        AND `ID` = #{serviceId }
+    </update>
+
+    <select id="getListByIds" resultMap="sysUserExtentPO">
+
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `PL_SYS_USER_EXTENT`
+        WHERE
+        `IS_DELETED`=0
+        <if test="list!=null and list.size>0">
+            AND `ID` IN
+            <foreach collection="list" item="id" open="(" close=")" separator="," index="index">
+                #{id}
+            </foreach>
+        </if>
+
+    </select>
+</mapper>

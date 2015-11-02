@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:services="http://www.alibaba.com/schema/services"
+             xmlns:uris="http://www.alibaba.com/schema/services/uris"
+             xsi:schemaLocation="http://www.alibaba.com/schema/services http://localhost:8080/schema/services.xsd
+                 http://www.alibaba.com/schema/services/uris http://localhost:8080/schema/services-uris.xsd
+                 http://www.springframework.org/schema/beans http://localhost:8080/schema/www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <services:uris>
+        <uris:uri id="server" requestAware="true"/>
+
+        <uris:servlet-uri id="systemServer" requestAware="true">
+            <!--    <serverScheme>https</serverScheme>
+                <serverPort>443</serverPort>-->
+            <servletPath>/</servletPath>
+        </uris:servlet-uri>
+
+        <uris:turbine-uri id="homeLink" exposed="true" extends="systemServer">
+            <componentPath>/</componentPath>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="singleLink" exposed="true" extends="systemServer">
+            <componentPath>/single/</componentPath>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="platformLink" exposed="true" extends="systemServer">
+            <componentPath>/platform/</componentPath>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="baseLink" exposed="true" extends="systemServer">
+            <componentPath>/base/</componentPath>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="mobileLink" exposed="true" extends="systemServer">
+            <componentPath>/mobile/</componentPath>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="indexPage" exposed="true" extends="homeLink">
+            <target>/index</target>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="LoginLink" exposed="true" extends="homeLink">
+            <target>login</target>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="baseLogoutLink" exposed="true" extends="baseLink">
+            <target>login</target>
+            <query key="action">loginAction</query>
+            <query key="eventSubmitDoLogout">yes</query>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="registerurl" exposed="true" extends="homeLink">
+            <target>member/register/step2</target>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="registersuccess" exposed="true" extends="homeLink">
+            <target>member/register/step3</target>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="mobileregistersuccess" exposed="true" extends="homeLink">
+            <target>mobile/register/step3</target>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="memberindex" exposed="true" extends="homeLink">
+            <target>member/admin/index</target>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="mobilelogin" exposed="true" extends="homeLink">
+            <target>mobile/login</target>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="findpasswordstep" exposed="true" extends="homeLink">
+            <target>base/findpassword/step3</target>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="findmobilesuccess" exposed="true" extends="homeLink">
+            <target>mobile/findPassport/step3</target>
+        </uris:turbine-uri>
+        <uris:turbine-uri id="alipaypayment" exposed="true" extends="systemServer">
+            <target>/alipay</target>
+        </uris:turbine-uri>
+        <uris:turbine-content-uri id="indexContent" exposed="true" extends="systemServer">
+            <componentPath>/</componentPath>
+        </uris:turbine-content-uri>
+        <uris:turbine-content-uri id="homeContent" exposed="true" extends="systemServer">
+            <componentPath>/home/</componentPath>
+        </uris:turbine-content-uri>
+        <uris:turbine-content-uri id="singleContent" exposed="true" extends="systemServer">
+            <componentPath>/single/</componentPath>
+        </uris:turbine-content-uri>
+        <uris:turbine-content-uri id="baseContent" exposed="true" extends="systemServer">
+            <componentPath>/base/</componentPath>
+        </uris:turbine-content-uri>
+        <uris:turbine-content-uri id="platformContent" exposed="true" extends="systemServer">
+            <componentPath>/platform/</componentPath>
+        </uris:turbine-content-uri>
+        <uris:turbine-content-uri id="alipaypaymentContent" exposed="true" extends="systemServer">
+            <componentPath>/alipay</componentPath>
+        </uris:turbine-content-uri>
+        <uris:turbine-content-uri id="mobileContent" exposed="true" extends="systemServer">
+            <componentPath>/mobile/</componentPath>
+        </uris:turbine-content-uri>
+        <uris:turbine-content-uri id="showcalContent" exposed="true" extends="systemServer">
+            <componentPath>/showcal/</componentPath>
+        </uris:turbine-content-uri>
+        <uris:turbine-uri id="showcalLink" exposed="true" extends="systemServer">
+            <componentPath>/showcal/</componentPath>
+        </uris:turbine-uri>
+        <uris:turbine-content-uri id="tcContent" exposed="true" extends="systemServer">
+            <componentPath>/tc/</componentPath>
+        </uris:turbine-content-uri>
+        <uris:turbine-uri id="tcLink" exposed="true" extends="systemServer">
+            <componentPath>/tc/</componentPath>
+        </uris:turbine-uri>
+        <uris:turbine-content-uri id="mdContent" exposed="true" extends="systemServer">
+            <componentPath>/md/</componentPath>
+        </uris:turbine-content-uri>
+        <uris:turbine-uri id="mdLink" exposed="true" extends="systemServer">
+            <componentPath>/md/</componentPath>
+        </uris:turbine-uri>
+        <uris:turbine-content-uri id="serviceContent" exposed="true" extends="systemServer">
+            <componentPath>/service/</componentPath>
+        </uris:turbine-content-uri>
+    </services:uris>
+</beans:beans>

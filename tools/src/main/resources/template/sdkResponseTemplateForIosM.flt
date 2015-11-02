@@ -1,0 +1,100 @@
+//
+//  ${class.name}.h
+//
+//
+//  Created by ${annotation.authorName} on ${annotation.date}
+//  Copyright (c) 2014-2015 –苏州犀牛网络科技有限公司
+//
+
+#import "${class.name}.h"
+
+@implementation ${class.name}
+
+<#if fields??>
+    <#list fields as field>
+#pragma mark - ${field.description}
+    <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*" && (field.name=="baseDomain" || field.name=="baseRequest" || field.name=="baseResponse")>
+@synthesize ${field.name};
+     <#else>
+        <#if field.name=="uuid">
+static NSString * const  f_uuid = @"id";
+        <#else>
+static NSString * const  f_${field.name} = @"${field.name}";
+        </#if>
+        <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">
+@synthesize ${field.name};
+            <#if field.parentName!="null">
+@synthesize ${field.name}_cursor;
+            </#if>
+        </#if>
+    </#if>
+    </#list>
+</#if>
+
+- (instancetype)init {
+    self = [super init];
+    if(self) {
+<#if fields??>
+    <#list fields as field>
+        <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">
+         ${field.name} = [[${field.iostype} alloc]init];
+        </#if>
+    </#list>
+</#if>
+    }
+    return self;
+}
+
+#pragma mark - getter/setter
+<#if fields??>
+    <#list fields as field>
+
+#pragma mark - 判断${field.description}是否存在
+-(BOOL)has${field.name?cap_first} {
+    for(NSString *key in [_baseResponse.fields allKeys]) {
+        if ([key isEqualToString:f_${field.name}]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+#pragma mark - ${field.description}
+-(${field.iostype}<#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">*</#if>)${field.name} {
+    <#if field.isDomain>
+        <#if field.iostype=="NSArray*" || field.iostype=="NSDictionary*">
+    return (${field.iostype})[_baseResponse.fields objectForKey:f_${field.name}];
+        <#elseif field.isEnum>
+    return [_baseResponse.fields objectForKey:f_${field.name}];
+        <#else>
+            <#if field.parentName == "null">
+    ${field.name}.baseDomain.fields = _baseResponse.fields;
+    return ${field.name};
+            <#else>
+    ${field.name} = [[${field.iostype} alloc]init];
+    NSArray *arr_${field.name} = [_baseResponse.fields objectForKey:f_${field.parentName}];
+    NSMutableDictionary *dic_${field.name} =[arr_${field.name} objectAtIndex:${field.name}_cursor];
+
+    if(dic_${field.name}){
+        [${field.name} setSelfDic:dic_${field.name}];
+    }
+    return ${field.name};
+            </#if>
+        </#if>
+    <#else >
+        <#if field.iostype=="NSDate*">
+    return (${field.iostype})[_baseResponse.fields objectForKey:f_${field.name}];
+        <#elseif field.iostype=="NSString*">
+    return (NSString*)[_baseResponse.fields objectForKey:f_${field.name}];
+        <#else>
+    return [[_baseResponse.fields objectForKey:f_${field.name}] ${field.iostypeValue}Value];
+        </#if>
+    </#if>
+}
+
+-(void)set${field.name?cap_first}:(${field.iostype} <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">*</#if>)${field.name} {
+}
+
+    </#list>
+</#if>
+@end

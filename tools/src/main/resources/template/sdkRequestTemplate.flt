@@ -1,0 +1,130 @@
+package ${class.packageName};
+
+import com.alibaba.fastjson.JSON;
+import com.xiniunet.api.ApiRuleException;
+import com.xiniunet.api.XiniuRequest;
+import com.xiniunet.api.internal.util.XiniuHashMap;
+import com.xiniunet.api.internal.util.RequestCheckUtils;
+import com.xiniunet.api.domain.${dochref}.*;
+import com.xiniunet.api.response.${dochref}.${class.response.name};
+<#if imports??>
+    <#list imports as import>
+import ${import};
+    </#list>
+</#if>
+
+import java.util.Map;
+
+
+/**
+ * <p>
+ * <pre>
+ * ***************************************************************
+ *  Copyright (c) 2014 –${annotation.company}
+ *  Title: ${class.packageName}.${class.name}
+ *  Description:${annotation.description}
+ *  @since ${annotation.version}
+ *  @author ${annotation.authorName}
+ * ***************************************************************
+ * </pre>
+ */
+public class ${class.name} implements XiniuRequest<${class.response.name}> {
+    private XiniuHashMap udfParams = new XiniuHashMap();
+
+    /**
+     * 获取API名称
+     */
+    @Override
+    public String getApiMethodName() {
+        return "${class.apiName}";
+    }
+
+<#if fields??>
+    <#list fields as field>
+    /**
+     * ${field.description}
+     */
+    private ${field.type} ${field.name};
+    </#list>
+</#if>
+<#if fields??>
+    <#list fields as field>
+
+    /**
+     * 获取${field.description}
+     */
+    public ${field.type} get${field.name?cap_first}() {
+        return ${field.name};
+    }
+
+    /**
+     * 设置${field.description}
+     */
+    public void set${field.name?cap_first}(${field.type} ${field.name}) {
+        this.${field.name} = ${field.name};
+    }
+    </#list>
+
+</#if>
+    @Override
+    public Map<String, String> getTextParams() {
+        XiniuHashMap txtParams = new XiniuHashMap();
+        <#if fields??>
+            <#list fields as field>
+                <#if field.isDomain && !field.isEnum>
+        if(this.${field.name} != null) {
+            txtParams.put("${field.name}", JSON.toJSONString(this.${field.name}));
+        }
+                <#else>
+        txtParams.put("${field.name}", this.${field.name});
+                </#if>
+            </#list>
+
+        </#if>
+        if (this.udfParams != null) {
+            txtParams.putAll(this.udfParams);
+        }
+        return txtParams;
+    }
+
+    @Override
+    public Long getTimestamp() {
+        return null;
+    }
+
+    @Override
+    public void setTimestamp(Long timestamp) {
+
+    }
+
+    @Override
+    public Class getResponseClass() {
+        return ${class.response.name}.class;
+    }
+
+    @Override
+    public void check() throws ApiRuleException {
+        <#if fields??>
+            <#list fields as field>
+                <#if field.isNotNull || field.isLength>
+                    <#if field.isNotNull>
+        RequestCheckUtils.checkNotEmpty(${field.name}, "${field.name}");
+                    </#if>
+                    <#if field.isLength>
+        RequestCheckUtils.checkMaxLength(${field.name}, ${field.maxLength}, "${field.name}");
+                    </#if>
+                </#if>
+            </#list>
+        </#if>
+    }
+
+    @Override
+    public Map<String, String> getHeaderMap() {
+        return null;
+    }
+
+    @Override
+    public void putOtherTextParam(String key, String value) {
+        this.udfParams.put(key, value);
+    }
+}

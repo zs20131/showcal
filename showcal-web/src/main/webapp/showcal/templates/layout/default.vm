@@ -1,0 +1,57 @@
+<!DOCTYPE html >
+<html lang="zh-CN">
+<head>
+    <title>瘦咖工作平台</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Expires" CONTENT="0">
+    <meta http-equiv="Cache-Control" CONTENT="no-cache">
+    <meta http-equiv="Cache-Control" CONTENT="no-store">
+    <meta http-equiv="Pragma" content="no-cache">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ERP 应用">
+    <meta name="author" content="犀牛网络">
+    <link rel="Shortcut Icon" href="$showcalContent.getURI('images/favicon.ico')" type="image/x-icon">
+
+    <link href="$platformContent.getURI('vendor/xn/styles/global.min.css')" rel="stylesheet">
+
+    <link rel="stylesheet" href="$showcalContent.getURI('dist/styles/local.min.css')"></link>
+    <script type="text/javascript">
+        (function () {
+            if (window.location.protocol === "http:") {
+              /*  var windowLocation = window.location.href.slice(7);
+                window.location="https://"+windowLocation;*/
+            }
+        })();
+    </script>
+    <script type="text/javascript" src="$showcalContent.getURI('vendor/xn/scripts/base.min.js')"></script>
+    <script type="text/javascript" src="$showcalContent.getURI('vendor/xn/scripts/global.min.js')"></script>
+    <script type="text/javascript" src="$showcalContent.getURI('dist/scripts/local.min.js')"></script>
+    <script type="text/javascript" src="$showcalContent.getURI('vendor/xn/scripts/markdownsetting.min.js')"></script>
+</head>
+<body ng-controller="BodyController" class="ng-cloak">
+<div id="loadingInit" ng-if="global.loadingInit"></div>
+<div class="xn-iframe">
+    <div class="xn-iframe-l">
+        $control.setTemplate("showcal:nav")
+    </div>
+    <div class="xn-iframe-top">
+        $control.setTemplate("showcal:header")
+    </div>
+    <div class="xn-iframe-bottom">
+        $screen_placeholder
+            $control.setTemplate("showcal:footer")
+    </div>
+    $application.setCode("showcal")
+</div>
+</body>
+
+<script type="text/javascript">
+    /*犀牛ng-app的运用*/
+    angular.element(document).ready(function () {
+        initApp();
+        angular.bootstrap(document.body, ['xn']);
+    });
+</script>
+</html>

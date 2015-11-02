@@ -1,0 +1,228 @@
+<div class="worktitle-right" ng-controller="IndexController" id="showcalindex">
+<!--两个按钮-->
+<div class="btn-box">
+    <a class="btn showcal-index-button-default orangebg" href="$showcalContent.getURI("dashboard/history")">对话记录</a>
+    <a class="btn  showcal-index-button-default  bluebg" ng-click="doSearch()">搜索</a>
+</div>
+
+<!--搜索条件-->
+<div class="mt_20 xn-col-md-24">
+    <div class="xn-col-md-8 ">
+        <label class="f-left l-h-34 ">用户昵称：</label>
+        <input type="text" class="form-control xn-input-sm" ng-model="vm.userName">
+    </div>
+    <div class="xn-col-md-8">
+        <label class="f-left l-h-34">用户标签：</label>
+        <select id="type" class="form-control xn-input-sm" name="usertype" ng-model="vm.userTag"
+                ng-options="tag.id as tag.tag for tag in usertags">
+            <option value="">-- 全部 --</option>
+        </select>
+    </div>
+    <div class="xn-col-md-8">
+        <label class="f-left l-h-34">回答截止时间：</label>
+        <select id="type" class="form-control xn-input-sm" name="usertype" ng-model="vm.deadline"
+                ng-options="endtime.id as endtime.name for endtime in endtimes">
+            <option value="">-- 全部 --</option>
+        </select>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<!--虚线-->
+<div class="line-dashed"></div>
+
+<!--表格和问答-->
+<div class="mt_20 xn-col-md-24">
+    <!--表格-->
+    <div class="xn-col-md-6">
+        <table>
+            <tr class="showcal-tr">
+                <td colspan="2" class="showcal-td" ng-click="queryNewUser()">
+                    <span class="f-left pl-50">新用户</span>
+
+                    <div class="number-1">
+                        {{newUserQuestionCount}}
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="showcal-tr" ng-repeat="questionTag in questionTagList">
+                <td colspan="2" class="showcal-td" ng-click="queryMessageByTag(questionTag.tagId)">
+                    <span class="f-left pl-50">{{questionTag.tagName}}</span>
+
+                    <div class="number-1">
+                        {{questionTag.count}}
+                    </div>
+                </td>
+            </tr>
+            <tr class="showcal-tr" ng-repeat="keywordtag in keyWordTagList">
+                <td colspan="2" class="showcal-td" ng-click="queryMessageBykeyword(keywordtag.keywordId)">
+                    <span class="f-left pl-50">{{keywordtag.keywordName}}</span>
+
+                    <div class="number-1">
+                        {{keywordtag.count}}
+                    </div>
+                </td>
+            </tr>
+            <tr class="showcal-tr">
+                <td colspan="2" class="showcal-td" ng-click="queryOther()">
+                    <span class="f-left pl-50">其他</span>
+
+                    <div class="number-1">
+                        {{otherQuestionCount}}
+                    </div>
+                </td>
+            </tr>
+        ##        <tr class="showcal-tr">
+        ##            <td class="showcal-td">
+        ##                <span class="f-left">子关键字2</span>
+        ##
+        ##                <div class="number-1">
+        ##                    20
+        ##                </div>
+        ##            </td>
+        ##        </tr>
+        </table>
+    </div>
+    <!--问答-->
+    <div class="xn-col-md-18">
+        <div class="showcal-question-header clearfix">
+            <label class="xn-cursor l-h-34 mt-20 mb-12 f-left" for="checkbox1">
+                <input class="none" type="checkbox" name="checkbox1" id="checkbox1" ng-click="allBox()">
+
+                <div class="showcal-checkbox">
+                    <i class="icon icon-right_3 right-icon" ng-if="all"></i>
+                </div>
+            </label>
+
+            <div class="showcal-question-total">共有 {{totalCount}} 位客户在此关键词栏目提问</div>
+
+            <div class=" f-right">
+                <pagination ng-show="totalCount>vm.pageSize" ng-change="getquestion()" max-size="maxPageSize"
+                            total-items="totalCount"
+                            ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                            boundary-links="true"
+                            previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                            last-text="&raquo;"></pagination>
+            </div>
+        </div>
+        <div class="showcal-question-box clearfix position-relative" ng-repeat="question in  questions"
+             ng-init="open=false;" >
+            <div class="f-left clearfix">
+                <label class="xn-cursor l-h-34 mt-20 mb-12" for="checkbox_{{$index}}">
+                    <input class="none" type="checkbox" name="checkbox2" id="checkbox_{{$index}}"
+                           ng-model="question.check" ng-change="dochangeSelect(question)">
+
+                    <div class="showcal-checkbox">
+                        <i class="icon icon-right_3 right-icon" ng-show="question.check"></i>
+                    </div>
+                </label>
+            </div>
+            <div class="ml_20 clearfix">
+                <span class="showcal-question-account">账号：{{question.nickName}}</span>
+                <span class="showcal-question-time">{{question.createTime}}</span>
+
+                <div class="f-left clearfix">
+                    <span class="showcal-person-information">性别：{{question.sex|sexType}}</span>
+                    <span class="showcal-person-information">年龄：{{question.age}}</span>
+                    <span class="showcal-person-information">身高：{{question.height}}CM</span>
+                    <span class="showcal-person-information">体重：{{question.weight}}KG</span>
+                </div>
+            </div>
+            <div class="showcal-ask-answer-box"  ng-class="open==true?'showcal-ask-answer-box-big':''">
+                <div class="showcal-ask-answer-list clearfix" ng-repeat="message in  question.serviceMessages">
+                    <div class="showcal-ask-answer">
+                        <span ng-if="message.type=='QUESTION'">
+                           <label class="f-left">问：</label>
+
+                            <span ng-bind-html="message.content|trustHtml" ng-if="message.messageType=='TEXT'"></span>
+                            <img ng-src="{{message.url}}" ng-if="message.messageType=='PICTURE'"/>
+                        </span>
+                        <span ng-if="message.type=='ANSWER'">
+                           <label class="f-left">答:</label><span ng-bind-html="message.content|trustHtml"></span>
+                        </span>
+                    ##                        <message id="word-display" >
+                    ##                        </message>
+                    ##                        {{message.content|trustHtml}}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <div>
+                <a class="more-ask-answer"
+                   ng-show="(question.serviceMessages[0].messageType=='TEXT'&&question.serviceMessages[1].messageType=='TEXT'&&question.serviceMessages[2].messageType=='TEXT'&&question.serviceMessages.length>2&&open==false)||
+              (question.serviceMessages[0].messageType=='PICTURE'||question.serviceMessages[1].messageType=='PICTURE'||question.serviceMessages[2].messageType=='PICTURE')&&open==false"
+                   ng-click="open=!open">点击查看更多</a>
+                <a class="more-ask-answer" ng-show="open==true" ng-click="open=false">收起</a>
+            </div>
+
+##            <a class="more-ask-answer" ng-show="question.serviceMessages.length > 3&&open==false"
+##               ng-click="open=!open">点击查看更多</a>
+
+        </div>
+        <a class="showcal-reply" ng-click="reply()">回复</a>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<!--滑出框-->
+<div class="showcal-slip-box  {{vm.show}}" id="showslide">
+    <div class="xn-col-md-24 pt_20">
+        <div class="xn-col-md-12 ">
+            <div class="mt_20" name="content" xn-markdown ng-model="markdownValue" rows="8"></div>
+            <div class=" f-left mt_20 ">
+                <a class="btn showcal-index-button-default bluebg" ng-click="send()">发送(Alt+Ent)</a>
+                <a class="btn  showcal-index-button-default greenbg ml_50"
+                   ng-click="sendandclose()">发送并结束(Alt+S)</a>
+            </div>
+        </div>
+        <div class="xn-col-md-12 knowledge-button-box" ng-init="system=true">
+            <a class="knowledge-button" ng-click="system=true;my=false"
+               ng-class="system==true?'color-green':''">系统知识库</a>
+            <a class="knowledge-button border-right-none" ng-class="my==true?'color-green':''"
+               ng-click="my=true;system=false">我的知识库</a>
+
+            <div class="answer-search">
+                <input class="form-control search-answer-input" placeholder="搜索" type="text"
+                       ng-model="vm.repositoryKeyword" ng-change="searchrepository()">
+                <i class="icon icon-search"></i>
+            </div>
+            <div class="f-left" ng-show="system==true">
+                <div class="showcal-answer-box   clearfix" ng-click="selectRepository(sysrep.content)"
+                     ng-repeat="sysrep in sysRepository">
+                    <div class="showcal-ask-answer-list clearfix">
+                        <div class="showcal-ask-answer">
+                            关键字：<font style="color: #ff0000">{{sysrep.keywordName}}</font> 标签:<font
+                                style="color: #ff0000">{{sysrep.tagName}}</font>
+                        </div>
+                    </div>
+                    <div class="showcal-ask-answer-list clearfix">
+                        <div class="showcal-ask-answer">
+                            答：{{sysrep.content}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="f-left" ng-show="my==true">
+                <div class="showcal-answer-box   clearfix" ng-click="selectRepository(sysrep.content)"
+                     ng-repeat="sysrep in myRepository">
+                    <div class="showcal-ask-answer-list clearfix">
+                        <div class="showcal-ask-answer">
+                            关键字：<font style="color: #ff0000">{{sysrep.keywordName}}</font> 标签:<font
+                                style="color: #ff0000">{{sysrep.tagName}}</font>
+                        </div>
+                    </div>
+                    <div class="showcal-ask-answer-list clearfix">
+                        <div class="showcal-ask-answer">
+                            答：{{sysrep.content}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+</div>

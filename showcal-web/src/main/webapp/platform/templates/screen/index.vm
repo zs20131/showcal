@@ -1,0 +1,6 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+##        <li><a class="icon icon-home_page" href="$platfromLink.setTarget("index")"></a></li>
+    </ul>
+</div>

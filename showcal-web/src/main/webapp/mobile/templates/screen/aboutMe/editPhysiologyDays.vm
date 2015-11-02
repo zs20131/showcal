@@ -1,0 +1,58 @@
+<div class="showcal discover">
+    <!--header-->
+  <header data-am-widget="header" class="am-header am-no-layout am-header-fixed showcal--mobile-header">
+      <div class="am-header-left am-header-nav">
+##          <a href="create" class="">
+##              <img class="showcal-left-arrow" src="$mobileContent.getURI("images/grayleftarrow.png")"
+##                   width="10" height="24" alt="">
+##          </a>
+      </div>
+      <h1 class="am-header-title">修改行经天数</h1>
+      <div class="am-header-left am-header-nav">
+          <a href="physiologySet?passportid=$!passport.id" class="pic">
+              <i class="am-icon-angle-left am-text-xxl"></i>
+          </a>
+      </div>
+     </header>
+    <div class="mt-20 xn-text-center">
+          <input type="text" class="login-input" id="physiologyDays" placeholder="行经天数">
+    </div>
+    <div class="mt-20 xn-text-center" id="errormsg" style="color: #ff0000"></div>
+    <div class="mt-20 xn-text-center">
+        <button class="btn login-button-default login-button-gray" disabled onclick="doChange()">确认修改</button>
+    </div>
+</div>
+<script src="$mobileContent.getURI('vendor/md5/md5.js')"></script>
+<script>
+    //   控制保存并查询按钮的样式，最初是不可用状态，全部填写之后才可以出现可用状态
+    $("#physiologyDays").bind('input propertychange', function() {
+        $("#errormsg").html("");
+        if($("#physiologyDays").val()){
+            $(".login-button-default").removeAttr("disabled");
+            $(".login-button-default").addClass("login-button-pink");
+        }else{
+            $(".login-button-default").attr("disabled","disabled");
+            $(".login-button-default").removeClass("login-button-pink");
+        }
+    });
+    function doChange()
+    {
+        var data = {};
+        data.physiologyDays = $('#physiologyDays').val();
+        // 检验身高合法性
+        var reg = new RegExp("^[1-9][0-9]*$");
+        if(!reg.test(data.physiologyDays)){
+            alert("请输入数字");
+        }
+        $.ajax({
+            url: "Api.do?method=api.about.me.info.physiologyDays.edit&passportid=$!passport.id",
+            data: JSON.stringify(data),
+            contentType:"application/json",
+            type: 'POST',
+            dataType: 'json',
+            success: function (msg) {
+                window.location.href="physiologySet?passportid=$!passport.id";
+            }});
+    }
+
+</script>

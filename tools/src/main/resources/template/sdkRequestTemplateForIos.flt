@@ -1,0 +1,38 @@
+//
+//  ${class.name}.h
+//
+//
+//  Created by ${annotation.authorName} on ${annotation.date}
+//  Copyright (c) 2014-2015 –苏州犀牛网络科技有限公司
+//
+
+#import "BaseRequest.h"
+<#list fields as field>
+    <#if field.isDomain>
+        <#if !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">
+#import "${field.iostype}.h"
+        </#if>
+    </#if>
+</#list>
+
+@interface ${class.name} : BaseRequest
+<#if fields??>
+    <#list fields as field>
+//${field.description}
+<#if field.isEnum>
+@property(nonatomic) NSString* ${field.name};
+<#else>
+@property(nonatomic) ${field.iostype} <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">*</#if>${field.name};
+</#if>
+
+#pragma mark - 判断${field.description}是否存在
+-(BOOL)has${field.name?cap_first};
+
+    </#list>
+</#if>
+
+@property BaseRequest *baseRequest;
+
+- (instancetype)init;
+
+@end

@@ -1,0 +1,143 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+        <li><a href="$platformLink.setTarget("daily/index")">日常管理</a></li>
+        <li class="active">投诉管理</a></li>
+    </ul>
+</div>
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="ComplaintIndexController">
+    <div class="xn-table-wrap">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th class="col-sm-1">项次</th>
+                <th class="col-sm-2">发布时间</th>
+                <th class="col-sm-1">发帖人</th>
+                <th class="col-sm-1">投诉人</th>
+                <th class="col-sm-1">投诉帖子</th>
+                <th class="col-sm-1">投诉原因</th>
+                <th class="col-sm-2">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <tr ng-repeat="complaint in  complaints">
+                <td>
+                    <span> {{$index+1}}</span><br>
+                </td>
+                <td class=" ">{{complaint.creationTime | timeReturnFormat}}</td>
+                <td>
+                    {{complaint.sendArticleName}}
+                </td>
+                <td>
+                    {{complaint.createdByName}}
+                </td>
+                <td>
+                   <span ng-click="show(complaint.sourceId)"> <a>{{complaint.title}}</a></span>
+                </td>
+                <td>
+                    {{complaint.content}}
+                </td>
+                <td class="xn-center">
+                    <div class="view auto">
+                        <a ng-click="doDelete(complaint)">删帖</a>
+                        <a ng-show="!complaint.isProhibit" ng-click="prohibit(complaint)">禁言</a>
+                        <a ng-show="complaint.isProhibit" ng-click="clearProhibit(complaint)">解禁</a>
+                        <a ng-show="!complaint.isSocked" ng-click="socked(complaint)">封锁</a>
+                        <a ng-show="complaint.isSocked" ng-click="clearSocked(complaint)">解锁</a>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-if="vm.totalCount == 0">
+                <td colspan="12" class="center">无法找到相应的记录</td>
+            </tr>
+            </tbody>
+
+        </table>
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{vm.totalCount}}条</div>
+            <pagination ng-show="vm.totalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                        total-items="vm.totalCount"
+                        ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                        last-text="&raquo;"></pagination>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="prohibit.html">
+    <div class="modal-header">
+        <h3 class="modal-title">禁言</h3>
+
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <div class="xn-input-line clearfix">
+    </div>
+    <div class=" clearfix ">
+        <div class="mt_5">
+            <label class="xn-label "> 禁言原因：</label>
+
+                <input   type="text"  class="form-control w_200"  ng-model="complaint.reason"/>
+        </div>
+        <div class="mt_5">
+            <label class="xn-label "> 禁言时间：</label>
+
+            <div class="xn-input-sm">
+                <div class="input-group openData">
+                    <input type="text" class="form-control w_200" id="startDate" placeholder="开始日期"
+                           ng-model="complaint.prohibitTime" name="regularDate"
+                           datepicker-popup="yyyy-MM-dd" is-open="startDate" min-date="minDate"
+                           datepicker-options="dateOptions"
+                           date-disabled="disabled(date, mode)" close-text="关闭" current-text="今天"
+                           clear-text="清除">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="openStart($event)"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a ng-click="sure()" class="btn btn-default  ">确定</a>
+        <a ng-click="cancel()" class="btn btn-default  ">返回</a>
+    </div>
+
+</script>
+<script type="text/ng-template" id="check.html">
+    <div class="modal-header" >
+        <h3 class="modal-title">查看帖子</h3>
+        <div class="xn-close xn-cursor" ng-click="cancel()">
+            <i class="icon icon-delete"></i>
+        </div>
+    </div>
+
+    <div class="xn-input-line clearfix">
+
+        <div class="f-left mt_5">
+            <label class="xn-label "> 新贴题目：</label>
+            <span class="l-h-34">{{article.title}}</span>
+        </div>
+    </div>
+    <div class="xn-input-line clearfix">
+        <div class=" f-left mt_5">
+            <label class="xn-label ">封面图片：</label>
+            <img ng-if="article.avatarurl != null"
+                 width="234" height="120" ng-src="{{article.avatarurl}}"/>
+        </div>
+    </div>
+    <div class="xn-input-line clearfix">
+        <div class="f-left mt_5">
+            <label class="xn-label ">正文：</label>
+            <span  class="l-h-34">{{article.content}}</span>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a ng-click="cancel()" class="btn btn-default  ">返回</a>
+    </div>
+
+</script>

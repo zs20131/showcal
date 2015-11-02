@@ -1,0 +1,46 @@
+<link href="$homeContent.getURI('styles/login.css')" rel="stylesheet">
+<div class="loginwrapper">
+    <header class="login-header">
+        <div class="mt-20 ml-100">
+            <img src="$homeContent.getURI('images/logo1.png')">
+        </div>
+    </header>
+    <section class="login-box">
+        #macro (loginMessage $field)
+            #if (!$field.valid) $field.message #end
+        #end
+        <form action="" method="post">
+            #set ($group = $form.login.defaultInstance)
+            <input type="hidden" name="action" value="login_action"/>
+
+            <div class="login-action-box">
+                <div class="login-img">
+                    <img src="$homeContent.getURI("images/image.png")" width="120" height="120">
+                </div>
+                <div class="relative">
+                    <img class="person-img" src="$homeContent.getURI("images/person.png")">
+                    <input class="login-account-input" name="$group.account.key" value="$!group.account.value"
+                           placeholder="请输入账号" type="text">
+                </div>
+                <div class="relative">
+                    <img  class="password-img" src="$homeContent.getURI("images/password.png")">
+                    <input type="password" class="login-password-input" id="passwordInput" placeholder="请输入您的密码">
+                    <input type="hidden" id="password" name="$group.password.key" value="$!group.password.value">
+                </div>
+                <div class="input-line clearfix">
+                    #if($errorMsg) <p style="color: red">$errorMsg</p> #end
+                </div>
+                <input type="submit" class="login-home-button" name="event_submit_do_login" onclick="doLogin()"
+                       value="登录"/>
+            </div>
+        </form>
+    </section>
+    <script>
+        function doLogin() {
+            if ($("#passwordInput").val().length > 0) {
+                $("#password").val(hex_md5($("#passwordInput").val()));
+            }
+            return true;
+        }
+    </script>
+</div>

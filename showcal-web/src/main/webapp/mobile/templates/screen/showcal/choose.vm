@@ -1,0 +1,445 @@
+$page.setTitle("选择瘦咖")
+<div class="discover discover-detail  chooseShowcal">
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a onclick="backReturn()" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+
+        <h5 class="am-header-title">选择瘦咖</h5>
+
+        <div class="am-header-right am-header-nav">
+##            <input type="text" id="nickName" class="showcal-goodsdetail-input">
+            <span id="search" class="info-ico" data-am-modal="{target: '#my-alert'}">
+                <img class="am-right" src="$mobileContent.getURI("images/search.png")"/>
+            </span>
+        </div>
+    </header>
+    <!--分类 -->
+    <div class="am-g choose-tab am-text-sm bottom-border am-text-center">
+        <div class="am-u-sm-6 border-right" id="rank1"><span>累计服务人数</span><i id="rank1_i"
+                class="am-icon-chevron-up lighter-gray-txt am-padding-left-xs am-text-default"></i></div>
+        <div class="am-u-sm-6" id="rank2"><span>响应时间</span><i id="rank2_i"
+                class="am-icon-chevron-up lighter-gray-txt am-padding-left-xs am-text-default"></i></div>
+    </div>
+    <div id="common">
+    <ul class="choose-calcon am-cf am-text-sm" id="am-text-sm" >
+    </ul>
+        <button  class="click-more" id="show-more">点击更多</button>
+    </div>
+    <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+        <div class="am-modal-dialog am-text-sm">
+            <form action="#">
+            <div class="history-search1  am-fl">
+               <input type="search" class="input-con" value="" onkeydown="search(event)" id="searchShowcal"/>
+
+                <div class="search"><img class="am-margin-right-xs"
+                                         src="$mobileContent.getURI("images/search-gray.png")"
+                                         width="14px" height="14px"/><span
+                        class="lighter-gray-txt am-text-xs">请输入瘦咖名称</span>
+                </div>
+
+            </div>
+            <div data-am-modal-close class="am-fl am-margin-left-sm pic mt-5">取消</div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">瘦咖提醒您</div>
+        <div class="am-modal-bd" id="errormsg">
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn">确定</span>
+        </div>
+    </div>
+</div>
+<script>
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        strs = str.split("&");
+        console.log(strs);
+        for (var i = 0; i < strs.length; i++) {
+            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+        }
+        console.log(theRequest);
+    }
+    function backReturn(){
+        if(theRequest.choose==2){
+            window.location.href="../chat/index?passportid=$!passport.id";
+        } else{
+            window.location.href="index?passportid=$!passport.id";
+        }
+    }
+    $.ajax({
+        type: "post",
+        data: {pageNum:1},
+        url: "Search.do?passportid=$!passport.id",
+        error: function () {
+            $("#errormsg").html("程序错误");
+            $('#my-alert').modal({
+                relatedTarget: this
+            });
+        },
+        success: function (msg) {
+            var arr = eval("(" + msg + ")");
+            if (arr.errors.length == 0) {
+                var show = "";
+                for (var i = 0; i < arr.result.length; i++) {
+                    show += "  <li class=\"am-pdding-0 am-cf am-margin-bottom-sm\" onclick=\"detail('" + arr.result[i].id + "')\">  <a class=\"am-cf\">  <div class=\"am-fl\"><img class=\"photo\" src=\"" + arr.result[i].avatarurl + "\"/></div>";
+                    show += "   <div class=\"am-fl am-padding-left-xs width-60\"> <p class=\"am-padding-top-xs am-text-default dark-gray\">" + arr.result[i].nickName + "<span  class=\"am-align-right pic am-text-sm\"><i class=\"peopleico\"></i>";
+                    if(typeof(arr.result[i].countService)!="undefined"){
+                        show += "<span>"+ arr.result[i].countService + "</span>";
+                    }
+                    show+="</span></p>";
+                    show += "  <p class=\"pt-2\"><span class=\"dark-gray\">瘦咖简介:</span></p> " ;
+                    if(typeof(arr.result[i].content)!='undefined') {
+                        var str=arr.result[i].content.replace(/<[^>]+>/g,"");
+                        if(str>25){
+                            show += " <span class=\"light-gray-txt num\">" + str.substr(0,25) + ".... </span> ";
+                        }
+                        else{
+                            show += " <span class=\"light-gray-txt num\">" + str+ " </span> ";
+                        }
+                    }
+                   show += "</div> </a> </li>";
+                }
+                $("#am-text-sm").append(show);
+                if (Math.ceil(arr.totalCount / 5) == pageIndex) {
+                    $("#show-more").hide();
+                }
+            }
+            else {
+                var errors = [];
+                for (var i = 0; i < arr.errors.length; i++) {
+                    errors.push(arr.errors[i].message);
+                }
+                $("#errormsg").html(errors);
+                $('#my-alert').modal({
+                    relatedTarget: this
+                });
+            }
+        }
+    })
+    $(function () {
+
+        $(".input-con").focus(function () {
+            $(this).next(".search").hide();
+            $(this).val("");
+        });
+
+        $(".search").on("click", function () {
+            $(this).hide();
+            $(this).prev(".input-con").focus();
+        });
+
+        $(".input-con").blur(function () {
+            if (!$(this).val()) {
+                $(this).next(".search").show();
+            } else {
+                return;
+            }
+        });
+
+
+    });
+    var pageIndex = 1;
+    var countService;
+    var responseTime;
+    var nickName;
+    $(function () {
+        var txtlen = $(".num").html();
+        if (txtlen&&txtlen.length > 40) {
+            $(".num").html(txtlen.substr(0, 40) + "...");
+        }
+        $(".choose-calcon li:last-child").removeClass("am-margin-bottom-sm");
+
+
+    });
+
+    function detail(id) {
+        window.location.href = "detail?passportid=$!passport.id&id=" + id+"&choose="+theRequest.choose;
+    }
+    function search(event) {
+        pageIndex=1;
+        if (event.keyCode == 13) {
+            nickName = $.trim($(".input-con").val());
+            var param = {
+                nickName: nickName,
+                countService: countService,
+                responseTime: responseTime
+            }
+            $.ajax({
+                type: "post",
+                data: param,
+                url: "Search.do?passportid=$!passport.id",
+                error: function () {
+                    $("#errormsg").html("程序错误");
+                    $('#my-alert').modal({
+                        relatedTarget: this
+                    });
+                },
+                success: function (msg) {
+                    var arr = eval("(" + msg + ")");
+                    console.log(arr);
+                    if (arr.errors.length == 0) {
+                        $("#my-alert").css("display","none");
+                        $(".am-active").css("opacity","0");
+                        var show = ""
+
+                        for (var i = 0; i < arr.result.length; i++) {
+                            show += "  <li class=\"am-pdding-0 am-cf am-margin-bottom-sm\" onclick=\"detail('" + arr.result[i].id + "')\">  <a class=\"am-cf\">  <div class=\"am-fl\"><img class=\"photo\" src=\"" + arr.result[i].avatarurl + "\"/></div>";
+                            show += "   <div class=\"am-fl am-padding-left-xs width-60\"> <p class=\"am-padding-top-xs am-text-default dark-gray\">" + arr.result[i].nickName + "<span  class=\"am-align-right pic am-text-sm\"><i class=\"peopleico\"></i>";
+                            if(typeof(arr.result[i].countService)!="undefined"){
+                                show += "<span>"+ arr.result[i].countService + "</span>";
+                            }
+                            show+="</span></p>";
+                            show += "  <p class=\"pt-2\"><span class=\"dark-gray\">瘦咖简介:</span></p> " ;
+                            if(typeof(arr.result[i].content)!='undefined') {
+                                var str=arr.result[i].content.replace(/<[^>]+>/g,"");
+                                if(str.length>25){
+                                    show += " <span class=\"light-gray-txt num\">" + str.substr(0,25) + ".... </span> ";
+                                }
+                                else{
+                                    show += " <span class=\"light-gray-txt num\">" + str+ " </span> ";
+                                }
+                            }
+                            show += "</div> </a> </li>";
+                        }
+                        $("#am-text-sm").html(show);
+                        if (arr.totalCount <=5) {
+                            $("#show-more").hide();
+                        }else{
+                            if (Math.ceil(arr.totalCount / 5) == pageIndex) {
+                                $("#show-more").hide();
+                            }else{
+                                 $("#show-more").show();
+                            }
+                        }
+                    }
+                    else {
+                        var errors = [];
+                        for (var i = 0; i < arr.errors.length; i++) {
+                            errors.push(arr.errors[i].message);
+                        }
+                        $("#errormsg").html(errors);
+                        $('#my-alert').modal({
+                            relatedTarget: this
+                        });
+                    }
+                }
+            })
+        }
+    }
+    var boolCountService = true;
+    $("#rank1").click(function () {
+        if($('#rank1_i').hasClass('am-icon-chevron-up')){
+            $('#rank1_i').removeClass('am-icon-chevron-up').addClass('am-icon-chevron-down');
+        }else{
+            $('#rank1_i').removeClass('am-icon-chevron-down').addClass('am-icon-chevron-up');
+        }
+        pageIndex=1;
+        countService = boolCountService;
+        boolCountService = !boolCountService;
+        var param = {
+            nickName: nickName,
+            countService: countService,
+            responseTime: responseTime
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "Search.do?passportid=$!passport.id",
+            error: function () {
+                $("#errormsg").html("程序错误");
+                $('#my-alert').modal({
+                    relatedTarget: this
+                });
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                console.log(arr);
+                if (arr.errors.length == 0) {
+                    var show = ""
+
+                    for (var i = 0; i < arr.result.length; i++) {
+                        show += "  <li class=\"am-pdding-0 am-cf am-margin-bottom-sm\" onclick=\"detail('" + arr.result[i].id + "')\">  <a class=\"am-cf\">  <div class=\"am-fl\"><img class=\"photo\" src=\"" + arr.result[i].avatarurl + "\"/></div>";
+                        show += "   <div class=\"am-fl am-padding-left-xs width-60\"> <p class=\"am-padding-top-xs am-text-default dark-gray\">" + arr.result[i].nickName + "<span  class=\"am-align-right pic am-text-sm\"><i class=\"peopleico\"></i>";
+                        if(typeof(arr.result[i].countService)!="undefined"){
+                            show += "<span>"+ arr.result[i].countService + "</span>";
+                        }
+                        show+="</span></p>";
+                        show += "  <p class=\"pt-2\"><span class=\"dark-gray\">瘦咖简介:</span></p> " ;
+                        if(typeof(arr.result[i].content)!='undefined') {
+                            var str=arr.result[i].content.replace(/<[^>]+>/g,"");
+                            if(str.length>25){
+                                show += " <span class=\"light-gray-txt num\">" + str.substr(0,25) + ".... </span> ";
+                            }
+                            else{
+                                show += " <span class=\"light-gray-txt num\">" + str+ " </span> ";
+                            }
+                        }
+                        show += "</div> </a> </li>";
+                    }
+                    $("#am-text-sm").html(show);
+                    if (arr.totalCount <=5) {
+                        $("#show-more").hide();
+                    }else{
+                        if (Math.ceil(arr.totalCount / 5) == pageIndex) {
+                            $("#show-more").hide();
+                        }else{
+                            $("#show-more").show();
+                        }
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    $("#errormsg").html(errors);
+                    $('#my-alert').modal({
+                        relatedTarget: this
+                    });
+                }
+            }
+        })
+    })
+    var boolResponseTime = true;
+    $("#rank2").click(function () {
+        if($('#rank2_i').hasClass('am-icon-chevron-up')){
+            $('#rank2_i').removeClass('am-icon-chevron-up').addClass('am-icon-chevron-down');
+        }else{
+            $('#rank2_i').removeClass('am-icon-chevron-down').addClass('am-icon-chevron-up');
+        }
+        pageIndex=1;
+        responseTime = boolResponseTime;
+        boolResponseTime = !boolResponseTime;
+        var param = {
+            nickName: nickName,
+            countService: countService,
+            responseTime: responseTime
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "Search.do?passportid=$!passport.id",
+            error: function () {
+                $("#errormsg").html("程序错误");
+                $('#my-alert').modal({
+                    relatedTarget: this
+                });
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                console.log(arr);
+                if (arr.errors.length == 0) {
+                    var show = ""
+
+                    for (var i = 0; i < arr.result.length; i++) {
+                        show += "  <li class=\"am-pdding-0 am-cf am-margin-bottom-sm\" onclick=\"detail('" + arr.result[i].id + "')\">  <a class=\"am-cf\">  <div class=\"am-fl\"><img class=\"photo\" src=\"" + arr.result[i].avatarurl + "\"/></div>";
+                        show += "   <div class=\"am-fl am-padding-left-xs width-60\"> <p class=\"am-padding-top-xs am-text-default dark-gray\">" + arr.result[i].nickName + "<span  class=\"am-align-right pic am-text-sm\"><i class=\"peopleico\"></i>";
+                        if(typeof(arr.result[i].countService)!="undefined"){
+                            show += "<span>"+ arr.result[i].countService + "</span>";
+                        }
+                        show+="</span></p>";
+                        show += "  <p class=\"pt-2\"><span class=\"dark-gray\">瘦咖简介:</span></p> " ;
+                        if(typeof(arr.result[i].content)!='undefined') {
+                            var str=arr.result[i].content.replace(/<[^>]+>/g,"");
+                            if(str.length>25){
+                                show += " <span class=\"light-gray-txt num\">" + str.substr(0,25) + ".... </span> ";
+                            }
+                            else{
+                                show += " <span class=\"light-gray-txt num\">" + str+ " </span> ";
+                            }
+                        }
+                        show += "</div> </a> </li>";
+                    }
+                    $("#am-text-sm").html(show);
+                    if (arr.totalCount <=5) {
+                        $("#show-more").hide();
+                    }else{
+                        if (Math.ceil(arr.totalCount / 5) == pageIndex) {
+                            $("#show-more").hide();
+                        }else{
+                            $("#show-more").show();
+                        }
+                    }                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    $("#errormsg").html(errors);
+                    $('#my-alert').modal({
+                        relatedTarget: this
+                    });
+                }
+            }
+        })
+    });
+    $("#common").delegate("#show-more", "click", function () {
+        var param = {
+            pageNum: ++pageIndex,
+            nickName: nickName,
+            countService: countService,
+            responseTime: responseTime
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "Search.do?passportid=$!passport.id",
+            error: function () {
+                $("#errormsg").html("程序错误");
+                $('#my-alert').modal({
+                    relatedTarget: this
+                });
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                if (arr.errors.length == 0) {
+                    var show = "";
+                    for (var i = 0; i < arr.result.length; i++) {
+                        show += "  <li class=\"am-pdding-0 am-cf am-margin-bottom-sm\" onclick=\"detail('" + arr.result[i].id + "')\">  <a class=\"am-cf\">  <div class=\"am-fl\"><img class=\"photo\" src=\"" + arr.result[i].avatarurl + "\"/></div>";
+                        show += "   <div class=\"am-fl am-padding-left-xs width-60\"> <p class=\"am-padding-top-xs am-text-default dark-gray\">" + arr.result[i].nickName + "<span  class=\"am-align-right pic am-text-sm\"><i class=\"peopleico\"></i>";
+                        if(typeof(arr.result[i].countService)!="undefined"){
+                            show += "<span>"+ arr.result[i].countService + "</span>";
+                        }
+                        show+="</span></p>";
+                        show += "  <p class=\"pt-2\"><span class=\"dark-gray\">瘦咖简介:</span></p> " ;
+                        if(typeof(arr.result[i].content)!='undefined') {
+                            var str=arr.result[i].content.replace(/<[^>]+>/g,"");
+                            if(str.length>25){
+                                show += " <span class=\"light-gray-txt num\">" + str.substr(0,25) + ".... </span> ";
+                            }
+                            else{
+                                show += " <span class=\"light-gray-txt num\">" + str+ " </span> ";
+                            }
+                        }
+                        show += "</div> </a> </li>";
+                    }
+                    $("#am-text-sm").append(show);
+                    if (Math.ceil(arr.totalCount / 5) == pageIndex) {
+                        $("#show-more").hide();
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    $("#errormsg").html(errors);
+                    $('#my-alert').modal({
+                        relatedTarget: this
+                    });
+                }
+            }
+        })
+    });
+</script>

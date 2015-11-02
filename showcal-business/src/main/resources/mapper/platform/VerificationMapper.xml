@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.VerificationMapper">
+
+    <sql id="whereForFindList">
+    </sql>
+
+    <select id="check" resultMap="verificationPO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        PL_SYS_VERIFICATION
+        WHERE
+        IS_DELETED=0
+        AND CODE=#{entity.code}
+        AND OBJECT=#{entity.object}
+        AND INACTIVE_DATE>#{entity.inactiveDate}
+        AND TYPE=#{entity.type}
+    </select>
+
+    <select id="checkLogin" resultMap="verificationPO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        PL_SYS_VERIFICATION
+        WHERE
+        IS_DELETED=0
+        AND CODE=#{entity.code}
+        AND ID=#{entity.id}
+        AND UNIX_TIMESTAMP(INACTIVE_DATE)>UNIX_TIMESTAMP(#{entity.inactiveDate})
+        AND TYPE=#{entity.type}
+    </select>
+
+</mapper>

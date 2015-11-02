@@ -1,0 +1,145 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+        <li><a href="$platformLink.setTarget("daily/index")">日常管理</a></li>
+        <li><a href="$platformLink.setTarget("daily/usermanager")">用户管理</a></li>
+        <li class="active">新建用户</a></li>
+    </ul>
+</div>
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="UserManagerCreateController">
+<form class="form-horizontal xn-form" role="form" xn-form-validate novalidate name="validateForm">
+<div class="xn-sidebar-2 clearfix">
+<div class="sidebar-left">
+    <h4 class="mb_10">什么是用户</h4>
+    <p>用户是指可使用该平台，并进行相应操作的人员。包含平台用户，瘦咖，普通用户</p>
+</div>
+<div class="sidebar-right  clearfix">
+    <h4 class="mt_10 pb_10">创建一个用户 </h4>
+
+    <div class="sidebar-description pt_30 clearfix">
+        <div class="xn-input-line  clearfix xn-upload-img xn-text-center">
+            <label class="xn-label mt-50">请上传头像：</label>
+            <input type="file" id="pictureFile" name="pictureFile" ng-click="showPicture()" width="114" height="85"
+                   contentEditable="false" style="display:none" accept="image/png,image/gif,image/bmp,image/jpeg,image/jpg"/>
+            <li class="clearfix"  ng-if="user.avatarurl == null" onclick="pictureFile.click()">
+                <i class="icon icon-add  font-45"></i>
+                <div class="upload-add-title ng-binding">求真相</div>
+            </li>
+            <img ng-if="user.avatarurl != null" onclick="pictureFile.click()" class="view-img imgFile" id="spanImage" alt="请选择图片"
+                 width="234" height="120" ng-src="{{user.avatarurl}}"/>
+        </div>
+        <div class="xn-input-line  clearfix">
+            <label class="xn-label"><span class="f-right">昵称：</span><i
+                    class="xn-required-i f-right"></i></label>
+
+            <div class="xn-input w_150 mr_45">
+                <input class="form-control  " type="text" name="nickName" ng-model="user.nickName"
+                       placeholder="请输入用户昵称" required="required" autofocus>
+            </div>
+            <div class="xn-input w_150">
+                <label for="man" class=" xn-cursor mr_10"><input id="man" type="radio" name="sex" value="MALE"
+                                                                 ng-model="user.sex"  > 男</label>
+                <label for="woman" class="xn-cursor mr_10"><input id="woman" type="radio" name="sex"
+                                                                  value="FEMALE" ng-model="user.sex">
+                    女</label>
+            </div>
+        </div>
+        <div class="xn-input-line  clearfix">
+            <label class="xn-label"><span class="f-right">手机：</span><i
+                    class="xn-required-i f-right"></i></label>
+
+            <div class="xn-input">
+                <input type="text" class="form-control " id="mobilePhone" placeholder="请输入手机号码"
+                       name="mobilePhone"
+                       ng-model="user.mobilePhone" required="required"
+                       ng-pattern="/^(1[3|4|5|6|7|8|9][\d]{9})$/">
+            </div>
+        </div>
+        <div class="xn-input-line  clearfix">
+            <label for="type" class="xn-label"><span class="f-right">用户类型：</span><i
+                    class="xn-required-i f-right"></i></label>
+
+            <div class="xn-input">
+                <select id="type" class="form-control" name="usertype" ng-model="user.userType"
+                        ng-options="type.id as type.name for type in userTypes" required="required">
+                    <option value="">-- 请选择用户类型 --</option>
+                </select>
+            </div>
+        </div>
+        <div class="xn-input-line  clearfix">
+            <label for="workYear" class="xn-label">身高：</label>
+
+            <div class="xn-input">
+                <input type="text" class="form-control " id="mobilePhone" placeholder="单位cm"
+                       name="employeemobilePhone"
+                       ng-model="user.height" ng-pattern="/^([0-9]{3})$/">
+            </div>
+        </div>
+        <div class="xn-input-line  clearfix">
+            <label class="xn-label"><span class="f-right">出生日期：</span><i class="xn-required-i f-right"></i></label>
+
+            <div class="xn-input">
+                <div class="input-group openData">
+                    <input type="text" class="form-control " required="required" id="entryDate"
+                           placeholder="" ng-model="user.birthday" name="employeeentryDate"
+                           datepicker-popup="yyyy-MM-dd" is-open="openedDate" min-date="minDate"
+                           datepicker-options="dateOptions"
+                           date-disabled="disabled(date, mode)" close-text="关闭" current-text="今天"
+                           clear-text="清除">
+                               <span class="input-group-btn">
+                                   <button class="btn btn-default" type="button" ng-click="openData($event)"><i
+                                           class="glyphicon glyphicon-calendar"></i></button>
+                               </span>
+                </div>
+            </div>
+        </div>
+        <div style="display: none" class="xn-input-line  clearfix">
+            <label class="xn-label" ng-show="user.bindaccount || bindaccount">QQ号码：</label>
+
+            <div class="xn-input" ng-show="user.bindaccount || bindaccount">
+                <input type="text" class="form-control " id="userAccount" name="userAccount"
+                       ng-model="user.qq" placeholder="请输入QQ">
+            </div>
+            <button class="btn btn-link f-right mr_45" ng-init="bindaccount=false"
+                    ng-click="bindaccount=true" ng-show="!(user.bindaccount || bindaccount)">绑定账号
+            </button>
+        </div>
+        <div style="display: none" class="xn-input-line  clearfix">
+            <label class="xn-label" ng-show="bindaccount"><span
+                    class="f-right">微信账号：</span><i ng-show="user.bindaccount"
+                                                   class="xn-required-i f-right"></i></label>
+
+            <div class="xn-input" ng-show="user.bindaccount || bindaccount">
+                <input type="text" class="form-control " id="userAccount" name="bindaccount"
+                       ng-model="user.wechat" placeholder="请输入微信号">
+            </div>
+        </div>
+        <div class="xn-input-line  clearfix">
+            <label for="workYear" class="xn-label">密码：</label>
+
+            <div class="xn-input">
+                <input type="password" class="form-control " id="mobilePhone" placeholder="请输入密码"
+                       name="employeemobilePhone"
+                       ng-model="user.password">
+            </div>
+        </div>
+
+        <div class="xn-input-line" ng-show="validateForm.$errors.length > 0">
+            <label class="xn-label"></label>
+
+            <div class="alert alert-danger xn-input">
+                <i class="glyphicon glyphicon-remove-sign mr_5"
+                   ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]}}
+            </div>
+        </div>
+        <div class="xn-input-line clearfix">
+            <label class="xn-label"></label>
+            <a class="btn btn-primary col-md-2" xn-form-submit="doSave()">保存</a>
+            <a href="$hrLink.setTarget("employee/index")" class="btn btn-default col-md-2 col-sm-offset-2">取消</a>
+        </div>
+    </div>
+</div>
+</div>
+</form>
+</div>

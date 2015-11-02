@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.thermalcontrol.dal.FoodExchangeMapper">
+
+    <sql id="whereForFindList">
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           )
+    </sql>
+
+    <select id="find" resultMap="foodExchangePO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `TC_FOOD_EXCHANGE`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_FOOD_EXCHANGE`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="foodExchangePO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `TC_FOOD_EXCHANGE`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_FOOD_EXCHANGE`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_FOOD_EXCHANGE`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `TC_FOOD_EXCHANGE`
+        SET
+        `MEALS_ID`=#{ request.mealsId },
+        `BASE_HEAT`=#{ request.baseHeat },
+        `TOTAL_EXCHANGE`=#{ request.totalExchange },
+        `VEGETABLE`=#{ request.vegetable },
+        `MEAT_EGG`=#{ request.meatEgg },
+        `STAPLE_FOOD`=#{ request.stapleFood },
+        `GREASE`=#{ request.grease },
+        `IS_ACTIVE`=#{ request.isActive },
+        `ACTIVE_DATE`=#{ request.activeDate },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+
+    <update id="inactive">
+        UPDATE
+            `TC_FOOD_EXCHANGE`
+        SET
+            `IS_ACTIVE` = 0
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `IS_ACTIVE`=1
+            AND `ID` = #{id}
+    </update>
+
+    <update id="active">
+        UPDATE
+            TC_FOOD_EXCHANGE
+        SET
+            `IS_ACTIVE` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `IS_ACTIVE`=0
+            AND `ID` = #{id}
+    </update>
+
+</mapper>

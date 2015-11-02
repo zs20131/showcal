@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.cms.dal.ArticleMapper">
+
+    <sql id="whereForFindList">
+        <if test="request.categoryId!=null"> AND `CATEGORY_ID` =#{ request.categoryId }</if>
+        <if test="request.submitUserId!=null"> AND `SUBMIT_USER_ID` =#{ request.submitUserId }</if>
+        <if test="request.submitUserName!=null"> AND `SUBMIT_USER_NAME` LIKE CONCAT ('%',#{ request.submitUserName },'%')</if>
+        <if test="request.approveUserId!=null"> AND `APPROVE_USER_ID` =#{ request.approveUserId }</if>
+        <if test="request.approveUserName!=null"> AND `APPROVE_USER_NAME` LIKE CONCAT ('%',#{ request.approveUserName },'%')</if>
+        <if test="request.approveStartTime !=null">
+            <![CDATA[ AND DATE_FORMAT(`APPROVE_TIME`, '%Y-%m-%d')>=  DATE_FORMAT(#{request.approveStartTime}, '%Y-%m-%d')   ]]>
+        </if>
+        <if test="request.approveEndTime !=null">
+        <![CDATA[ AND DATE_FORMAT(`APPROVE_TIME`, '%Y-%m-%d')<=  DATE_FORMAT(#{request.approveEndTime}, '%Y-%m-%d')   ]]>
+        </if>
+        <if test="request.countEndLink!=null">AND  `COUNT_LINK`  &lt;=#{ request.countEndLink } </if>
+        <if test="request.countStartLink!=null">AND  `COUNT_LINK`  &gt;=#{ request.countStartLink } </if>
+        <if test="request.countEndComment!=null">AND  `COUNT_COMMENT`  &lt;=#{ request.countEndComment } </if>
+        <if test="request.countStartComment!=null">AND  `COUNT_COMMENT`  &gt;=#{ request.countStartComment } </if>
+        <if test="request.countEndCollection!=null">AND  `COUNT_CONNECTION`  &lt;=#{ request.countEndCollection } </if>
+        <if test="request.countStartCollection!=null">AND  `COUNT_CONNECTION`  &gt;=#{ request.countStartCollection } </if>
+        <if test="request.title!=null">AND  `TITLE` LIKE CONCAT ('%',#{ request.title },'%') </if>
+        <if test="request.alreadySubmit.size>0">
+            AND IS_APPROVED in
+            <foreach item="submit" index="index" collection="request.alreadySubmit"
+                     open="(" separator="," close=")">
+                #{submit}
+            </foreach>
+        </if>
+        <if test="request.ids!=null and request.ids.size>0">
+            AND ID IN
+            <foreach collection="request.ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+
+        ORDER BY
+        <if test="request.isHot">
+            (COUNT_COMMENT*5+COUNT_LINK*2+COUNT_READ)*WEIGHT DESC,
+        </if>
+        <if test="request.orderSort!=null and request.orderRule!=null">
+            ${request.orderSort}
+            ${request.orderRule},
+        </if>
+         ID DESC
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           `SUBMIT_USER_NAME` LIKE CONCAT ('%',#{ request.keyword },'%')  OR  
+           `APPROVE_USER_NAME` LIKE CONCAT ('%',#{ request.keyword },'%')  OR  
+           )
+    </sql>
+
+    <select id="find" resultMap="articlePO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `CMS_ARTICLE`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `CMS_ARTICLE`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="articlePO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `CMS_ARTICLE`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `CMS_ARTICLE`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `CMS_ARTICLE`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `CMS_ARTICLE`
+        SET
+        `TITLE`=#{ request.title },
+        `IS_ORIGINAL`=#{ request.isOriginal },
+        `AUTHOR_NAME`=#{ request.authorName },
+        `COVER_ID`=#{ request.coverId },
+        `IS_COVER_IN_BODY`=#{ request.isCoverInBody },
+        `SUMMARY`=#{ request.summary },
+        `WEIGHT`=#{ request.weight },
+         `COUNT_CONNECTION`=#{ request.countConnection },
+        `ORIGINAL_URL`=#{ request.originalUrl },
+        `CATEGORY_ID`=#{ request.categoryId },
+        `KEYWORDS`=#{ request.keywords },
+        `COUNT_READ`=#{ request.countRead },
+        `COUNT_LINK`=#{ request.countLink },
+        `COUNT_COMMENT`=#{ request.countComment },
+        `IS_SUBMIT`=#{ request.isSubmit },
+        `SUBMIT_USER_ID`=#{ request.submitUserId },
+        `SUBMIT_USER_NAME`=#{ request.submitUserName },
+        `SUBMIT_TIME`=#{ request.submitTime },
+        `IS_APPROVED`=#{ request.isApproved },
+        `APPROVE_USER_ID`=#{ request.approveUserId },
+        `APPROVE_USER_NAME`=#{ request.approveUserName },
+        `APPROVE_TIME`=#{ request.approveTime },
+        `APPROVE_RESULT`=#{ request.approveResult },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+
+</mapper>

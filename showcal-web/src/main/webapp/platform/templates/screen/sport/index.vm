@@ -1,0 +1,33 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+            <li class="active">运动方案</a></li>
+        </ul>
+    </ul>
+</div>
+<div class="xn-main xn-setting-list  auto  xn-width  clearfix">
+    <ul class="clearfix">
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("sport/setting.vm")">
+                <div class="xn-setting-img xn-setting-img-job"></div>
+                <div class="xn-setting-right">
+                    <h3>主数据</h3>
+
+                    <p>设置运动主数据... </p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("sport/sportscheme.vm")">
+                <div class="xn-setting-img xn-setting-img-level"></div>
+                <div class="xn-setting-right">
+                    <h3>运动方案</h3>
+
+                    <p>设置运动方案...</p>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>

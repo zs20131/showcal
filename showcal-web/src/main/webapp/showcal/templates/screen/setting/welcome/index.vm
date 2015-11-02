@@ -1,0 +1,97 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$showcalLink.setTarget("index")">首页</a></li>
+        <li><a href="$showcalLink.setTarget("setting/index")">我的设置</a></a></li>
+        <li class="active">欢迎语设置</a></li>
+    </ul>
+</div>
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="WelcomeIndexController">
+    <div class="clearfix">
+        <a class="btn btn-primary btn-sm f-right mr_10" href="#" ng-click="createWelcome()">添加欢迎语</a>
+    </div>
+    <div class="xn-table-wrap">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th class="col-sm-1">序号</th>
+                <th class="col-sm-7">欢迎语</th>
+                <th class="col-sm-2">是否默认</th>
+                <th class="col-sm-2">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <tr ng-repeat="welcome in  welcomes">
+                 <td>{{(vm.pageNumber-1)*vm.pageSize+$index+1}}</td>
+                 <td>{{welcome.cometent}}</td>
+                 <td>{{welcome.isActive | welcomeActive }}</td>
+                <td class="xn-center">
+                    <a  ng-click="doActive(welcome.id)" href="javascript:void(0);">默认</a>
+                    <a  ng-click="doEdit(welcome.id)" href="javascript:void(0);">修改</a>
+                    <a  method="doDelete(welcome.id)" xn-makesure content="您确定要删除吗？" title="删除" href="javascript:void(0);">删除</a>
+                </td>
+            </tr>
+            <tr ng-if="vm.totalCount == 0">
+                <td colspan="12" class="center">无法找到相应的记录</td>
+            </tr>
+            </tbody>
+
+        </table>
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{vm.totalCount}}条</div>
+            <pagination ng-show="vm.totalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                        total-items="vm.totalCount"
+                        ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                        last-text="&raquo;"></pagination>
+        </div>
+    </div>
+
+    <script type="text/ng-template" id="openCreate.html">
+        <form  class="form-horizontal xn-form clearfix" role="form"   >
+            <div class="modal-header">
+                <h3 class="modal-title">{{window.title}}</h3>
+
+                <div class="xn-close xn-cursor" ng-click="cancel()">
+                    <i class="icon icon-delete"></i>
+                </div>
+            </div>
+            <div class="modal-body clearfix">
+                <div class="form-group col-md-12 col-md-offset-1 clearfix">
+                    <label class="col-md-3 w_100"><span class="f-right">欢迎语：</span></label>
+                    <div class="col-md-9">
+                        <textarea type="text" rows="5" cols="20" class="form-control" name="cometent" ng-model="vm.cometent" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="doSave()">新建</button>
+                <button class="btn btn-default" ng-click="cancel()">取消</button>
+            </div>
+        </form>
+    </script>
+    <script type="text/ng-template" id="openEdit.html">
+        <form  class="form-horizontal xn-form clearfix" role="form"   >
+            <div class="modal-header">
+                <h3 class="modal-title">{{window.title}}</h3>
+
+                <div class="xn-close xn-cursor" ng-click="cancel()">
+                    <i class="icon icon-delete"></i>
+                </div>
+            </div>
+            <div class="modal-body clearfix">
+                <div class="form-group col-md-12 col-md-offset-1 clearfix">
+                    <label class="col-md-3 w_100"><span class="f-right">欢迎语：</span></label>
+                    <div class="col-md-9">
+                        <textarea rows="5" cols="20" type="text" class="form-control" name="cometent" ng-model="vm.cometent" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="doSave()">确定</button>
+                <button class="btn btn-default" ng-click="cancel()">取消</button>
+            </div>
+        </form>
+    </script>
+</div>

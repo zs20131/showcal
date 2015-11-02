@@ -1,0 +1,402 @@
+$page.setTitle("文章详情")
+<div class="discover discover-detail">
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="detail?back"  class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+
+        <h5 class="am-header-title">文章详情</h5>
+
+        <div class="am-header-right am-header-nav">
+            #if(!$article.isComplaint)
+                <a class="pic" id="complaint" #*data-am-modal="{target: '#my-actions'}"*#>
+                    举报
+                </a>
+            #else
+                <a>已举报</a>
+            #end
+        </div>
+    </header>
+    <!--tab 内容 -->
+    <div class="am-g clearfix tabcontent mt-10 am-text-sm am-padding-bottom-lg">
+        <div class="am-tab-panel">
+            <ul class="tablist am-padding-0 am-margin-0 ">
+                <li class="whitebg top-bottom-border">
+                    <div class="head-title pl_10 pr-10">
+                        <img class="am-circle am-fl " src="$!article.useravatarurl"/>
+
+                        <span class="am-text-middle am-padding-left-xs">$!article.submitUserName</span>
+                        <span class="f-right lighter-gray-txt am-text-xs ">$!base.reduceTimes($!base.formatDate($article.submitTime,
+                        "yyyy-MM-dd HH:mm:ss"))</span>
+                    </div>
+                    <div class="imgcon">
+                        #if($!article.avatarurl)
+                            <img src="$article.avatarurl@320w_240h_0e" class="width"/> </a>
+                        #else
+                            <img class="listimg width" src="$mobileContent.getURI("images/listimg1.jpg")"/>
+                        #end
+                    </div>
+                    <div class="discover-detail-txt bottom-border">
+                        <h5>【$!article.title】</h5>
+
+                        <p class="sho">
+                            #noescape() $!article.html #end  </p>
+
+                    </div>
+                    <div class="listp am-g ">
+                        <div class="am-u-sm-4 am-text-center">
+                            <img class="praise praise-num"
+                                #if($!article.isPraise)
+                                 choose="true"
+                                 src="$mobileContent.getURI("images/praise-click.png")"
+                                #else
+                                 choose="false"
+                                 src="$mobileContent.getURI("images/praise.png")"
+                                #end />
+                            <span class="am-text-middle am-padding-left-xs">$!article.countLink</span>
+                        </div>
+                        <div class="am-u-sm-4 am-text-center">
+                            <img class="praise comment-num" id="articlePraise" src="$mobileContent.getURI("images/comment.png")"/>
+                            <span class="am-text-middle am-padding-left-xs"
+                                  id="countComment">$!article.countComment</span>
+                        </div>
+                        <div class="am-u-sm-4 am-text-center">
+                            <img class="praise collect-num"
+                                #if($!article.isCollection)
+                                 choose="true"
+                                 src="$mobileContent.getURI("images/collect-click.png")"
+                                #else
+                                 choose="false"
+                                 src="$mobileContent.getURI("images/collect.png")"
+                                #end />
+                            <span class="am-text-middle am-padding-left-xs">$!article.countConnection</span>
+                        </div>
+                    </div>
+                    <ul class="am-padding-0 clearfix listul am-margin-0" id="commentPost">
+                        #foreach($comment in $!article.commentPost)
+                            <li class="am-u-sm-12  am-padding-0 ">
+                                <div class="am-u-sm-2"><img class="am-circle discover-detaillist-img am-center"
+                                                            src="$!comment.avatarurl"/>
+                                </div>
+                                <div class="am-u-sm-10 bottom-border minheight">
+                                    <p class="am-padding-top-xs"><span class="pic">$!comment.userName</span><span
+                                            class="f-right am-text-xs lighter-gray-txt">$!base.formatDate($!comment.postTime,
+                                    "yyyy-MM-dd HH:mm:ss")</span></p>
+
+                                    <p class="am-text-xs pb-5">$!comment.content</p>
+                                </div>
+                            </li>
+                        #end
+                    </ul>
+                ##                    #if($commentPost.size >0)
+                ##                        <p class=" alllist pl_10 am-cf"><a href="#">查看全部$!commentPost.size 条评论</a></p>
+                ##                    #end
+                </li>
+
+            </ul>
+
+
+        </div>
+
+    </div>
+
+    <div id="bg">
+        <div class="dialog-popup" id="my-action">
+            <ul class="am-list am-margin-0 ">
+                <li><a class="" onclick="complaint(1)">广告</a></li>
+                <li><a class="" onclick="complaint(2)">垃圾信息</a></li>
+                <li><a class="" onclick="complaint(3)">含色情/暴力/反动信息</a></li>
+                <li><a class="" onclick="complaint(4)">含诈骗信息</a></li>
+            </ul>
+            <div class="bg-opacity-1"></div>
+            <div class="am-modal-actions-group">
+                <button class="am-btn am-btn-secondary am-btn-block cancel">取消</button>
+            </div>
+        </div>
+        </form>
+    </div>
+#* <div class="am-modal-actions" id="my-actions">
+     <div class="am-modal-actions-group">
+         <ul class="am-list">
+             <li><a data-am-modal-close class="innercon" onclick="complaint(1)">广告</a></li>
+             <li><a data-am-modal-close class="outcon" onclick="complaint(2)">垃圾信息</a></li>
+             <li><a data-am-modal-close class="outcon" onclick="complaint(3)">含色情/暴力/反动信息</a></li>
+             <li><a data-am-modal-close class="outcon" onclick="complaint(4)">含诈骗信息</a></li>
+
+         </ul>
+     </div>
+     <div class="am-modal-actions-group">
+         <button class="am-btn am-btn-secondary am-btn-block" data-am-modal-close>取消</button>
+     </div>
+ </div>*#
+</div>
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">瘦咖提醒您</div>
+        <div class="am-modal-bd" id="errormsg">
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" id="ok">确定</span>
+        </div>
+    </div>
+</div>
+
+<script>
+var width=document.body.clientWidth;
+$(".width").attr("width",width);
+$(".width").attr("height",width);
+function doBack() {
+    history.back();
+}
+$(function(){
+    $("#articlePraise").bind('click', function () {
+        location.href = "detail?articlePraise";
+    })
+})
+var handler=function(e){
+    e.stopPropagation();
+    e.preventDefault();
+}
+$("#complaint").bind('click', function () {
+    if($("#complaint").html()!="已举报"){
+        $("#my-action").css("display", "block");
+        $("#bg").css("display", "block");
+    }
+    document.body.addEventListener("touchmove",handler,true)
+})
+$(".cancel").bind('click', function () {
+    $(".dialog-popup").css("display", "none");
+    $("#bg").css("display", "none");
+    document.body.removeEventListener("touchmove",handler,true)
+})
+$("#ok").bind('click', function () {
+    $(".dialog-popup").css("display", "none");
+    $("#bg").css("display", "none");
+    document.body.removeEventListener("touchmove",handler,true)
+});
+//collect
+$('.collect-num').click(function () {
+    var choose = $(this).attr("choose");
+    var praise;
+    if (choose == "false") {
+        praise = true;
+    }
+    else {
+        praise = false;
+    }
+    var param = {
+        id: "$article.id",
+        praise: praise
+    };
+    $.ajax({
+        type: "post",
+        data: param,
+        url: "Collection.do?passportid=$!passport.id",
+        error: function () {
+            $("#errormsg").html("程序错误");
+            $('#my-alert').modal({
+                relatedTarget: this
+            })
+        },
+        success: function (msg) {
+            var arr = eval("(" + msg + ")");
+            if (arr.errors.length == 0) {
+                if (choose == "false") {
+                    $('.collect-num').attr('src', '$mobileContent.getURI("images/collect-click.png")');
+                    var num = $('.collect-num').next("span").text();
+                    $('.collect-num').next("span").text(parseInt(num) + 1);
+                    $('.collect-num').attr("choose", "true");
+                }
+                else {
+                    $('.collect-num').attr('src', '$mobileContent.getURI("images/collect.png")');
+                    var num = $('.collect-num').next("span").text();
+                    $('.collect-num').next("span").text(parseInt(num) - 1);
+                    $('.collect-num').attr("choose", "false");
+                }
+            }
+            else {
+                var errors = [];
+                for (var i = 0; i < arr.errors.length; i++) {
+                    errors.push(arr.errors[i].message);
+                }
+                $("#errormsg").html(errors);
+                $('#my-alert').modal({
+                    relatedTarget: this
+                })
+            }
+        }
+    })
+
+});
+//praise
+$('.praise-num').click(function () {
+    var choose = $(this).attr("choose");
+    var praise;
+    if (choose == "false") {
+        praise = true;
+    }
+    else {
+        praise = false;
+    }
+    var param = {
+        id: "$article.id",
+        praise: praise
+    };
+    $.ajax({
+        type: "post",
+        data: param,
+        url: "Praise.do?passportid=$!passport.id",
+        error: function () {
+            $("#errormsg").html("程序错误");
+            $('#my-alert').modal({
+                relatedTarget: this
+            })
+        },
+        success: function (msg) {
+            var arr = eval("(" + msg + ")");
+            if (arr.errors.length == 0) {
+                if (choose == "false") {
+                    $(".praise-num").attr('src', '$mobileContent.getURI("images/praise-click.png")');
+                    var num = $(".praise-num").next("span").text();
+                    $(".praise-num").next("span").text(parseInt(num) + 1);
+                    $(".praise-num").attr("choose", "true");
+                }
+                else {
+                    $(".praise-num").attr('src', '$mobileContent.getURI("images/praise.png")');
+                    var num = $(".praise-num").next("span").text();
+                    $(".praise-num").next("span").text(parseInt(num) - 1);
+                    $(".praise-num").attr("choose", "false");
+                }
+            }
+            else {
+                var errors = [];
+                for (var i = 0; i < arr.errors.length; i++) {
+                    errors.push(arr.errors[i].message);
+                }
+                $("#errormsg").html(errors);
+                $('#my-alert').modal({
+                    relatedTarget: this
+                });
+            }
+        }
+    })
+
+});
+function addComment(content, url) {
+    var param = {
+        threadId: "$article.id",
+        content: content
+    }
+    $.ajax({
+        type: "post",
+        data: param,
+        url: "CreateComment.do?passportid=$!passport.id",
+        error: function () {
+            $("#errormsg").html("程序错误");
+            $('#my-alert').modal({
+                relatedTarget: this
+            })
+        },
+        success: function (msg) {
+            var arr = eval("(" + msg + ")");
+            if (arr.errors.length == 0) {
+                var countComment = $("#countComment").html();
+                var html = "";
+                var avatar = "$passport.avatar";
+                var username = "$passport.userName";
+                var now = new Date();
+                var year = now.getFullYear();
+                var month = now.getMonth() + 1;
+                var day = now.getDate();
+                if (day.length == 1) {
+                    day = "0" + day;
+                }
+                var hh = now.getHours();
+                if (hh.length == 1) {
+                    hh = "0" + hh;
+                }
+                var mm = now.getMinutes();
+                if (mm.length == 1) {
+                    mm = "0" + mm;
+                }
+                var ss = now.getSeconds();
+                if (ss.length == 1) {
+                    ss = "0" + ss;
+                }
+                var time = year + "-" + month + "-" + day + " " + hh + ":" + mm + ":" + ss;
+                html += " <li class=\"am-u-sm-12  am-padding-0 \">";
+                html += "<div class=\"am-u-sm-2\"><img class=\"am-circle discover-detaillist-img am-center\" src=\"" + avatar + "\"/></div>";
+                html += "<div class=\"am-u-sm-10 bottom-border minheight\"><p class=\"am-padding-top-xs\"><span class=\"pic\">" + username + "</span><span class=\"f-right am-text-xs lighter-gray-txt\">" + time + "</span></p>";
+                html += "<p class=\"am-text-xs pb-5\">" + content + "</p> </div> </li>";
+                $("#commentPost").prepend(html);
+                $("#countComment").html(++countComment);
+            }
+            else {
+                var errors = [];
+                for (var i = 0; i < arr.errors.length; i++) {
+                    errors.push(arr.errors[i].message);
+                }
+                $("#errormsg").html(errors);
+                $('#my-alert').modal({
+                    relatedTarget: this
+                });
+            }
+        }
+    })
+}
+function complaint(index) {
+    var content = "";
+    if (index == 1) {
+        content = "广告";
+    }
+    if (index == 2) {
+        content = "垃圾信息";
+    }
+    if (index == 3) {
+        content = "含色情/暴力/反动信息";
+    }
+    if (index == 4) {
+        content = "含诈骗信息";
+    }
+    var param = {
+        context1: content,
+        id: "$article.id"
+    }
+    $.ajax({
+        type: "post",
+        data: param,
+        url: "Complaint.do?passportid=$!passport.id",
+        error: function () {
+            $("#errormsg").html("程序错误");
+            $('#my-alert').modal({
+                relatedTarget: this
+            })
+        },
+        success: function (msg) {
+            var arr = eval("(" + msg + ")");
+            if (arr.errors.length == 0) {
+                $("#errormsg").html("举报成功");
+                $('#my-alert').modal({
+                    relatedTarget: this
+                });
+                $("#complaint").html("已举报");
+                $("#complaint").removeClass("pic");
+            }
+            else {
+                var errors = [];
+                for (var i = 0; i < arr.errors.length; i++) {
+                    errors.push(arr.errors[i].message);
+                }
+                $("#errormsg").html(errors);
+                $('#my-alert').modal({
+                    relatedTarget: this
+                });
+            }
+        }
+    })
+}
+</script>

@@ -1,0 +1,21 @@
+<PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>API文档 </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+<div class="api-container">
+    <h1 class="api-span-24 api-left">API 列表</h1>
+    <ul>
+    <#if methods??>
+        <#list methods as method>
+            <li class="api-list-item">
+                <span><a class="link" href="${method.name}.html">${moduleName?lower_case}${method.apiName} </a></span>
+                <p class="api-list-intro">${method.description}</p>
+            </li>
+        </#list>
+    </#if>
+    </ul>
+</div>
+</body>
+</html>

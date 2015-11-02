@@ -1,0 +1,123 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+        <li><a href="$platformLink.setTarget("setting/index")">设置</a></li>
+        <li class="active">评价建议</li>
+    </ul>
+</div>
+
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="EvaluateIndexController">
+    <div class="xn-table-wrap">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th class="col-sm-2">评语标题</th>
+                <th class="col-sm-4">评价内容</th>
+                <th class="col-sm-1">类型</th>
+                <th class="col-sm-1">优先级</th>
+                <th class="col-sm-1">开始值</th>
+                <th class="col-sm-1">结束值</th>
+                <th class="col-sm-1">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbody" ng-init="usershow=false">
+            <tr ng-repeat="evaluate in  pagedResult" ng-class="{'unactive':!evaluate.isActive}">
+                <td>
+                    {{evaluate.title}}
+                </td>
+                <td>
+                    {{evaluate.content}}
+                </td>
+                <td>
+                    {{evaluate.type | evaluateType}}
+                </td>
+                <td>
+                    {{evaluate.priority}}
+                </td>
+                <td>
+                    {{evaluate.startGrade}}
+                </td>
+                <td>
+                    {{evaluate.endGrade}}
+                </td>
+                <td>
+                    <a ng-click="edit(evaluate)">编辑</a>
+                </td>
+            </tr>
+            <tr ng-if="vm.totalCount == 0">
+                <td colspan="12" class="center">无法找到相应的记录</td>
+            </tr>
+            </tbody>
+
+        </table>
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{vm.totalCount}}条</div>
+            <pagination ng-show="vm.totalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                        total-items="vm.totalCount"
+                        ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                        last-text="&raquo;"></pagination>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="evaluateEidt.html">
+    <form  class="form-horizontal xn-form clearfix" role="form"  xn-form-validate novalidate  name="validateForm" >
+        <div class="modal-header" ng-mousedown="mousedown($event)" ng-mousemove="mousemove($event)" ng-mouseup="mouseup()">
+            <h3 class="modal-title"> 评价</h3>
+            <div class="xn-close xn-cursor" ng-click="clean()">
+                <i class="icon icon-delete"></i>
+            </div>
+        </div>
+        <div class="modal-body clearfix">
+            <label class="col-sm-5 control-label"><span class="f-right">评论标题：</span> </label>
+            <div class="col-sm-7">
+                <input class="form-control" type="text"    ng-model="evaluate.title"  >
+            </div>
+        </div>
+        <div class="modal-body clearfix">
+            <label class="col-sm-5 control-label"><span class="f-right">评价内容：</span> </label>
+            <div class="col-sm-7">
+                <input class="form-control" type="text"   ng-model="evaluate.content"  >
+            </div>
+        </div>
+        <div class="modal-body clearfix">
+            <label class="col-sm-5 control-label"><span class="f-right">类型：</span> </label>
+            <select ng-model="evaluate.type" class="form-control mr_10 w_130 f-left ml_10 "
+                    ng-show="!integral.edit"
+                    ng-options="type.value as type.key for type in types">
+            </select>
+        </div>
+##        <div class="modal-body clearfix">
+##            <label class="col-sm-5 control-label"><span class="f-right">评价类型：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+##            <select ng-model="integral.status" class="form-control mr_10 w_130 f-left ml_10 "
+##                    ng-show="!integral.edit"
+##                    ng-options="rule.value as rule.key for rule in evaluates">
+##            </select>
+##        </div>
+        <div class="modal-body clearfix">
+            <label class="col-sm-5 control-label"><span class="f-right">优先级：</span> </label>
+            <div class="col-sm-7">
+                <input class="form-control" type="text"  name="organizationname" ng-model="evaluate.priority" >
+            </div>
+        </div>
+        <div class="modal-body clearfix">
+            <label class="col-sm-5 control-label"><span class="f-right">开始值：</span> </label>
+            <div class="col-sm-7">
+                <input class="form-control" type="text"  name="organizationname" ng-model="evaluate.startGrade"  >
+            </div>
+        </div>
+        <div class="modal-body clearfix">
+            <label class="col-sm-5 control-label"><span class="f-right">结束值：</span> </label>
+            <div class="col-sm-7">
+                <input class="form-control" type="text"  name="organizationname" ng-model="evaluate.endGrade"  >
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button  class="btn btn-primary "  xn-form-submit="doSave()">保存</button>
+            <a ng-click="clean()"  class="btn btn-default ">取消</a>
+        </div>
+    </form>
+</script>

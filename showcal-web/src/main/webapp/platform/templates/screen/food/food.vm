@@ -1,0 +1,264 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+            <li><a href="$platformLink.setTarget("food/index")">食物管理</a></li>
+            <li class="active">食物主数据</a></li>
+        </ul>
+    </ul>
+</div>
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="FoodIndexController">
+    <div class="clearfix">
+        <a class="btn btn-primary btn-sm f-right mr_10" href="$platformLink.setTarget("food/createfood")">新建食物</a>
+        <a class="btn btn-primary btn-sm f-right mr_10" href="import.vm">批量导入</a>
+    </div>
+    <!--搜索部分-->
+    <form class="form-horizontal clearfix xn-form ng-valid ng-valid-required ng-dirty" name="searchForm"
+          xn-form-validate novalidate="" role="form">
+        <div class="xn_search_box auto">
+            <div class="xn-input-line clearfix">
+                <label class="xn-label">状态：</label>
+
+                <div class="xn-input-smm">
+                    <select id="foodActive" class="form-control" name="foodActive" ng-model="vm.isActive"
+                            ng-options="foodActive.sqlSave as foodActive.name for foodActive in foodActives">
+                        <option value="">-- 请选择 --</option>
+                    </select>
+                </div>
+                <div class="tip"></div>
+                <label class="xn-label">类别(大类)：</label>
+                <div class="xn-input-smm">
+                    <select  id="foodLargeCategory"  class="form-control"  name="foodLargeCategory" ng-model="vm.foodLargeCategory">
+                        <option value="">-- 请选择 --</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+                <div class="tip"></div>
+                <label class="xn-label">类别(小类)：</label>
+                <div class="xn-input-smm">
+                    <select  id="foodCategoryId"  class="form-control"  name="foodCategoryId" ng-model="vm.foodCategoryId">
+                        <option value="">-- 请选择 --</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="xn-input-line clearfix">
+                <label class="xn-label">增肌推荐：</label>
+                <div class="xn-input-smm">
+                    <select class="form-control" name="isAddMuscleTrue" id="isAddMuscleTrue" ng-model="vm.isAddMuscle" >
+                        <option value="">-- 请选择 --</option>
+                        <option value="1">早</option>
+                        <option value="2">中</option>
+                        <option value="3">晚</option>
+                    </select>
+                </div>
+                <div class="tip"></div>
+                <label class="xn-label">减肥推荐：</label>
+                <div class="xn-input-smm">
+                    <select class="form-control" name="isLoseTrue" id="isLoseTrue" ng-model="vm.isLose" >
+                        <option value="">-- 请选择 --</option>
+                        <option value="1">早</option>
+                        <option value="2">中</option>
+                        <option value="3">晚</option>
+                    </select>
+                </div>
+                <div class="tip"></div>
+                <label class="xn-label">常见：</label>
+                <div class="xn-input-smm">
+                    <select class="form-control" name="isCommon" id="isCommon" ng-model="vm.isCommon" >
+                        <option value="">-- 请选择 --</option>
+                        <option value="1">早</option>
+                        <option value="2">中</option>
+                        <option value="3">晚</option>
+                    </select>
+                </div>
+            </div>
+            <div class="xn-input-line clearfix">
+                <label class="xn-label">条形码：</label>
+
+                <div class="xn-input-smm">
+                    <input type="text" class="form-control ng-pristine ng-valid" id="barCode" name="barCode"
+                           ng-model="vm.barCode">
+                </div>
+                <div class="tip"></div>
+                <label class="xn-label">品牌：</label>
+
+                <div class="xn-input-smm">
+                    <input type="text" class="form-control ng-pristine ng-valid" id="brand" name="brand"
+                           ng-model="vm.brand">
+                </div>
+                <div class="tip"></div>
+                <label class="xn-label">名称：</label>
+
+                <div class="xn-input-smm">
+                    <input type="text" class="form-control ng-pristine ng-valid" id="name" name="name"
+                           ng-model="vm.name">
+                </div>
+                <a class="btn btn-success btn-sm w_80 f-right" xn-submit-enter="doSearch()">查询</a>
+            </div>
+        </div>
+    </form>
+
+    <link rel="stylesheet" href="$platformContent.getURI('vendor/mmgrid/mmGrid.css')">
+    <link rel="stylesheet" href="$platformContent.getURI('vendor/mmgrid/mmPaginator.css')">
+    #*<table id="table" class="mmgrid">
+    </table>
+    <div id="pg" style="text-align: right;"></div>*#
+    <!--数据展示部分-->
+    <div class="xn-table-wrap">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th class="col-sm-1">
+                    序号
+                </th>
+                <th class="col-sm-1">
+                    名称
+                </th>
+                <th class="col-sm-1">
+                    重量
+                </th>
+                <th class="col-sm-1">
+                    热量
+                </th>
+                <th class="col-sm-1">
+                    组成
+                </th>
+                <th class="col-sm-1">
+                    规格
+                </th>
+                <th class="col-sm-1">
+                    食物交换份克数
+                </th>
+                <th class="col-sm-1">
+                    单位食用克数
+                </th>
+                <th class="col-sm-1">
+                    类别
+                </th>
+                <th class="col-sm-1">
+                    推荐
+                </th>
+                <th class="col-sm-1">
+                    状态
+                </th>
+                <th class="col-sm-1">
+                    操作
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="food in searchResult">
+                <td>
+                    {{(vm.pageNumber-1)*vm.pageSize+$index+1}}
+                </td>
+                <td>
+                    {{food.name}}
+                </td>
+                <td>
+                    食物重量：{{food.weight}}<br>
+                    每单位：{{food.unitWeight}}
+                </td>
+                <td>
+                    热量：{{food.heat}}<br>
+                    单位热量：{{food.unitheat}}
+                </td>
+                <td>
+                    蛋白质：{{food.protein}}<br>
+                    脂肪：{{food.fat}}<br>
+                    碳水化合物：{{food.carbohydrate}}<br>
+                    膳食纤维：{{food.df}}
+                </td>
+                <td>
+                    单位：{{food.unit}}<br>
+                    品牌：{{food.brand}}<br>
+                    条形码：{{food.barCode}}
+                </td>
+                <td>
+                    {{food.foodExchange}}
+                </td>
+                <td>
+                    {{food.edubleUnit}}
+                </td>
+                <td>
+                    大类:{{food.foodLargeCategory}}<br>
+                    小类:{{food.foodCategoryId}}<br>
+                    菜谱:{{food.menuCategory}}
+                </td>
+                <td>
+                    增肌：{{food.isAddMuscle | isRecommend}}<br>
+                    减肥：{{food.isLose | isRecommend}}<br>
+                    常见：{{food.isCommon | isRecommend}}
+                </td>
+                <td>
+                    {{food.isActive | isActive}}
+                </td>
+                <td>
+                    <a class="view-a" ng-if="!food.isActive" ng-click="doActive(food.id)" href="javascript:void(0);"  >发布</a>
+                    <a class="view-a" ng-if="food.isActive" ng-click="cancelActive(food.id)" href="javascript:void(0);" >取消发布</a>
+                    <a class="view-a" ng-href="editfood.vm?id={{food.id}}" target="_blank" >编辑</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{vm.totalCount}}条</div>
+            <pagination ng-show="vm.totalCount>vm.pageSize" ng-change="doSearch()" max-size="maxPageSize"
+                        total-items="vm.totalCount"
+                        ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                        last-text="&raquo;"></pagination>
+        </div>
+    </div>
+    <!--数据展示部分结束-->
+</div>
+
+<script>
+    var cols = [
+        {title: '类别', name: 'foodLargeCategory', align: 'center', width: 100},
+        {title: '名称', name: 'name', align: 'center', width: 180},
+        {title: '重量', name: 'weight', align: 'center', width: 180},
+        {title: '热量', name: 'heat', align: 'center', width: 180, type: 'number'},
+        {title: '单位热量', name: 'unitheat', align: 'center', width: 180, type: 'number'},
+        {title: '蛋白质', name: 'protein', align: 'center', width: 80, type: 'number'},
+        {title: '脂肪', name: 'fat', align: 'center', width: 80, type: 'number'},
+        {title: '碳水化合物', name: 'carbohydrate', align: 'center', width: 80, type: 'number'},
+        {title: '膳食纤维', name: 'df', align: 'center', width: 80, type: 'number'},
+        {title: '交换份克数', name: 'foodExchange', align: 'center', width: 80, type: 'number'},
+        {title: '单位食用克数', name: 'edubleUnit', align: 'center', width: 110, type: 'number'},
+        {title: '食物分类', name: 'foodCategoryId', align: 'center', width: 100, type: 'number'},
+        {title: '减肥推荐', name: 'isLose', align: 'center', width: 80, type: 'number'},
+        {title: '增肌推荐', name: 'isAddMuscle', align: 'center', width: 80, type: 'number'},
+        {title: '最后修改时间', name: 'lastUpdateTime', align: 'center', width: 80, type: 'number'},
+        {title: '最后修改人', name: 'lastUpdateBy', align: 'center', width: 80, type: 'number'},
+        {title: '状态', name: 'isActive', align: 'center', width: 80, type: 'number'}
+    ];
+    var mmg = jQuery('#table').mmGrid({
+        height:500,
+        cols: cols,
+        url: '$tcContent.getURI("api.do?method=api.thermalcontrol.food.find")',
+        method: 'post',
+        indexCol: true,
+        indexColWidth: 35,
+        nowrap: true,
+        root: 'result',
+        loadErrorText: '数据加载异常...',
+        autoLoad: true,
+        indexColWidth: 30,
+        plugins: [
+            $('#pg').mmPaginator({limitList: [10, 20, 30]})
+        ],
+        params: function () {
+            return {
+                data: {}
+            }
+        }
+    });
+
+</script>

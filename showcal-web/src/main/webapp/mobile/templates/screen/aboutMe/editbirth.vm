@@ -1,0 +1,65 @@
+<div class="showcal discover">
+    <!--header-->
+  <header data-am-widget="header" class="am-header am-no-layout am-header-fixed showcal--mobile-header">
+      <div class="am-header-left am-header-nav">
+      </div>
+      <h5 class="am-header-title font-14">修改出生日期</h5>
+      <div class="am-header-left am-header-nav">
+          <a href="information?passportid=$!passport.id" class="pic">
+              <i class="am-icon-angle-left am-text-xxl"></i>
+          </a>
+      </div>
+     </header>
+    <div class="mt-20 xn-text-center">
+          <input  class="login-input" type="text" id="birth"  placeholder="出生日期"
+              #if(!$!birthday) value=""#else value="$!birthday"#end>
+    </div>
+    <div class="mt-10 ml-10 font-14">提示：输入日期格式为：“2015-01-09”</div>
+    <div class="mt-10 ml-10 font-14"  id="errormsg" style="color: #ff0000"></div>
+    <div class="mt-10 xn-text-center">
+        <button class="btn login-button-default login-button-gray" disabled  onclick="doChangeBirth()">确认修改</button>
+    </div>
+</div>
+<script>
+    //   控制保存并查询按钮的样式，最初是不可用状态，全部填写之后才可以出现可用状态
+    $("#birth").bind('input propertychange', function() {
+        $("#errormsg").html("");
+        if($("#birth").val()){
+            $(".login-button-default").removeAttr("disabled");
+            $(".login-button-default").addClass("login-button-pink");
+        }else{
+            $(".login-button-default").attr("disabled","disabled");
+            $(".login-button-default").removeClass("login-button-pink");
+        }
+    });
+
+    function doChangeBirth() {
+        var mystring= $('#birth').val();
+        var result = mystring.match(/((^((1[8-9]\d{2})|([2-9]\d{3}))(-)(10|12|0?[13578])(-)(3[01]|[12][0-9]|0?[1-9])$)|(^((1[8-9]\d{2})|([2-9]\d{3}))(-)(11|0?[469])(-)(30|[12][0-9]|0?[1-9])$)|(^((1[8-9]\d{2})|([2-9]\d{3}))(-)(0?2)(-)(2[0-8]|1[0-9]|0?[1-9])$)|(^([2468][048]00)(-)(0?2)(-)(29)$)|(^([3579][26]00)(-)(0?2)(-)(29)$)|(^([1][89][0][48])(-)(0?2)(-)(29)$)|(^([2-9][0-9][0][48])(-)(0?2)(-)(29)$)|(^([1][89][2468][048])(-)(0?2)(-)(29)$)|(^([2-9][0-9][2468][048])(-)(0?2)(-)(29)$)|(^([1][89][13579][26])(-)(0?2)(-)(29)$)|(^([2-9][0-9][13579][26])(-)(0?2)(-)(29)$))/);
+        if(result==null)
+        {
+            $("#errormsg").html("出生日期格式不正确");
+            return false;
+        }
+        var birthday = $('#birth').val();
+        var now= new Date();
+        var birthdays=new Date(birthday);
+        if(birthdays>now){
+            $("#errormsg").html("出生日期不能大于系统当前时间");
+            return false;
+        }
+        var data = {};
+        console.log(birthday +"");
+        data.birthday = birthday;
+        $.ajax({
+            url: "Api.do?method=api.about.me.info.birthday.edit&passportid=$!passport.id",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            type: 'POST',
+            dataType: 'json',
+            success: function (msg) {
+                window.location.href = "information?passportid=$!passport.id";
+            }
+        });
+    }
+</script>

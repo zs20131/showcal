@@ -1,0 +1,58 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$showcalLink.setTarget("index")">首页</a></li>
+        <li><a href="$showcalLink.setTarget("setting/index")">我的设置</a></a></li>
+        <li class="active">自我介绍</a></li>
+    </ul>
+</div>
+<div class="xn-main xn-setting-list  auto  xn-width  clearfix" ng-controller="IntroduceIndexController"  ng-init="userId='$passport.userId'">
+    <form class="form-horizontal xn-form ng-pristine ng-valid ng-valid-required" name="supplierForm" xn-form-validate=""
+          novalidate="" role="form">
+        <div class="xn-edit  showcal-editContent clearfix" style="min-width: 1200px">
+            <div class="edit-content">
+                <div class="showcal-editContent-top clearfix">
+                    <h4 class="showcal-editContent-h4">我的封面</h4>
+
+                    <div>
+                        <div class="xn-input-line  clearfix" style="width:980px;margin: 0 auto">
+                            <ul class="xn-upload-img xn-upload-img-header clearfix"
+                                style="width: 595px;height: 250px ;float: left;margin-right: 20px">
+                                <input type="file" id="pictureFile" name="pictureFile" ng-click="showPicture()" width="114" height="85"
+                                       contentEditable="false" style="display:none" accept="image/png,image/gif,image/bmp,image/jpeg,image/jpg"/>
+                                <li class="clearfix"  ng-if="article.avatarurl == null" onclick="pictureFile.click()">
+                                    <i class="icon icon-add  font-45"></i>
+                                    <div class="upload-add-title ng-binding"></div>
+                                </li>
+                                <img ng-if="article.avatarurl != null" onclick="pictureFile.click()" class="view-img imgFile" id="spanImage" alt="请选择图片"
+                                     width="234" height="120" ng-src="{{article.avatarurl}}"/>
+
+                                </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="line"></div>
+                <h4 class="showcal-editContent-h4">我的介绍</h4>
+
+                <div>
+                    <div class="xn-input-line  clearfix" style="width:980px;margin: 0 auto">
+                        <div class="mt_20" name="content"  xn-markdown   ng-model="article.content" rows="8"></div>
+                    </div>
+                </div>
+                <div class="btn-class">
+                    <button class="btn btn-primary col-md-1 col-md-offset-5" ng-if="vm.totalCount==0" xn-form-submit="doSave()"
+                            data-toggle="modal"
+                            data-target="#myModal">保存
+                    </button>
+                    <button class="btn btn-primary col-md-1 col-md-offset-5" ng-if="vm.totalCount==1" xn-form-submit="update()"
+                            data-toggle="modal"
+                            data-target="#myModal">更新
+                    </button>
+                    <a href="$platformLink.setTarget("food/food")"
+                       class="btn btn-default col-md-1 col-md-offset-1">返回</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

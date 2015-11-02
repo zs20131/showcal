@@ -1,0 +1,135 @@
+$page.setTitle("关于我")
+<div class="discover discover-detail  chooseShowcal aboutme">
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="index?back" onclick="doback()" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+        <h5 class="am-header-title">关于我</h5>
+
+        <div class="am-header-right am-header-nav">
+            <a href="#right-link" class="info-ico ">
+
+            </a>
+        </div>
+    </header>
+    <div class="am-cf whitebg bottom-border">
+        <div class="photocon am-g">
+            <div class="am-fl am-text-center am-padding-left-sm">
+                <a href="information?passportid=$!passport.id">
+                #if($!user&&$!user.avatarurl)
+                    <img   class="aboutme-cycle-img" src="$!user.avatarurl"><span
+                        class="am-margin-left-xs">$!user.nickName</span>
+                   #elseif($!user&& $!user.sex=='FEMALE')
+                       <img   class="aboutme-cycle-img" src="../images/girl.png"><span
+                           class="am-margin-left-xs">$!user.nickName</span>
+                    #else
+                    <img   class="aboutme-cycle-img" src="../images/boy.png"><span
+                            class="am-margin-left-xs">$!user.nickName</span>
+                #end
+
+                </a>
+            </div>
+            <div class="am-fr am-padding-right-0"><i
+                    class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr  "></i></div>
+            <div class="am-fr am-text-center am-margin-right-sm"><a href="myIntegral?passportid=$passport.id"><span
+                    class="line-angle pic mt-20">$!user.integral</span><span class="line-angle am-text-sm ">我的积分</span></a>
+            </div>
+
+
+        </div>
+
+    </div>
+    <!--列表 -->
+    <div class="am-g am-cf ">
+        <ul class="am-padding-0 clearfix aboutmeul am-text-sm  top-border bottom-border am-margin-top-sm  whitebg">
+            <li class="am-u-sm-12 am-g-collapse am-padding-0">
+                <a href="weightControl?passportid=$!passport.id">
+                    <div class="am-u-sm-2 am-text-center"><img src="$mobileContent.getURI("images/weigh.png")"
+                                                               width="34px" height="34px">
+                    </div>
+                    <div class="am-u-sm-10 bottom-border">
+                        <span>体重记录</span>
+                        <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+
+                    </div>
+                </a>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0">
+                <a href="girthControl?passportid=$!passport.id">
+                    <div class="am-u-sm-2 am-text-center"><img src="$mobileContent.getURI("images/girth.png")"
+                                                               width="34px" height="34px">
+                    </div>
+                    <div class="am-u-sm-10 bottom-border">
+                        <span>围度记录</span>
+                        <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+
+                    </div>
+                </a>
+            </li>
+            #if($!user && $!user.sex=='FEMALE')
+                <li class="am-u-sm-12 am-g-collapse am-padding-0">
+                    <a href="myPhysiology?passportid=$!passport.id">
+                        <div class="am-u-sm-2 am-text-center"><img src="$mobileContent.getURI("images/woman.png")"
+                                                                   width="34px" height="34px">
+                        </div>
+                        <div class="am-u-sm-10">
+                            <span>生理期记录</span>
+                            <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+
+                        </div>
+                    </a>
+                </li>
+            #end
+        </ul>
+        <ul class="am-padding-0 clearfix aboutmeul am-text-sm  top-border bottom-border am-margin-top-sm  whitebg">
+            <li class="am-u-sm-12 am-g-collapse am-padding-0">
+                <a href="myMark?passportid=$!passport.id">
+                    <div class="am-u-sm-2 am-text-center"><img src="$mobileContent.getURI("images/aboutmecollect.png")"
+                                                               width="34px" height="34px">
+                    </div>
+                    <div class="am-u-sm-10 bottom-border">
+                        <span>我的收藏</span>
+                        <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+
+                    </div>
+                </a>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0">
+                <a href="myAccount?passportid=$!passport.id">
+                    <div class="am-u-sm-2 am-text-center"><img src="$mobileContent.getURI("images/account.png")"
+                                                               width="34px" height="34px">
+                    </div>
+                    <div class="am-u-sm-10 bottom-border">
+                        <span>我的账号</span>
+                        <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+
+                    </div>
+                </a>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0">
+                <a href="mySet?passportid=$!passport.id">
+                    <div class="am-u-sm-2 am-text-center"><img src="$mobileContent.getURI("images/setting.png")"
+                                                               width="34px" height="34px">
+                    </div>
+                    <div class="am-u-sm-10">
+                        <span>我的设置</span>
+                        <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+
+                    </div>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    function doback() {
+        History.back()
+    }
+</script>

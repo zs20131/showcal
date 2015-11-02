@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.foundation.dal.FileMapper">
+
+    <sql id="whereForFindList">
+    </sql>
+
+    <select id="getList" resultMap="filePO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                SYS_FILE
+            WHERE
+                IS_DELETED=0
+                <include refid="whereForFindList" />
+        ) AS T
+        LIMIT #{beginItemIndex}, #{endItemIndex}
+    </select>
+
+    <select id="getListCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            SYS_FILE
+        WHERE
+            IS_DELETED=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            SYS_FILE
+        WHERE
+            IS_DELETED=0
+            AND  ID!=#{id}
+            AND CODE=#{code}
+    </select>
+
+</mapper>

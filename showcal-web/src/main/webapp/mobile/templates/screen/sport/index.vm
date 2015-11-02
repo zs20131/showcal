@@ -1,0 +1,148 @@
+$page.setTitle("运动控制")
+<div class="discover sport">
+    <!--header -->
+##    <header data-am-widget="header"
+##            class="am-header whitebg am-header-fixed bottom-border">
+##        <div class="am-header-left am-header-nav">
+##            <a href="#left-link" class="pic">
+##                <img class="am-circle am-fl" src="$!passport.avatar"/><span
+##                    class="am-padding-left-xs am-text-sm" id="name">$!passport.nickName</span>
+##            </a>
+##        </div>
+##
+##        <ul class="tabgroup am-center am-text-center am-text-sm " id="workingtab">
+##            <li >运动</li>
+##            <li class="active">餐饮</li>
+##        </ul>
+##
+##        <div class="am-header-right am-header-nav">
+##            <a href="#right-link" class="info-ico ">
+##                <img class="am-right" src="$mobileContent.getURI("images/news.png")"/>
+##            </a>
+##        </div>
+##    </header>
+    <!--tab 内容 -->
+##    <div class="am-g clearfix  am-text-sm ">
+    <div>
+    ##           <div class="sport-btn"></div>
+        <ul class="am-padding-0 am-margin-0" id="common">
+            #set($headNum = 1)
+            #foreach($sportHead in $sportHeads)
+                #if($headNum > 4)
+                    <li class="sport-li am-center" id="$headNum" onclick="showSettingDetail('$sportHead.id')"
+                        style="display: none;">
+                        #set($headNum = $headNum+1)
+                        <p class="title am-text-center am-text-default">$!sportHead.name</p>
+
+                        <div class="line"></div>
+                        <ul class="step am-padding-0 am-margin-0 am-g">
+                            #foreach($sportLine in $sportHead.sportLineList)
+                                #set($smsize = 12/$sportHead.sportLineList.size())
+                                <li class="am-u-sm-$smsize am-padding-0 am-text-center">
+                                    <span class="circle white-txt am-text-default am-text-center">$!sportLine.step</span>
+                                    <span class="dark-gray mt-5">$!sportLine.sportSetting.name</span>
+                                    <span class="lighter-gray-txt">$!sportLine.time 分钟</span>
+                                </li>
+                            #end
+                        </ul>
+                    </li>
+                #else
+                    <li class="sport-li am-center" id="$headNum" onclick="showSettingDetail('$sportHead.id')">
+                        #set($headNum = $headNum+1)
+                        <p class="title am-text-center am-text-default">$sportHead.name</p>
+
+                        <div class="line"></div>
+                        <ul class="step am-padding-0 am-margin-0 am-g">
+                            #foreach($sportLine in $sportHead.sportLineList)
+                                #set($smsize = 12/$sportHead.sportLineList.size())
+                                <li class="am-u-sm-$smsize am-padding-0 am-text-center">
+                                    <span class="circle white-txt am-text-default am-text-center">$!sportLine.step</span>
+                                    <span class="dark-gray mt-5">$!sportLine.sportSetting.name</span>
+                                    <span class="lighter-gray-txt">$!sportLine.time 分钟</span>
+                                </li>
+                            #end
+                        </ul>
+                    </li>
+                #end
+
+            #end
+        </ul>
+        #if($totalCount>3)
+        <button  class="click-more" id="show-more">点击更多</button>
+        #end
+        #if($totalCount==0)
+            <button   class="click-more" >暂无运动方案</button>
+        #end
+    </div>
+</div>
+</div>
+</div>
+
+<script>
+    $(function () {
+        //tab
+        $("#workingtab li").click(function () {
+            var indexLi = $(this).index();
+            $(this).addClass("active").siblings().removeClass("active");
+            $(".tabcontent > div").addClass("am-hide").eq(indexLi).removeClass("am-hide");
+        });
+
+        var namecontent = $("#name").html();
+        if (namecontent.length > 4) {
+            namecontent = namecontent.substring(0, 3) + "...";
+        }
+        $("#name").html(namecontent);
+    });
+    var pageIndex=1;
+    function showSettingDetail(id) {
+        window.location.href = "sportSettingDetail?id=" + id+"&passportid=$!passport.id";
+    }
+    $("#show-more").click(function () {
+        var param = {
+            pageIndex:++pageIndex,
+            sporttime: "$sportTime",
+            address:"$address",
+            intensity:"$intensity",
+            bmi:"$bmi"
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "ShowMore.do?passportid=$!passport.id",
+            error: function () {
+                alert("程序错误")
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                    var next = "";
+                console.log(arr);
+                if (arr.errors.length == 0) {
+                    for (var i = 0; i < arr.result.length; i++) {
+                        next+="<li class=\"sport-li am-center\"  onclick=\"showSettingDetail('"+arr.result[i].id+"')\">";
+                        next+=" <p class=\"title am-text-center am-text-default\">"+arr.result[i].name+"</p> <div class=\"line\"></div>";
+                        next+=" <ul class=\"step am-padding-0 am-margin-0 am-g\">";
+                        var smsize=12/arr.result[i].sportLineList.length;
+                        for(var j=0;j<arr.result[i].sportLineList.length;j++){
+                            next+="<li class=\"am-u-sm-"+smsize+" am-padding-0 am-text-center\">";
+                            next+="<span class=\"circle white-txt am-text-default am-text-center\">"+arr.result[i].sportLineList[j].step+"</span>";
+                            next+="<span class=\"dark-gray mt-5\">"+arr.result[i].sportLineList[j].sportSetting.name+"</span>";
+                            next+="<span class=\"lighter-gray-txt\">"+arr.result[i].sportLineList[j].time+"分钟</span> </li>";
+                        }
+                        next+=" </ul> </li>";
+                    }
+                    $("#common").append(next);
+                    if (Math.ceil(arr.totalCount / 3) == pageIndex) {
+                        $("#show-more").hide();
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    });
+</script>

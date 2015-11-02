@@ -1,0 +1,142 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+        <li><a   href="$platformLink.setTarget("daily/index")">日常管理</a></li>
+        <li class="active">账号管理</a></li>
+    </ul>
+</div>
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="AccountManagerIndexController">
+    <!--搜索部分-->
+    <form class="form-horizontal clearfix xn-form ng-valid ng-valid-required ng-dirty" name="searchForm" xn-form-validate  novalidate="" role="form">
+        <div class="xn_search_box auto">
+            <div class="xn-input-line clearfix">
+                <label class="xn-label">昵称：</label>
+
+                <div class="xn-input-smm">
+                    <input type="text" class="form-control ng-pristine ng-valid" id="nickName" name="nickName"
+                           ng-model="vm.nickName">
+                </div>
+                <div class="tip"></div>
+                <label class="xn-label">手机号：</label>
+                <div class="xn-input-smm">
+                    <input type="text" class="form-control ng-pristine ng-valid" id="mobilePhone" name="mobilePhone"
+                           ng-model="vm.mobilePhone">
+                </div>
+                <div class="tip"></div>
+                <label class="xn-label">QQ号：</label>
+                <div class="xn-input-smm">
+                    <input type="text" class="form-control ng-pristine ng-valid" id="qq" name="qq"
+                           ng-model="vm.qq">
+                </div>
+                <div class="tip"></div>
+                <label class="xn-label">微信号：</label>
+                <div class="xn-input-smm">
+                    <input type="text" class="form-control ng-pristine ng-valid" id="wechat" name="wechat"
+                           ng-model="vm.wechat">
+                </div>
+            </div>
+            <div class="xn-input-line clearfix">
+                <label class="xn-label">当前状态：</label>
+                <div class="xn-input-lg"  xn-checkbox-list ng-model="vm.statusObj" data-checkbox-list="checkboxlist" method="">
+                </div>
+                <a class="btn btn-success btn-sm w_80 f-right" href="javascript:void(0)"
+                   xn-submit-enter="doSearch()">查询</a>
+            </div>
+        </div>
+    </form>
+
+    <div class="xn-table-wrap">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th class="col-sm-1" align="center">头像</th>
+                <th class="col-sm-2">昵称</th>
+                <th class="col-sm-1">类型</th>
+                <th class="col-sm-2">联系方式</th>
+                <th class="col-sm-1">状态</th>
+                <th class="col-sm-2">时效</th>
+                <th class="col-sm-2">原因</th>
+                <th class="col-sm-2">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbody" ng-init="usershow=false">
+            <tr ng-repeat="user in  pagedResult" ng-class="{'unactive':!user.isActive}">
+                <td align="center">
+                   <img class="xn-user-photo" width="50px" height="50px" ng-src="{{user.avatarurl}}"/>
+                </td>
+                <td>
+                    <div data-user-id={{user.id}} xn-user-card>{{user.nickName}}</div>
+                </td>
+                <td align="center">
+                    {{user.userType|userType}}
+                </td>
+                <td>
+                    <i class="icon icon-phone"></i> {{user.mobilePhone | mobilePhone }}<br/>
+                    <i class="xn-icon icon-qq color-gray font-14"></i><span ng-if="user.qq"> 已绑定 </span><span ng-if="!user.qq"> 未绑定 </span> <br/>
+                    <i class="xn-icon icon-weixin color-gray"></i><span ng-if="user.wechat"> 已绑定 </span><span ng-if="!user.wechat"> 未绑定 <br/>
+                    <span ng-if="!user.isActive">{{user.email}}</span>
+                </td>
+                <td align="center">
+                    <span ng-if="!user.isActive">封锁</span>
+                    <span ng-if="user.isActive && user.isBanned">禁言</span>
+                    <span ng-if="user.isActive && !user.isBanned">正常</span>
+                </td>
+                <td>
+                    {{ user.bannedTime | date : 'yyyy-MM-dd hh:mm:ss' }}
+                </td>
+                <td>
+                    {{ user.bannedReason }}
+                </td>
+                <td class="xn-center">
+                    <div class="view auto" ng-mouseenter="showDetail=true" ng-init="showDetail=false"
+                         ng-mouseleave="showDetail=false" ng-class="showDetail?'showMessage':''">
+                        <a ng-if="user.isActive && !user.isBanned" method="ban(user.id)" xn-makesure content="您确定要禁言吗？" title="禁言" href="javascript:void(0);">禁言</a>
+                        <a ng-if="user.isBanned" method="inBan(user.id)" xn-makesure content="您确定要取消禁言吗？" title="取消禁言" href="javascript:void(0);">取消禁言</a>
+                        <a ng-if="user.isActive" method="doInActive(user.id)" xn-makesure content="您确定要封锁吗？" title="封锁" href="javascript:void(0);">封锁</a>
+                        <a ng-if="!user.isActive" method="doActive(user.id)" xn-makesure content="您确定要取消封锁吗？" title="取消封锁" href="javascript:void(0);">取消封锁</a>
+                        <a ng-click="doResetPassword(user.id)" href="javascript:void(0);">重置密码</a>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-if="vm.totalCount == 0">
+                <td colspan="12" class="center">无法找到相应的记录</td>
+            </tr>
+            </tbody>
+
+        </table>
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{vm.totalCount}}条</div>
+            <pagination ng-show="vm.totalCount>vm.pageSize" ng-change="getList()" max-size="maxPageSize"
+                        total-items="vm.totalCount"
+                        ng-model="vm.pageNumber" items-per-page="vm.pageSize" class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                        last-text="&raquo;"></pagination>
+        </div>
+    </div>
+
+    <script type="text/ng-template" id="openBan.html">
+        <form  class="form-horizontal xn-form clearfix" role="form"   >
+            <div class="modal-header">
+                <h3 class="modal-title">{{window.title}}</h3>
+
+                <div class="xn-close xn-cursor" ng-click="cancel()">
+                    <i class="icon icon-delete"></i>
+                </div>
+            </div>
+            <div class="modal-body clearfix">
+                <div class="form-group col-md-12 col-md-offset-1 clearfix">
+                    <label class="col-md-3 w_100"><span class="f-right">禁言原因：</span></label>
+                    <div class="col-md-9">
+                        <textarea rows="5" cols="20" type="text" class="form-control" name="bannedReason" ng-model="vm.bannedReason" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="doBan()">禁言</button>
+                <button class="btn btn-default" ng-click="cancel()">取消</button>
+            </div>
+        </form>
+    </script>
+</div>

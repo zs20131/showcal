@@ -1,0 +1,53 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+            <li class="active">报表中心</a></li>
+        </ul>
+    </ul>
+</div>
+<div class="xn-main xn-setting-list  auto  xn-width  clearfix">
+    <ul class="clearfix">
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("md/mdcategory")">
+                <div class="xn-setting-img xn-setting-img-job"></div>
+                <div class="xn-setting-right">
+                    <h3>用户数量汇总</h3>
+
+                    <p>设置商品类别... </p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("md/mditem")">
+                <div class="xn-setting-img xn-setting-img-level"></div>
+                <div class="xn-setting-right">
+                    <h3>响应平均时间</h3>
+
+                    <p>设置商品主数据...</p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("md/mditem")">
+                <div class="xn-setting-img xn-setting-img-level"></div>
+                <div class="xn-setting-right">
+                    <h3>用户体重变化</h3>
+
+                    <p>设置商品主数据...</p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$platformLink.setTarget("md/mditem")">
+                <div class="xn-setting-img xn-setting-img-level"></div>
+                <div class="xn-setting-right">
+                    <h3>用户特征分析</h3>
+
+                    <p>设置商品主数据...</p>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>

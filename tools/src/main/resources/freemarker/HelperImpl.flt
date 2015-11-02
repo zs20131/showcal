@@ -1,0 +1,33 @@
+package ${basePackage}.${moduleName?uncap_first}.helper;
+
+/**
+* <p/>
+* <pre>
+ * ***************************************************************
+ *  Copyright (c) 2014 –${company}
+    *  Title: ${basePackage}.${moduleName}.helper.${moduleName ?cap_first}HelperImpl
+    *  Description: ${moduleName} Helper 实现类
+    *  @since
+    *  @author ${author}
+    * ***************************************************************
+ * </pre>
+*/
+@Component
+public class ${moduleName ?cap_first}HelperImpl implements ${moduleName ?cap_first}Helper {
+@Autowired
+private ${moduleName ?cap_first}Service ${moduleName}Service;
+<#if methods??>
+    <#list methods as method>
+    /**
+    * ${method.description}
+    * @param request
+    * @param passport 用户护照
+    * @return
+    */
+    @Override
+    public ${method.responseName} ${method.name}(${method.requestName} request, Passport passport) {
+    return ${moduleName}Service.${method.name}(request, passport);
+    }
+    </#list>
+</#if>
+}

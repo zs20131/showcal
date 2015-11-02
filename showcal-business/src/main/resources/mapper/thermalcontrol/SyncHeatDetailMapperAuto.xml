@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.thermalcontrol.dal.SyncHeatDetailMapper">
+
+    <resultMap  id="syncHeatDetailPO" type="com.showcal.thermalcontrol.po.SyncHeatDetailPO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="SYNC_HEAT_ID"  jdbcType="NUMERIC" property="syncHeatId"></result>
+        <result column="FOOD_ID"  jdbcType="NUMERIC" property="foodId"></result>
+        <result column="FOOD_NAME"  jdbcType="VARCHAR" property="foodName"></result>
+        <result column="UNIT"  jdbcType="VARCHAR" property="unit"></result>
+        <result column="RECOMMEND_VALUE"  jdbcType="NUMERIC" property="recommendValue"></result>
+        <result column="ACTUAL_VALUE"  jdbcType="NUMERIC" property="actualValue"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`SYNC_HEAT_ID`,`FOOD_ID`,`FOOD_NAME`,`UNIT`,`RECOMMEND_VALUE`,`ACTUAL_VALUE`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `TC_SYNC_HEAT_DETAIL`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ syncHeatDetail.id },
+        
+        #{ syncHeatDetail.syncHeatId },
+        #{ syncHeatDetail.foodId },
+        #{ syncHeatDetail.foodName },
+        #{ syncHeatDetail.unit },
+        #{ syncHeatDetail.recommendValue },
+        #{ syncHeatDetail.actualValue },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `TC_SYNC_HEAT_DETAIL`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "syncHeatDetail" index ="index" separator=",">
+            (
+            #{ syncHeatDetail.id },
+            
+            #{ syncHeatDetail.syncHeatId },
+            #{ syncHeatDetail.foodId },
+            #{ syncHeatDetail.foodName },
+            #{ syncHeatDetail.unit },
+            #{ syncHeatDetail.recommendValue },
+            #{ syncHeatDetail.actualValue },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `TC_SYNC_HEAT_DETAIL`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `TC_SYNC_HEAT_DETAIL`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="syncHeatDetailPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `TC_SYNC_HEAT_DETAIL`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="syncHeatDetailPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `TC_SYNC_HEAT_DETAIL`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="syncHeatDetailPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `TC_SYNC_HEAT_DETAIL`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_SYNC_HEAT_DETAIL`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

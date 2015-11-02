@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.thermalcontrol.dal.FoodExchangeMapper">
+
+    <resultMap  id="foodExchangePO" type="com.showcal.thermalcontrol.po.FoodExchangePO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="MEALS_ID"  jdbcType="NUMERIC" property="mealsId"></result>
+        <result column="BASE_HEAT"  jdbcType="NUMERIC" property="baseHeat"></result>
+        <result column="TOTAL_EXCHANGE"  jdbcType="NUMERIC" property="totalExchange"></result>
+        <result column="VEGETABLE"  jdbcType="NUMERIC" property="vegetable"></result>
+        <result column="MEAT_EGG"  jdbcType="NUMERIC" property="meatEgg"></result>
+        <result column="STAPLE_FOOD"  jdbcType="NUMERIC" property="stapleFood"></result>
+        <result column="GREASE"  jdbcType="NUMERIC" property="grease"></result>
+        <result column="IS_ACTIVE"  jdbcType="TINYINT" property="isActive"></result>
+        <result column="ACTIVE_DATE"  jdbcType="DATE" property="activeDate"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`MEALS_ID`,`BASE_HEAT`,`TOTAL_EXCHANGE`,`VEGETABLE`,`MEAT_EGG`,`STAPLE_FOOD`,`GREASE`,`IS_ACTIVE`,`ACTIVE_DATE`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `TC_FOOD_EXCHANGE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ foodExchange.id },
+        
+        #{ foodExchange.mealsId },
+        #{ foodExchange.baseHeat },
+        #{ foodExchange.totalExchange },
+        #{ foodExchange.vegetable },
+        #{ foodExchange.meatEgg },
+        #{ foodExchange.stapleFood },
+        #{ foodExchange.grease },
+        #{ foodExchange.isActive },
+        #{ foodExchange.activeDate },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `TC_FOOD_EXCHANGE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "foodExchange" index ="index" separator=",">
+            (
+            #{ foodExchange.id },
+            
+            #{ foodExchange.mealsId },
+            #{ foodExchange.baseHeat },
+            #{ foodExchange.totalExchange },
+            #{ foodExchange.vegetable },
+            #{ foodExchange.meatEgg },
+            #{ foodExchange.stapleFood },
+            #{ foodExchange.grease },
+            #{ foodExchange.isActive },
+            #{ foodExchange.activeDate },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `TC_FOOD_EXCHANGE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `TC_FOOD_EXCHANGE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="foodExchangePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `TC_FOOD_EXCHANGE`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="foodExchangePO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `TC_FOOD_EXCHANGE`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="foodExchangePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `TC_FOOD_EXCHANGE`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_FOOD_EXCHANGE`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

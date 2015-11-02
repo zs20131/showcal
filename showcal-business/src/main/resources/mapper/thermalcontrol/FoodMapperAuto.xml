@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.thermalcontrol.dal.FoodMapper">
+
+    <resultMap  id="foodPO" type="com.showcal.thermalcontrol.po.FoodPO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="NAME"  jdbcType="VARCHAR" property="name"></result>
+        <result column="WEIGHT"  jdbcType="NUMERIC" property="weight"></result>
+        <result column="HEAT"  jdbcType="NUMERIC" property="heat"></result>
+        <result column="UNITHEAT"  jdbcType="NUMERIC" property="unitheat"></result>
+        <result column="PROTEIN"  jdbcType="NUMERIC" property="protein"></result>
+        <result column="FAT"  jdbcType="NUMERIC" property="fat"></result>
+        <result column="CARBOHYDRATE"  jdbcType="NUMERIC" property="carbohydrate"></result>
+        <result column="DF"  jdbcType="NUMERIC" property="df"></result>
+        <result column="BAR_CODE"  jdbcType="VARCHAR" property="barCode"></result>
+        <result column="BRAND"  jdbcType="VARCHAR" property="brand"></result>
+        <result column="FOOD_EXCHANGE"  jdbcType="NUMERIC" property="foodExchange"></result>
+        <result column="EDUBLE_UNIT"  jdbcType="NUMERIC" property="edubleUnit"></result>
+        <result column="UNIT"  jdbcType="VARCHAR" property="unit"></result>
+        <result column="UNIT_WEIGHT"  jdbcType="NUMERIC" property="unitWeight"></result>
+        <result column="FOOD_LARGE_CATEGORY"  jdbcType="NUMERIC" property="foodLargeCategory"></result>
+        <result column="FOOD_CATEGORY_ID"  jdbcType="NUMERIC" property="foodCategoryId"></result>
+        <result column="IS_LOSE"  jdbcType="TINYINT" property="isLose"></result>
+        <result column="IS_ADD_MUSCLE"  jdbcType="TINYINT" property="isAddMuscle"></result>
+        <result column="IS_COMMON"  jdbcType="TINYINT" property="isCommon"></result>
+        <result column="SOURCE_ID"  jdbcType="NUMERIC" property="sourceId"></result>
+        <result column="MENU_ID"  jdbcType="NUMERIC" property="menuId"></result>
+        <result column="MENU_CATEGORY"  jdbcType="NUMERIC" property="menuCategory"></result>
+        <result column="IS_ACTIVE"  jdbcType="TINYINT" property="isActive"></result>
+        <result column="PICTURE_URL"  jdbcType="TINYINT" property="pictureUrl"></result>
+        <result column="ACTIVE_DATE"  jdbcType="DATE" property="activeDate"></result>
+        <result column="ACTIVE_USER"  jdbcType="VARCHAR" property="activeUser"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`NAME`,`WEIGHT`,`HEAT`,`UNITHEAT`,`PROTEIN`,`FAT`,`CARBOHYDRATE`,`DF`,`BAR_CODE`,`BRAND`,`FOOD_EXCHANGE`,`EDUBLE_UNIT`,`UNIT`,`UNIT_WEIGHT`,`FOOD_LARGE_CATEGORY`,`FOOD_CATEGORY_ID`,`IS_LOSE`,`IS_ADD_MUSCLE`,`IS_COMMON`,`SOURCE_ID`,`MENU_ID`,`MENU_CATEGORY`,`PICTURE_URL`,`IS_ACTIVE`,`ACTIVE_DATE`,`ACTIVE_USER`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+        `TC_FOOD`
+        (
+        <include refid="entityColumnList" />
+        )
+        VALUES
+        (
+        #{ food.id },
+
+        #{ food.name },
+        #{ food.weight },
+        #{ food.heat },
+        #{ food.unitheat },
+        #{ food.protein },
+        #{ food.fat },
+        #{ food.carbohydrate },
+        #{ food.df },
+        #{ food.barCode },
+        #{ food.brand },
+        #{ food.foodExchange },
+        #{ food.edubleUnit },
+        #{ food.unit },
+        #{ food.unitWeight },
+        #{ food.foodLargeCategory },
+        #{ food.foodCategoryId },
+        #{ food.isLose },
+        #{ food.isAddMuscle },
+        #{ food.isCommon },
+        #{ food.sourceId },
+        #{ food.menuId },
+        #{ food.menuCategory },
+        #{ food.pictureUrl },
+        #{ food.isActive },
+        #{ food.activeDate },
+        #{ food.activeUser },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+        `TC_FOOD`
+        (
+        <include refid="entityColumnList" />
+        )
+        VALUES
+        <foreach collection="list" item= "food" index ="index" separator=",">
+            (
+            #{ food.id },
+
+            #{ food.name },
+            #{ food.weight },
+            #{ food.heat },
+            #{ food.unitheat },
+            #{ food.protein },
+            #{ food.fat },
+            #{ food.carbohydrate },
+            #{ food.df },
+            #{ food.barCode },
+            #{ food.brand },
+            #{ food.foodExchange },
+            #{ food.edubleUnit },
+            #{ food.unit },
+            #{ food.unitWeight },
+            #{ food.foodLargeCategory },
+            #{ food.foodCategoryId },
+            #{ food.isLose },
+            #{ food.isAddMuscle },
+            #{ food.isCommon },
+            #{ food.sourceId },
+            #{ food.menuId },
+            #{ food.menuCategory },
+            #{ food.pictureUrl },
+            #{ food.isActive },
+            #{ food.activeDate },
+            #{ food.activeUser },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `TC_FOOD`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `TC_FOOD`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="foodPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `TC_FOOD`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="foodPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `TC_FOOD`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="foodPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `TC_FOOD`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_FOOD`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.merchandise.dal.ItemEcommerceMapper">
+
+    <resultMap  id="itemEcommercePO" type="com.showcal.merchandise.po.ItemEcommercePO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="ORIGINAL_PRICE"  jdbcType="NUMERIC" property="originalPrice"></result>
+        <result column="CURRENT_PRICE"  jdbcType="NUMERIC" property="currentPrice"></result>
+        <result column="BUY_QUANTITY"  jdbcType="NUMERIC" property="buyQuantity"></result>
+        <result column="NEED_FREIGHT"  jdbcType="TINYINT" property="needFreight"></result>
+        <result column="IS_FEE_FREE"  jdbcType="TINYINT" property="isFeeFree"></result>
+        <result column="IS_UNIFIED_FEE"  jdbcType="TINYINT" property="isUnifiedFee"></result>
+        <result column="UNIFIED_FEE"  jdbcType="NUMERIC" property="unifiedFee"></result>
+        <result column="IS_FEE_TEMPLATE"  jdbcType="TINYINT" property="isFeeTemplate"></result>
+        <result column="FEE_TEMPLATE_ID"  jdbcType="NUMERIC" property="feeTemplateId"></result>
+        <result column="IS_SHOW_INVENTORY"  jdbcType="TINYINT" property="isShowInventory"></result>
+        <result column="LIMIT_QUANTITY"  jdbcType="NUMERIC" property="limitQuantity"></result>
+        <result column="ENABLE_MEMBER_DISCOUNT"  jdbcType="TINYINT" property="enableMemberDiscount"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`ORIGINAL_PRICE`,`CURRENT_PRICE`,`BUY_QUANTITY`,`NEED_FREIGHT`,`IS_FEE_FREE`,`IS_UNIFIED_FEE`,`UNIFIED_FEE`,`IS_FEE_TEMPLATE`,`FEE_TEMPLATE_ID`,`IS_SHOW_INVENTORY`,`LIMIT_QUANTITY`,`ENABLE_MEMBER_DISCOUNT`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `MD_ITEM_ECOMMERCE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ itemEcommerce.id },
+        
+        #{ itemEcommerce.originalPrice },
+        #{ itemEcommerce.currentPrice },
+        #{ itemEcommerce.buyQuantity },
+        #{ itemEcommerce.needFreight },
+        #{ itemEcommerce.isFeeFree },
+        #{ itemEcommerce.isUnifiedFee },
+        #{ itemEcommerce.unifiedFee },
+        #{ itemEcommerce.isFeeTemplate },
+        #{ itemEcommerce.feeTemplateId },
+        #{ itemEcommerce.isShowInventory },
+        #{ itemEcommerce.limitQuantity },
+        #{ itemEcommerce.enableMemberDiscount },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `MD_ITEM_ECOMMERCE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "itemEcommerce" index ="index" separator=",">
+            (
+            #{ itemEcommerce.id },
+            
+            #{ itemEcommerce.originalPrice },
+            #{ itemEcommerce.currentPrice },
+            #{ itemEcommerce.buyQuantity },
+            #{ itemEcommerce.needFreight },
+            #{ itemEcommerce.isFeeFree },
+            #{ itemEcommerce.isUnifiedFee },
+            #{ itemEcommerce.unifiedFee },
+            #{ itemEcommerce.isFeeTemplate },
+            #{ itemEcommerce.feeTemplateId },
+            #{ itemEcommerce.isShowInventory },
+            #{ itemEcommerce.limitQuantity },
+            #{ itemEcommerce.enableMemberDiscount },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `MD_ITEM_ECOMMERCE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `MD_ITEM_ECOMMERCE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="itemEcommercePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `MD_ITEM_ECOMMERCE`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="itemEcommercePO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `MD_ITEM_ECOMMERCE`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="itemEcommercePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `MD_ITEM_ECOMMERCE`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `MD_ITEM_ECOMMERCE`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

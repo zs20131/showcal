@@ -1,0 +1,328 @@
+<div class="showcal">
+    <!--header-->
+    <header data-am-widget="header" class="am-header am-no-layout am-header-fixed showcal--mobile-header am-padding-0 ">
+        <div class="am-header-left am-header-nav">
+            <a href="../aboutMe/index?passportid=$!passport.id" class="">
+                <img class="goodsdetail-header-img" src="$!passport.avatar" alt="">
+##                <span class="ml-10 color-pink">$!passport.nickName</span>
+            </a>
+        </div>
+        <h1 class="am-header-title">精品</h1>
+
+        <div class="am-header-right showcal-header-right">
+            <a href="../message/index?passportid=$!passport.id" class="">
+                <img class="" src="$mobileContent.getURI("images/news.png")" width="20" height="20"/>
+            </a>
+            #if($passport.tenantId>0)
+                <div class="cycle-dot"></div>
+            #end
+        </div>
+##        <div class="classify-search-box">
+##            <img class="doc-oc-js" data-rel="open" id="openclassify"
+##                 data-am-offcanvas="{target: '#classify-left',effect: 'push'}"
+##                 src="$mobileContent.getURI("images/classify.png")" width="18" height="12">
+####            <input type="text" id="title" onkeydown="search()"#*onkeyup="search()"*# class="showcal-goodsdetail-input">
+####            <div class="search-goods">
+####                <img class="am-margin-right-xs"
+####                     src="../images/search-gray.png"
+####                     width="14px" height="14px">
+####                <span class="lighter-gray-txt am-text-xs">请输入搜索内容</span>
+####            </div>
+##        #*<span class="f-right mr-10" onclick="search()">
+##        <img class="am-right" src="$mobileContent.getURI("images/search.png")" width="15" height="15"/>
+##        </span>*#
+##        </div>
+
+      #*  <div class="classify-search-box">
+            <img class="doc-oc-js" data-rel="open" id="openclassify"
+                 data-am-offcanvas="{target: '#classify-left',effect: 'push'}"
+                 src="$mobileContent.getURI("images/classify.png")" width="18" height="12">
+            <input type="text" id="title" class="showcal-goodsdetail-input"><span class="f-right mr-10"
+                                                                                  onclick="search()">  <img
+                class="am-right " src="$mobileContent.getURI("images/search.png")" width="15" height="15"/></span>
+        </div>*#
+    </header>
+    <div class="h-20">
+        <img class="doc-oc-js" data-rel="open" id="openclassify"
+             data-am-offcanvas="{target: '#classify-left',effect: 'push'}"
+             src="$mobileContent.getURI("images/classify.png")" width="18" height="12">
+    </div>
+    <!--搜索框-->
+
+    <!--侧边栏-->
+    <div id="classify-left" class="am-offcanvas lighter-gray-txt">
+        <div class="am-offcanvas-bar">
+            <div class="am-offcanvas-content">
+                <div class="goodsdetail-description-listcontainer clearfix">
+                    <li class="am-u-sm-12 detail-list xn-text-center doc-oc-js classifyid" data-rel="close">
+                        <span class="am-text-default">分类</span>
+                    </li>
+                    #foreach($clazz in $clazzs)
+                        <a class="am-u-sm-12 detail-list doc-oc-js classifyid" data-rel="close"
+                           onclick="chooseCategory('$clazz.id')">
+                            <span class="ml-30">$!clazz.name </span>
+                        </a>
+                    #end
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--图片及其细节-->
+    <div id="clickMore">
+    <div id="detail-box">
+        #foreach($item in $items)
+            <div class="showcal-detail-box" onclick="detail('$item.id')">
+                <img src="$item.avatarurl@400w_400h_0e" class="width"/>
+
+                <div class="showcal-detail-bottom-description">
+                    #if($item.name.length()>14)
+                        <div class="description">${item.name.substring(0,14)}</div>
+                    #else
+                        <div class="description">${item.name}</div>
+                    #end
+
+                    <div class="price">$!item.currentPrice元</div>
+                    <a class="right-arrows">
+                        <img class="color-pink" src="$mobileContent.getURI("images/rightarrow.png")" width="10"
+                             height="16">
+                    </a>
+                </div>
+            </div>
+        #end
+    </div>
+        <button style="display:none;" class="click-more" id="show-more">点击更多</button>
+
+    </div>
+
+##    <!--页脚-->
+##    <footer id="footer">
+##        <div class="am-u-sm-12 am-text-xs am-padding-0">
+##            <div class="am-u-sm-3"><a class="" href="#">
+##               <span class="footericon am-center mt-10"><img
+##                       src="$mobileContent.getURI("images/control.png")"></span>
+##                <span class="foottitle mt-5 active ">热控</span></a></div>
+##            <div class="am-u-sm-3"><a class="" href="#">
+##               <span class="footericon am-center mt-10"><img
+##                       src="$mobileContent.getURI("images/show.png")"></span>
+##                <span class="foottitle mt-5">瘦咖</span></a></div>
+##            <div class="am-u-sm-3"><a class="" href="#">
+##               <span class="footericon am-center mt-10"><img
+##                       src="$mobileContent.getURI("images/find.png")"></span>
+##                <span class="foottitle mt-5">发现</span></a></div>
+##            <div class="am-u-sm-3"><a class="" href="#">
+##               <span class="footericon am-center mt-10"><img
+##                       src="$mobileContent.getURI("images/gifts－click.png")"></span>
+##                <span class="foottitle mt-5">精品</span></a></div>
+##        </div>
+##    </footer>
+
+</div>
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">瘦咖提醒您</div>
+        <div class="am-modal-bd" id="errormsg">
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn">确定</span>
+        </div>
+    </div>
+</div>
+<script>
+    if($totalCount>10){
+        $("#show-more").show()
+    }
+    var width=document.body.clientWidth;
+    $(".width").attr("width",width);
+    $(".width").attr("height",width);
+    $("#title").focus(function () {
+        $(".search-goods").hide();
+        $(this).val("");
+    });
+
+    $(".search-goods").on("click", function () {
+        $(this).hide();
+        $(this).prev("#title").focus();
+    });
+
+    $("#title").blur(function () {
+        if (!$(this).val()) {
+            $(this).next(".search-goods").show();
+        } else {
+            return;
+        }
+    });
+    //侧边栏
+    var id = '#classify-left';
+    var $myOc =$(id);
+    $("#openclassify").on("click", function () {
+            $myOc.offCanvas("open");
+    });
+
+    $(".classifyid").on("click", function () {
+            $myOc.offCanvas("close");
+           $(this).addClass("detail-list-1");
+           $(this).siblings().removeClass("detail-list-1");
+    });
+
+    var pageIndex = 1;
+    var categoryId;
+    function chooseCategory(id) {
+        categoryId = id;
+        var param = {
+            categoryId: id
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "Create.do?passportid=$!passport.id",
+            error: function () {
+                $("#errormsg").html("程序错误");
+                $('#my-alert').modal({
+                    relatedTarget: this
+                })
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                console.log(arr);
+                if (arr.errors.length == 0) {
+                    var show = ""
+                    if (arr.result.length == 0) {
+                        $("#detail-box").html("");
+                    }
+                    for (var i = 0; i < arr.result.length; i++) {
+                        show += "<div class=\"showcal-detail-box\" onclick=\"detail('" + arr.result[i].id + "')\"><img  src=\""+arr.result[i].avatarurl+"@320w_240h_0e\"  width=\""+width+"\" height=\""+width+"\">";
+                        show += "<div class=\"showcal-detail-bottom-description\"> "
+                        if(arr.result[i].name.length>14){
+                            show+="<div class=\"description\">"+arr.result[i].name.substr(0,14)+"</div> ";
+                        }else{
+                            show += "<div class=\"description\">" + arr.result[i].name + "</div> ";
+                        }
+                        show += "<div class=\"price\">"+arr.result[i].currentPrice+"元</div><a class=\"right-arrows\"> <img class=\"color-pink\" src=\"$mobileContent.getURI('images/rightarrow.png')\" width=\"10\" height=\"16\"> </a></div></div>";
+
+                    }
+                    $("#detail-box").html(show);
+                    if (arr.totalCount <=10) {
+                        $("#show-more").hide();
+                    }else{
+                        $("#show-more").show();
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    }
+    function search() {
+        pageIndex=1;
+//        $(".am-header-fixed").attr("z-index","0");
+            var param = {
+                title: $.trim($("#title").val()),
+                pageNum:pageIndex
+            }
+            $.ajax({
+                type: "post",
+                data: param,
+                url: "Search.do?passportid=$!passport.id",
+                error: function () {
+                    $("#errormsg").html("程序错误");
+                    $('#my-alert').modal({
+                        relatedTarget: this
+                    })
+                },
+                success: function (msg) {
+                    var arr = eval("(" + msg + ")");
+                    console.log(arr);
+                    if (arr.errors.length == 0) {
+                        var show = ""
+                        if (arr.result.length == 0) {
+                            $("#detail-box").html("");
+                        }
+                        for (var i = 0; i < arr.result.length; i++) {
+                            show += "<div class=\"showcal-detail-box\" onclick=\"detail('" + arr.result[i].id + "')\"><img  src=\"" + arr.result[i].avatarurl + "\" width=\""+width+"\" height=\""+width+"\">";
+                            show += "<div class=\"showcal-detail-bottom-description\">";
+                            if (typeof(arr.result[i].name) != "undefined") {
+                                if (arr.result[i].name.length > 14) {
+                                    show += "<div class=\"description\">" + arr.result[i].name.substr(0, 14) + "....</div> ";
+                                } else {
+                                    show += "<div class=\"description\">" + arr.result[i].name + "</div> ";
+                                }
+
+                            }
+                            if (typeof(arr.result[i].currentPrice) != "undefined") {
+                                show += "<div class=\"price\">" + arr.result[i].currentPrice + "元</div>";
+                            }
+                            show += "<a class=\"right-arrows\"> <img class=\"color-pink\" src=\"$mobileContent.getURI(
+                                'images/rightarrow.png')\" width=\"10\" height=\"16\"> </a></div></div>";
+                        }
+                        $("#detail-box").html(show);
+                        if (arr.totalCount <=10) {
+                            $("#show-more").hide();
+                        }else{
+                                $("#show-more").show();
+                        }
+                    }
+                    else {
+                        var errors = [];
+                        for (var i = 0; i < arr.errors.length; i++) {
+                            errors.push(arr.errors[i].message);
+                        }
+                        alert(errors);
+                    }
+                }
+            })
+    }
+
+    $("#clickMore").delegate("#show-more", "click", function () {
+        var param = {
+            pageNum: ++pageIndex,
+            categoryId: categoryId
+        }
+        $.ajax({
+            type: "post",
+            data: param,
+            url: "Create.do?passportid=$!passport.id",
+            error: function () {
+                $("#errormsg").html("程序错误");
+                $('#my-alert').modal({
+                    relatedTarget: this
+                })
+            },
+            success: function (msg) {
+                var arr = eval("(" + msg + ")");
+                if (arr.errors.length == 0) {
+                    var show = "";
+                    for (var i = 0; i < arr.result.length; i++) {
+                        show += "<div class=\"showcal-detail-box\" onclick=\"detail('" + arr.result[i].id + "')\"><img  src=\""+arr.result[i].avatarurl+" width=\""+width+"\" height=\""+width+"\">";
+                        show += "<div class=\"showcal-detail-bottom-description\"> "
+                        if(arr.result[i].name.length>14){
+                            show+="<div class=\"description\">"+arr.result[i].name.substr(0,14)+"</div> ";
+                        }else{
+                            show += "<div class=\"description\">" + arr.result[i].name + "</div> ";
+                        }
+                        show += "<div class=\"price\">"+arr.result[i].currentPrice+"元</div><a class=\"right-arrows\"> <img class=\"color-pink\" src=\"$mobileContent.getURI('images/rightarrow.png')\" width=\"10\" height=\"16\"> </a></div></div>";
+                    }
+                    $("#detail-box").append(show);
+
+                    if (Math.ceil(arr.totalCount / 10) == pageIndex) {
+                        $("#show-more").hide();
+                    }
+                }
+                else {
+                    var errors = [];
+                    for (var i = 0; i < arr.errors.length; i++) {
+                        errors.push(arr.errors[i].message);
+                    }
+                    alert(errors);
+                }
+            }
+        })
+    });
+    function detail(id) {
+        window.location.href = "detail?id=" + id+"&passportid=$!passport.id";
+    }
+</script>

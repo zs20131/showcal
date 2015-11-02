@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.PassportMapper">
+    <!--<cache eviction="LRU" type="com.xiniunet.framework.data.MybatisRedisCache" />-->
+    <resultMap id="passportPO" type="com.showcal.platform.po.PassportPO">
+        <id column="ID" jdbcType="NUMERIC" property="id"/>
+        <result column="USER_ID" jdbcType="NUMERIC" property="userId"/>
+        <result column="ISSUE_TIME" jdbcType="TIMESTAMP" property="issueTime"/>
+        <result column="EXPIRE_TIME" jdbcType="TIMESTAMP" property="expireTime"/>
+        <result column="REVOKE_TIME" jdbcType="TIMESTAMP" property="revokeTime"/>
+        <result column="REVOKE_TYPE" jdbcType="VARCHAR" property="revokeType"/>
+        <result column="ISSUE_IP" jdbcType="VARCHAR" property="issueIp"/>
+        <result column="ISSUE_CLIENT" jdbcType="NUMERIC" property="issueClient"/>
+        <result column="IS_DELETED" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="CREATED_BY" jdbcType="NUMERIC" property="createdBy"/>
+        <result column="CREATION_TIME" jdbcType="TIMESTAMP" property="creationTime"/>
+        <result column="LAST_UPDATED_BY" jdbcType="NUMERIC" property="lastUpdatedBy"/>
+        <result column="LAST_UPDATE_TIME" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+    </resultMap>
+
+    <sql id="entityColumnList">
+        ID,USER_ID,ISSUE_TIME,EXPIRE_TIME,REVOKE_TIME,REVOKE_TYPE,ISSUE_IP,ISSUE_CLIENT,IS_DELETED,CREATED_BY,CREATION_TIME,LAST_UPDATED_BY,LAST_UPDATE_TIME
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+        SYS_PASSPORT
+        (
+        ID,USER_ID,ISSUE_TIME,EXPIRE_TIME,REVOKE_TIME,REVOKE_TYPE,ISSUE_IP,ISSUE_CLIENT,IS_DELETED,CREATED_BY,CREATION_TIME,LAST_UPDATED_BY,LAST_UPDATE_TIME
+        )
+        VALUES
+        (
+        #{ passport.id },
+        #{ passport.userId },
+        #{ passport.issueTime },
+        #{ passport.expireTime },
+        #{ passport.revokeTime },
+        #{ passport.revokeType },
+        #{ passport.issueIp },
+        #{ passport.issueClient },
+        0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+        SYS_PASSPORT
+        (
+        ID,USER_ID,ISSUE_TIME,EXPIRE_TIME,REVOKE_TIME,REVOKE_TYPE,ISSUE_IP,ISSUE_CLIENT,IS_DELETED,CREATED_BY,CREATION_TIME,LAST_UPDATED_BY,LAST_UPDATE_TIME
+        )
+        VALUES
+        <foreach collection="list" item="passport" index="index" separator=",">
+            (
+            #{ passport.id },
+            #{ passport.userId },
+            #{ passport.issueTime },
+            #{ passport.expireTime },
+            #{ passport.revokeTime },
+            #{ passport.revokeType },
+            #{ passport.issueIp },
+            #{ passport.issueClient },
+            0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+        SYS_PASSPORT
+        SET
+        IS_DELETED = 1
+        ,LAST_UPDATED_BY=#{ passport.userId }
+        ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+        IS_DELETED=0
+        AND ID = #{id}
+    </update>
+
+    <update id="deleteBatch">
+        UPDATE
+        SYS_PASSPORT
+        SET
+        IS_DELETED = 1
+        ,LAST_UPDATED_BY=#{ passport.userId }
+        ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+        IS_DELETED=0
+        AND ID in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="update">
+        UPDATE
+        SYS_PASSPORT
+        SET
+        <if test="passport.userId!=null">USER_ID=#{ passport.userId },</if>
+        <if test="passport.issueTime!=null">ISSUE_TIME=#{ passport.issueTime },</if>
+        <if test="passport.expireTime!=null">EXPIRE_TIME=#{ passport.expireTime },</if>
+        <if test="passport.revokeTime!=null">REVOKE_TIME=#{ passport.revokeTime },</if>
+        <if test="passport.revokeType!=null">REVOKE_TYPE=#{ passport.revokeType },</if>
+        <if test="passport.issueIp!=null">ISSUE_IP=#{ passport.issueIp },</if>
+        <if test="passport.issueClient!=null">ISSUE_CLIENT=#{ passport.issueClient },</if>
+        LAST_UPDATED_BY=#{ passport.userId }
+        ,LAST_UPDATE_TIME=SYSDATE()
+        WHERE
+        IS_DELETED=0
+        AND ID = #{passport.id}
+    </update>
+
+    <update id="updateBatch">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE
+            SYS_PASSPORT
+            SET
+            <if test="item.userId!=null">USER_ID=#{ item.userId },</if>
+            <if test="item.issueTime!=null">ISSUE_TIME=#{ item.issueTime },</if>
+            <if test="item.expireTime!=null">EXPIRE_TIME=#{ item.expireTime },</if>
+            <if test="item.revokeTime!=null">REVOKE_TIME=#{ item.revokeTime },</if>
+            <if test="item.revokeType!=null">REVOKE_TYPE=#{ item.revokeType },</if>
+            <if test="item.issueIp!=null">ISSUE_IP=#{ item.issueIp },</if>
+            <if test="item.issueClient!=null">ISSUE_CLIENT=#{ item.issueClient },</if>
+            LAST_UPDATED_BY=#{ passport. }
+            ,LAST_UPDATE_TIME=SYSDATE()
+            WHERE
+            IS_DELETED=0
+            AND ID=#{item.id}
+        </foreach>
+    </update>
+
+    <select id="getById" resultMap="passportPO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        SYS_PASSPORT
+        WHERE
+        ID = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="passportPO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        SYS_PASSPORT
+        WHERE
+        ID in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getAllList" resultMap="passportPO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        SYS_PASSPORT
+        WHERE
+        IS_DELETED=0
+    </select>
+
+    <select id="existById" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        SYS_PASSPORT
+        WHERE
+        ID=#{id}
+    </select>
+</mapper>

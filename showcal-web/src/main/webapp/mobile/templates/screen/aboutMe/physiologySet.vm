@@ -1,0 +1,125 @@
+$page.setTitle("生理期设置")
+<div class="discover discover-detail  chooseShowcal aboutme" >
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="myPhysiology?passportid=$!passport.id" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+        <h5 class="am-header-title">生理期设置</h5>
+
+        <div class="am-header-right am-header-nav">
+            <a href="#right-link" class="info-ico ">
+
+            </a>
+        </div>
+    </header>
+
+    <!--列表 -->
+    <div class="am-g am-cf " >
+        <ul class="am-padding-left-sm clearfix aboutmeul am-text-sm  top-border bottom-border am-margin-top-sm  whitebg" id="info">
+
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border" id="myPhysiologyCycle" >
+                <a href="#">
+                    <span>月经周期</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+                    <span class="am-fr am-padding-right-sm lighter-gray-txt">$!userDetail.userSetting.physiologyCycle 天</span>
+
+                </a>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border" id="myPhysiologyDays" >
+                <a href="#">
+                    <span>行经天数</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+                    <span class="am-fr am-padding-right-sm lighter-gray-txt">$!userDetail.userSetting.physiologyDays 天</span>
+
+                </a>
+            </li>
+            <li class="am-u-sm-12 am-g-collapse am-padding-0 bottom-border" id="physiologyStart" >
+
+                    <span>经期开始日期</span>
+                    <i class="am-icon-angle-right am-icon-sm  am-padding-right-sm lighter-gray-txt am-fr "></i>
+                    <span class="am-fr am-padding-right-sm lighter-gray-txt" id="physiologyStartvalue">
+                    #if($!userDetail.userSetting.physiologyStart)
+                        $!utils.formatMessage("{0, date, yyyy-MM-dd}", $!userDetail.userSetting.physiologyStart)
+                    #end
+                    </span>
+
+            </li>
+
+
+        </ul>
+        <div class="mt-10 ml-10 xn-text-left" id="errormsg" style="color: #ff0000;font-weight: 500"></div>
+    </div>
+
+  #*  <div id="bg">
+        <div class="dialog-popup" id="myPhysiologyStart" >
+            <div class="action-comfirm">
+                <span class="am-u-sm-6 border-right cancel">取消</span>
+                <span class="am-u-sm-6" onclick="doPhysiologyStart()">完成</span>
+            </div>
+            <input type="date" id="physiologyStartDate" class="xn-text-center am-form-field"/>
+        </div>
+    </div>*#
+
+</div>
+
+<script>
+    $(function () {
+  $("#info").find("li:last-child").removeClass("bottom-border");
+
+        $("#myPhysiologyCycle").bind("click",function(){
+            window.location.href="editPhysiologyCycle?passportid=$!passport.id";
+        });
+
+        $("#myPhysiologyDays").bind("click",function(){
+            window.location.href="editPhysiologyDays?passportid=$!passport.id";
+        });
+
+        $("#physiologyStart").bind('click',function(){
+            $('#physiologyStart').datepicker('open').
+                    on('changeDate.datepicker.amui', function (event) {
+                        var physiologyStart = $('#physiologyStart').data('date');
+                        var now= new Date();
+                        var physiologyStarts=new Date(physiologyStart);
+                        if(physiologyStarts>now){
+                            $("#errormsg").html("生理期不能大于系统当前时间");
+                            return;
+                        }else{
+                            $('#physiologyStartvalue').text($('#physiologyStart').data('date'));
+                            doPhysiologyStart();
+                            $(this).datepicker('close');
+                        }
+                    });
+            ;
+          /*  $("#myPhysiologyStart").css("display","block");
+            $("#bg").css("display","block");*/
+        })
+
+        $(".cancel").bind('click',function(){
+            $(".dialog-popup").css("display","none");
+            $("#bg").css("display","none");
+        })
+
+    });
+
+    function doPhysiologyStart(){
+        var data = {};
+        var physiologyStart = $('#physiologyStartvalue').html();
+        data.physiologyStart = physiologyStart;
+        $.ajax({
+            url:"Api.do?method=api.about.me.info.physiologyStart.edit&passportid=$!passport.id",
+            data:JSON.stringify(data),
+            contentType:"application/json",
+            type:'POST',
+            dataType:'json',
+            success:function(msg){
+                window.location.href="physiologySet?passportid=$!passport.id";
+            }
+        });
+    }
+
+
+</script>

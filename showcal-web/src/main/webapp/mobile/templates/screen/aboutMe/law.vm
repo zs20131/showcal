@@ -1,0 +1,44 @@
+$page.setTitle("法律条款")
+<div class="discover discover-detail  chooseShowcal aboutme" >
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="mySet?passportid=$!passport.id" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+        <h5 class="am-header-title">法律条款</h5>
+
+        <div class="am-header-right am-header-nav">
+            <a href="#right-link" class="info-ico ">
+
+            </a>
+        </div>
+    </header>
+
+    <!--内容 -->
+    <div class="am-g am-cf law" >
+        <h6>关于瘦咖的说明</h6>
+     <p>1.法律法规，指中华人民共和国现行有效的法律、行政法规、司法解释、地方法规、地方规章、部门规章及其他规范性文件以及对于该等法律法规的不时修改和补充。</p>
+     <p>(1)法律法规，指中华人民共和国现行有效的法律、行政法规、司法解释、地方法规、地方规章、部门规章及其他规范性文件以及对于该等法律法规的不时修改和补充。</p>
+     <p>(2)法律法规，指中华人民共和国现行有效的法律、行政法规、司法解释、地方法规、地方规章、部门规章。</p>
+     <p>2.其中，法律有广义、狭义两种理解。广义上讲，法律泛指一切规范性文件；狭义上讲，仅指全国人大及其常委会制定的规范性文件。</p>
+     <p>3.在与法规等一起谈时，法律是指狭义上的法律。法规则主要指行政法规、地方性法规、民族自治法规及经济特区法规等。</p>
+    </div>
+
+</div>
+
+<script>
+    $(function () {
+  $("#info").find("li:last-child").removeClass("bottom-border");
+  $("#info1").find("li:last-child").removeClass("bottom-border");
+
+
+
+    });
+
+
+
+
+</script>

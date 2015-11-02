@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <script>
+        <property name="db.erp.host"
+                  defaultValue="192.168.1.112"
+                  description="数据库服务器IP地址"/>
+        <property name="db.erp.port"
+                  defaultValue="3306"
+                  description="数据库服务器端口号"/>
+        <property name="db.erp.username"
+                  defaultValue="system"
+                  description="数据库用户名"/>
+        <property name="db.erp.password"
+                  defaultValue="eDvQTQrkwEBxq8v8g7KLTMWY4cqZukPWKpMrCLvwFCkTBDEIvCyvVpPa/rlkKvC1EP6XL/rRaIY3kQZD2dC/vA=="
+                  description="数据库密码"/>
+
+        <!--<generate template="jdbc.properties"/>-->
+    </script>
+</config>

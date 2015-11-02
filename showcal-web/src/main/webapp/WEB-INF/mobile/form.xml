@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:services="http://www.alibaba.com/schema/services"
+             xmlns:fm-validators="http://www.alibaba.com/schema/services/form/validators"
+             xsi:schemaLocation="http://www.alibaba.com/schema/services http://localhost:8080/schema/services.xsd
+                 http://www.alibaba.com/schema/services/form/validators http://localhost:8080/schema/services-form-validators.xsd
+                 http://www.springframework.org/schema/beans http://localhost:8080/schema/www.springframework.org/schema/beans/spring-beans.xsd">
+    <services:form>
+        <group name="login">
+            <field name="account" displayName="用户名">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+            </field>
+            <field name="password" displayName="密  码">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+            </field>
+        </group>
+        <group name="resetpasswd">
+            <field name="userId" displayName="用户ID">
+            </field>
+            <field name="password" displayName="密码">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+            </field>
+            <field name="confrimpassword" displayName="确认密码">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+                <fm-validators:string-compare-validator equalTo="password">
+                    <message>${displayName} 必须和 ${password.displayName} 相同</message>
+                </fm-validators:string-compare-validator>
+            </field>
+        </group>
+        <group name="register">
+            <field name="registerError">
+                <fm-validators:custom-error id="registerError">
+                    <message>${errormsg}</message>
+                </fm-validators:custom-error>
+            </field>
+            <field name="account" displayName="账号">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+                <!--<fm-validators:regexp-validator pattern="^[A-Za-z_][A-Za-z_0-9]*$">-->
+                <!--<message>${displayName} 必须由字母、数字、下划线构成</message>-->
+                <!--</fm-validators:regexp-validator>-->
+                <fm-validators:string-length-validator minLength="4" maxLength="20">
+                    <message>${displayName} 最少必须由${minLength}个字组成，最多不能超过${maxLength}个字</message>
+                </fm-validators:string-length-validator>
+            </field>
+            <field name="password" displayName="密码">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+                <fm-validators:string-length-validator minLength="4" maxLength="10">
+                    <message>${displayName} 最少必须由${minLength}个字组成，最多不能超过${maxLength}个字</message>
+                </fm-validators:string-length-validator>
+                <fm-validators:string-compare-validator notEqualTo="account">
+                    <message>${displayName} 不能与 ${account.displayName} 相同</message>
+                </fm-validators:string-compare-validator>
+            </field>
+            <field name="confirmPassword" displayName="确认密码">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+                <fm-validators:string-compare-validator equalTo="password">
+                    <message>${displayName} 必须和 ${password.displayName} 相同</message>
+                </fm-validators:string-compare-validator>
+            </field>
+            <field name="name" displayName="公司(个人)名称">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+            </field>
+            <field name="contactName" displayName="联系人">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+            </field>
+            <field name="contactPhone" displayName="办公电话">
+                <fm-validators:regexp-validator pattern="((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)">
+                    <message>请输入正确的 ${displayName}</message>
+                </fm-validators:regexp-validator>
+            </field>
+
+            <field name="address" displayName="地址">
+            </field>
+        </group>
+        <group name="chagePassword">
+            <field name="oldPassword" displayName="原密码">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+            </field>
+            <field name="newPassword" displayName="新密码">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+            </field>
+            <field name="confirmPassword" displayName="确认密码">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+                <fm-validators:string-compare-validator equalTo="newPassword">
+                    <message>${displayName} 必须和 ${newPassword.displayName} 相同</message>
+                </fm-validators:string-compare-validator>
+            </field>
+        </group>
+    </services:form>
+</beans:beans>

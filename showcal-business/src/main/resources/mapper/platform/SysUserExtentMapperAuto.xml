@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.SysUserExtentMapper">
+
+    <resultMap  id="sysUserExtentPO" type="com.showcal.platform.po.SysUserExtentPO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="HEIGHT"  jdbcType="NUMERIC" property="height"></result>
+        <result column="BIRTHDAY"  jdbcType="DATE" property="birthday"></result>
+        <result column="AGE"  jdbcType="NUMERIC" property="age"></result>
+        <result column="WEIGHT"  jdbcType="NUMERIC" property="weight"></result>
+        <result column="WAIST_LINE"  jdbcType="NUMERIC" property="waistLine"></result>
+        <result column="HIPLINE"  jdbcType="NUMERIC" property="hipline"></result>
+        <result column="BMI"  jdbcType="NUMERIC" property="bmi"></result>
+        <result column="SETTING"  jdbcType="VARCHAR" property="setting"></result>
+        <result column="COUNT_SERVICE"  jdbcType="NUMERIC" property="countService"></result>
+        <result column="RESPONSE_TIME"  jdbcType="NUMERIC" property="responseTime"></result>
+        <result column="SUCCESS_RATE"  jdbcType="NUMERIC" property="successRate"></result>
+        <result column="INTEGRAL"  jdbcType="NUMERIC" property="integral"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`HEIGHT`,`BIRTHDAY`,`AGE`,`WEIGHT`,`WAIST_LINE`,`HIPLINE`,`BMI`,`SETTING`,`COUNT_SERVICE`,`RESPONSE_TIME`,`SUCCESS_RATE`,INTEGRAL,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `PL_SYS_USER_EXTENT`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ sysUserExtent.id },
+        
+        #{ sysUserExtent.height },
+        #{ sysUserExtent.birthday },
+        #{ sysUserExtent.age },
+        #{ sysUserExtent.weight },
+        #{ sysUserExtent.waistLine },
+        #{ sysUserExtent.hipline },
+        #{ sysUserExtent.bmi },
+        #{ sysUserExtent.setting },
+        #{ sysUserExtent.countService },
+        #{ sysUserExtent.responseTime },
+        #{ sysUserExtent.successRate },
+        #{sysUserExtent.integral},
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `PL_SYS_USER_EXTENT`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "sysUserExtent" index ="index" separator=",">
+            (
+            #{ sysUserExtent.id },
+            
+            #{ sysUserExtent.height },
+            #{ sysUserExtent.birthday },
+            #{ sysUserExtent.age },
+            #{ sysUserExtent.weight },
+            #{ sysUserExtent.waistLine },
+            #{ sysUserExtent.hipline },
+            #{ sysUserExtent.bmi },
+            #{ sysUserExtent.setting },
+            #{ sysUserExtent.countService },
+            #{ sysUserExtent.responseTime },
+            #{ sysUserExtent.successRate },
+            #{sysUserExtent.integral},
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `PL_SYS_USER_EXTENT`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `PL_SYS_USER_EXTENT`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="sysUserExtentPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `PL_SYS_USER_EXTENT`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+
+
+    <select id="getAllList" resultMap="sysUserExtentPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `PL_SYS_USER_EXTENT`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SYS_USER_EXTENT`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

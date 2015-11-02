@@ -1,0 +1,32 @@
+#pragma once
+#include "Response.h"
+#include "User.h" //model
+#include <string>
+#include <vector>
+#include <map>
+#include "json/json.h"
+using namespace std;
+
+
+class ${class.name} :public Response
+ {
+  public:
+    <#if fields??>
+        <#list fields as field>
+         <#if field.isDomain??>
+          ${field.type} get${field.name?cap_first}()
+             {
+             Json::Value valTemp = root;
+             Json::Value valRet = ParseJson<${field.type}>("${field.name}",valTemp);
+
+             return ${field.type}(valRet);
+
+             }
+         </#if>
+        </#list>
+    </#if>
+  public: ${class.name}()
+    {
+
+    }
+ };

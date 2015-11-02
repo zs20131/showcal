@@ -1,0 +1,90 @@
+<div class="showcal">
+    <!--header-->
+    <header data-am-widget="header" class="am-header am-no-layout am-header-fixed showcal--mobile-header">
+        <div class="am-header-left am-header-nav">
+        ##            <a href="create" class="">
+        ##                <img class="showcal-left-arrow" src="$mobileContent.getURI("images/grayleftarrow.png")"
+        ##                     width="10" height="24" alt="">
+        ##            </a>
+            <a href="../login" class="">
+                <img class="showcal-left-arrow" src="$mobileContent.getURI("images/grayleftarrow.png")"
+                     width="10" height="24" alt="">
+            </a>
+        </div>
+        <h1 class="am-header-title">重置密码</h1>
+    </header>
+    <div>
+        <form method="post" class="am-form" id="changePassword">
+            <div class="mt-10 am-u-sm-12 xn-text-center">
+                <input type="password" class="login-input" id="newpassword" name="newpassword" type="password"
+                       placeholder="重置密码">
+            </div>
+            <div class="mt-10 am-u-sm-12 xn-text-center">
+                <input type="password" class="login-input" id="confirmPass" name="confirmPass" placeholder="确认你的密码">
+            </div>
+            <div id="messageBox" style="color: red;font-size: 1.4rem;margin:1%"></div>
+            <div class="am-u-sm-12  mt-20 xn-text-center">
+                <button class="btn  login-button-default login-button-gray login-button-pink" id="submitChangePass">完成
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+<script src="$mobileContent.getURI('vendor/md5/md5.js')"></script>
+<script type="text/javascript" src="$mobileContent.getURI('vendor/validate/jquery.validate.js')"></script>
+<script>
+    $(function () {
+        $.validator.setDefaults({
+            errorElement: 'label'
+        });
+        $("#changePassword").validate({
+            rules: {
+                newpassword: {
+                    required: true
+                },
+                confirmPass: {
+                    required: true,
+                    equalTo: '#newpassword'
+                }
+            }, messages: {
+                newpassword: {
+                    required: "请填写密码"
+                },
+                confirmPass: {
+                    required: " 请填写确认密码",
+                    equalTo: "两次输入密码不一致"
+                }
+            },
+//            debug: true,
+            errorLabelContainer: "#messageBox"
+        });
+        $("#submitChangePass").click(function () {
+            if ($("#changePassword").valid()) {
+                var password = hex_md5($("#newpassword").val());
+                location.href = "$mobileContent.getURI("login/findpassword/step3")";
+                window.event.returnValue = false;
+                $.ajax({
+                    url: "$mobileContent.getURI("api.do?method=api.mobile.password.change")",
+                    data: '{"userId":"$!userId","password":"' + password + '"}',
+                    contentType: "application/json",
+                    type: 'POST',
+                    dataType: 'json',
+                    async: true,
+                    success: function (data) {
+                        if (data.errors.length > 0) {
+                            $("#errormsg").val(data.errors[0].message)
+                            $('#my-alert').modal({
+                                relatedTarget: this
+                            })
+                        } else {
+                            location.href = "$mobileContent.getURI("login/findpassword/step3")";
+                            window.event.returnValue = false;
+
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

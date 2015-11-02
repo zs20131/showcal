@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.merchandise.dal.ItemMapper">
+
+    <sql id="whereForFindList">
+
+        <if test="request.approveStartTime !=null">
+            <![CDATA[ AND DATE_FORMAT(`APPROVE_TIME`, '%Y-%m-%d')>=  DATE_FORMAT(#{request.approveStartTime}, '%Y-%m-%d')   ]]>
+        </if>
+        <if test="request.approveEndTime !=null">
+            <![CDATA[ AND DATE_FORMAT(`APPROVE_TIME`, '%Y-%m-%d')<=  DATE_FORMAT(#{request.approveEndTime}, '%Y-%m-%d')   ]]>
+        </if>
+        <if test="request.countEndCollection!=null">AND  `COUNT_CONNECTION`  &lt;=#{ request.countEndCollection } </if>
+        <if test="request.countStartCollection!=null">AND  `COUNT_CONNECTION`  &gt;=#{ request.countStartCollection } </if>
+        <if test="request.categoryId!=null">AND  `CLASS_ID`=#{ request.categoryId } </if>
+        <if test="request.title!=null">AND  `NAME` LIKE CONCAT ('%',#{ request.title },'%') </if>
+        <if test="request.alreadySubmit.size>0">
+            AND IS_APPROVED in
+            <foreach item="submit" index="index" collection="request.alreadySubmit"
+                     open="(" separator="," close=")">
+                #{submit}
+            </foreach>
+        </if>
+        order BY ORDER_SORT DESC ,ID DESC
+    </sql>
+
+    <sql id="whereForSearchList">
+
+    </sql>
+
+    <select id="find" resultMap="itemPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `MD_ITEM`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `MD_ITEM`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="itemPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `MD_ITEM`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `MD_ITEM`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `MD_ITEM`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `MD_ITEM`
+        SET
+        `CLASS_ID`=#{ request.classId },
+        `NUMBER`=#{ request.number },
+        `BARCODE`=#{ request.barcode },
+        `NAME`=#{ request.name },
+        `PINYIN`=#{ request.pinyin },
+        `PY`=#{ request.py },
+        `TYPE`=#{ request.type },
+         `ORDER_SORT`= #{ request.orderSort },
+         `URL`=#{ request.url },
+        `BASIS`=#{ request.basis },
+         IS_FEE_FREE=#{ request.isFeeFree },
+        `QUICK_CODE`=#{ request.quickCode },
+        `SHORT_NAME`=#{ request.shortName },
+        `INVOICED_NAME`=#{ request.invoicedName },
+        `DESCRIPTION`=#{ request.description },
+        `BRAND_ID`=#{ request.brandId },
+        `CATEGORY_ID`=#{ request.categoryId },
+        `UOM`=#{ request.uom },
+        `SPEC_CODE`=#{ request.specCode },
+        `SPEC_NAME`=#{ request.specName },
+        `IS_ACTIVE`=#{ request.isActive },
+        `IS_ALL_OU_OPENED`=#{ request.isAllOuOpened },
+        `IS_BY_OU_CONTROL`=#{ request.isByOuControl },
+        `KEYWORDS`=#{ request.keywords },
+        `COMMODITY_ID`=#{ request.commodityId },
+        `PICTURE_ID`=#{ request.pictureId },
+        `VALIDITY_TERM`=#{ request.validityTerm },
+        `SPEC1_ATTRIBUTE_ID`=#{ request.spec1AttributeId },
+        `SPEC1_ATTRIBUTE_NAME`=#{ request.spec1AttributeName },
+        `SPEC1_VALUE_ID`=#{ request.spec1ValueId },
+        `SPEC1_VALUE_NAME`=#{ request.spec1ValueName },
+        `SPEC2_ATTRIBUTE_ID`=#{ request.spec2AttributeId },
+        `SPEC2_ATTRIBUTE_NAME`=#{ request.spec2AttributeName },
+        `SPEC2_VALUE_ID`=#{ request.spec2ValueId },
+        `SPEC2_VALUE_NAME`=#{ request.spec2ValueName },
+        `SPEC3_ATTRIBUTE_ID`=#{ request.spec3AttributeId },
+        `SPEC3_ATTRIBUTE_NAME`=#{ request.spec3AttributeName },
+        `SPEC3_VALUE_ID`=#{ request.spec3ValueId },
+        `SPEC3_VALUE_NAME`=#{ request.spec3ValueName },
+        `WEIGHT`=#{ request.weight },
+        `VOLUME`=#{ request.volume },
+        `COUNT_READ`=#{ request.countRead },
+        `COUNT_CONNECTION`=#{ request.countConnection },
+        `IS_SUBMIT`=#{ request.isSubmit },
+        `SUBMIT_USER_ID`=#{ request.submitUserId },
+        `SUBMIT_USER_NAME`=#{ request.submitUserName },
+        `SUBMIT_TIME`=#{ request.submitTime },
+        `IS_APPROVED`=#{ request.isApproved },
+        `APPROVE_USER_ID`=#{ request.approveUserId },
+        `APPROVE_USER_NAME`=#{ request.approveUserName },
+        `APPROVE_TIME`=#{ request.approveTime },
+        `APPROVE_RESULT`=#{ request.approveResult },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+
+    <update id="inactive">
+        UPDATE
+            `MD_ITEM`
+        SET
+            `IS_ACTIVE` = 0
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `IS_ACTIVE`=1
+            AND `ID` = #{id}
+    </update>
+
+    <update id="active">
+        UPDATE
+            MD_ITEM
+        SET
+            `IS_ACTIVE` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `IS_ACTIVE`=0
+            AND `ID` = #{id}
+    </update>
+
+</mapper>

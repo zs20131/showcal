@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.service.dal.QuestionMapper">
+
+    <sql id="whereForFindList">
+    </sql>
+    <sql id="whereFindUnAnswerList">
+        AND a.ANSWER_USER_ID = #{passport.userId}
+        AND a.IS_ANSWERED = false
+        <if test="request.questionTagId !=null">
+            AND a.TAG = #{request.questionTagId}
+        </if>
+        <if test="request.keywordId !=null">
+            AND a.KEYWORD IN (
+            SELECT id FROM pl_setting_keyword a WHERE a.`PARENT_ID` = #{request.keywordId} OR a.`ID` =
+            #{request.keywordId}
+            )
+        </if>
+        <if test="request.userName !=null and request.userName!='' ">
+            AND b.NICK_NAME LIKE CONCAT ('%',#{ request.userName },'%')
+        </if>
+        <if test="request.userTag !=null">
+            AND b.ID IN
+            (SELECT USER_ID FROM pl_sys_user_tags WHERE USER_TAG_ID = #{request.userTag} AND IS_DELETED = 0)
+        </if>
+        <if test="request.isOther !=null and request.isOther">
+            AND a.KEYWORD IS NULL AND a.TAG IS NULL
+        </if>
+        <if test="request.isNewUser !=null and request.isNewUser">
+            AND a.`CREATED_BY` IN
+            (
+            SELECT a.`CREATED_BY`
+            FROM ser_question a WHERE a.`IS_DELETED`=0  AND a.`IS_ANSWERED` = FALSE AND a.`ANSWER_USER_ID` = #{passport.userId}
+            GROUP BY a.`CREATED_BY`  HAVING COUNT(1)=1
+            )
+            AND  a.`ANSWER_USER_ID` = #{passport.userId}
+        </if>
+        <if test="request.deadline !=null and request.deadline==0">
+            AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)<![CDATA[<=]]> 0
+        </if>
+        <if test="request.deadline !=null and request.deadline==6">
+            AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)>=0 AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)<![CDATA[<=]]>6
+        </if>
+        <if test="request.deadline !=null and request.deadline==12">
+            AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)>6 AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)<![CDATA[<=]]>12
+        </if>
+        <if test="request.deadline !=null and request.deadline==24">
+            AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)>12 AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)<![CDATA[<=]]>24
+        </if>
+    </sql>
+    <sql id="whereForFindQuestion">
+        <if test="request.keywordId !=null">
+            AND a.KEYWORD IN (
+            SELECT id FROM pl_setting_keyword a WHERE a.`PARENT_ID` = #{request.keywordId} OR a.`ID` =
+            #{request.keywordId}
+            )
+        </if>
+        <if test="request.userName !=null and request.userName!='' ">
+            AND b.NICK_NAME LIKE CONCAT ('%',#{ request.userName },'%')
+        </if>
+        <if test="request.userTag !=null">
+            AND b.ID IN
+            (SELECT USER_ID FROM pl_sys_user_tags WHERE USER_TAG_ID = #{request.userTag} AND IS_DELETED = 0)
+        </if>
+        <if test="request.userTag !=null">
+            AND b.ID IN
+            (SELECT USER_ID FROM pl_sys_user_tags WHERE USER_TAG_ID = #{request.userTag} AND IS_DELETED = 0)
+        </if>
+        <if test="request.deadline !=null and request.deadline==0">
+            AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)<![CDATA[<=]]> 0
+        </if>
+        <if test="request.deadline !=null and request.deadline==6">
+            AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)>=0 AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)<![CDATA[<=]]>6
+        </if>
+        <if test="request.deadline !=null and request.deadline==12">
+            AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)>6 AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)<![CDATA[<=]]>12
+        </if>
+        <if test="request.deadline !=null and request.deadline==24">
+            AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)>12 AND TIMESTAMPDIFF(HOUR, NOW(), a.RESPONSE_TIME)<![CDATA[<=]]>24
+        </if>
+    </sql>
+    <sql id="whereForSearchList">
+           (
+           )
+    </sql>
+
+    <select id="find" resultMap="questionPO">
+        SELECT * FROM
+        (
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `SER_QUESTION`
+        WHERE
+        `IS_DELETED`=0
+        <include refid="whereForFindList"/>
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        `SER_QUESTION`
+        WHERE
+        `IS_DELETED`=0
+        <include refid="whereForFindList"/>
+    </select>
+    <select id="findHistory" resultType="java.util.HashMap">
+
+        SELECT a.`CREATED_BY` ,b.name AS userName,max(a.`CREATION_TIME`) AS createTime FROM ser_question a
+        LEFT JOIN pl_sys_user b ON a.`CREATED_BY` = b.id
+        WHERE a.`ANSWER_USER_ID` = #{ passport.userId } and a.`IS_DELETED`=0
+        <include refid="whereForFindQuestion" />
+        GROUP BY a.`CREATED_BY`,b.name
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+
+
+    </select>
+
+    <select id="findHistoryCount" resultType="java.lang.Long">
+        select count(*) from (
+        SELECT a.`CREATED_BY`,b.name AS user_name,max(a.`CREATION_TIME`) AS createTime FROM ser_question a
+        LEFT JOIN pl_sys_user b ON a.`CREATED_BY` = b.id
+        WHERE a.`ANSWER_USER_ID` = #{ passport.userId } and  a.`IS_DELETED`=0
+        <include refid="whereForFindQuestion" />
+        GROUP BY a.`CREATED_BY`,b.name
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+        ) T
+    </select>
+
+    <select id="search" resultMap="questionPO">
+        SELECT * FROM
+        (
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        `SER_QUESTION`
+        WHERE
+        `IS_DELETED`=0
+        <if test="request.keyword !=null">
+            AND
+            <include refid="whereForSearchList"/>
+        </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        `SER_QUESTION`
+        WHERE
+        `IS_DELETED`=0
+        AND
+        <include refid="whereForSearchList"/>
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_QUESTION`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `SER_QUESTION`
+        SET
+        `TAG`=#{ request.tag },
+        `KEYWORD`=#{ request.keyword },
+        `RESPONSE_TIME`=#{ request.responseTime },
+        `ANSWER_USER_ID`=#{ request.answerUserId },
+        `ANSWER_TIME`=#{ request.answerTime },
+        `ANSWER_ID`=#{ request.answerId },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+    <select id="getMyUnAnswerQuestion" resultMap="questionPO">
+        SELECT * FROM `SER_QUESTION`
+        WHERE `IS_DELETED`=0 AND `IS_ANSWERED` = FALSE
+        AND `CREATED_BY` = #{passport.userId}
+        AND `ANSWER_USER_ID` = #{showcalId}
+        ORDER BY `CREATED_BY` DESC
+        LIMIT 0,1
+    </select>
+
+    <select id="getWillAnswerByTagCount" resultMap="totalQuestionTag">
+        SELECT a.`TAG` AS TAG_ID ,b.`TAG` AS TAG_NAME,COUNT(1) AS COUNT FROM ser_question a  LEFT JOIN pl_setting_question_tag b
+        ON a.`TAG` = b.`ID`
+        WHERE a.`IS_DELETED`=0 AND a.`IS_ANSWERED` = FALSE AND a.`ANSWER_USER_ID` = #{passport.userId}
+        AND a.`TAG` IS NOT NULL
+        GROUP BY a.`TAG`,b.`TAG`
+    </select>
+    <select id="getWillAnswerByKeywordCount" resultMap="totalKeyWordTag">
+        SELECT IFNULL(b.`PARENT_ID`,b.id) AS KEYWORD_ID,IFNULL(b.`PARENT_KEYWORD`,b.keyword) AS KEYWORD_NAME,COUNT(1) AS COUNT FROM ser_question a LEFT JOIN pl_setting_keyword b ON a.`KEYWORD` = b.`ID`
+        WHERE a.`IS_DELETED` = 0 AND a.`IS_ANSWERED` = FALSE AND a.`TAG` IS NULL AND a.`KEYWORD` IS NOT NULL AND a.`ANSWER_USER_ID` =#{passport.userId}
+        GROUP BY b.`PARENT_ID`,IFNULL(b.`PARENT_KEYWORD`,b.keyword)
+    </select>
+    <select id="getNewUserQuestion" resultType="java.lang.Integer">
+      SELECT COUNT(1) FROM
+        (
+        SELECT a.`CREATED_BY`,COUNT(1)
+        FROM ser_question a WHERE a.`IS_DELETED`=0 AND a.`IS_ANSWERED` = FALSE AND a.`ANSWER_USER_ID` = #{passport.userId}
+        GROUP BY a.`CREATED_BY`  HAVING COUNT(1)=1
+        ) AS NEWQUESTION
+    </select>
+    <select id="getOtherQuestionCount" resultType="java.lang.Integer">
+        SELECT  COUNT(1)
+        FROM ser_question a WHERE a.`IS_DELETED`=0 AND a.`IS_ANSWERED` = FALSE AND a.`ANSWER_USER_ID` = #{passport.userId}
+        AND tag IS NULL AND keyword IS NULL
+    </select>
+    <select id="findUnAnswerQuestion" resultMap="unAnswerQuestion">
+        SELECT a.`ID`,a.`KEYWORD`,a.`TAG`,d.tag AS TAGNAME,k.keyword AS KEYWORDNAME,
+        b.`NICK_NAME`,c.`HEIGHT`,c.`WEIGHT`,YEAR(SYSDATE())-YEAR(c.BIRTHDAY)AS AGE,a.CREATION_TIME,b.SEX,a.`CREATED_BY`
+        FROM
+        `SER_QUESTION` a
+        LEFT JOIN pl_sys_user b
+        ON a.`CREATED_BY` = b.`ID`
+        LEFT JOIN pl_sys_user_extent c
+        ON a.`CREATED_BY` = c.`ID`
+        LEFT JOIN pl_setting_question_tag d
+        ON a.tag = d.id
+        LEFT JOIN pl_setting_keyword k
+        ON a.keyword = k.id
+        WHERE
+        a.`IS_DELETED`=0
+        <include refid="whereFindUnAnswerList"/>
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+    <select id="findUnAnswerQuestionCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        `SER_QUESTION` a
+        LEFT JOIN pl_sys_user b
+        ON a.`CREATED_BY` = b.`ID`
+        LEFT JOIN pl_sys_user_extent c
+        ON a.`CREATED_BY` = c.`ID`
+        WHERE
+        a.`IS_DELETED`=0
+        <include refid="whereFindUnAnswerList"/>
+    </select>
+
+    <update id="closeBatch">
+        UPDATE
+        `SER_QUESTION`
+        SET
+        `IS_ANSWERED` = true,
+        `ANSWER_TIME` = SYSDATE(),
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        <where>
+            `IS_DELETED`=0
+            <choose>
+                <when test="ids!=null and ids.size>0">
+                    AND `ID` IN
+                    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                        #{id}
+                    </foreach>
+                </when>
+                <otherwise>
+                    AND 1!=1
+                </otherwise>
+            </choose>
+        </where>
+    </update>
+
+    <resultMap id="totalQuestionTag" type="com.showcal.service.domain.TotalQuestionTag">
+        <result column="ANSWER_USER_ID" jdbcType="NUMERIC" property="tagId"></result>
+        <result column="TAG_NAME" jdbcType="VARCHAR" property="tagName"></result>
+        <result column="COUNT" jdbcType="NUMERIC" property="count"></result>
+    </resultMap>
+    <resultMap id="totalKeyWordTag" type="com.showcal.service.domain.TotalKeyWordTag">
+        <result column="KEYWORD_ID" jdbcType="NUMERIC" property="keywordId"></result>
+        <result column="KEYWORD_NAME" jdbcType="VARCHAR" property="keywordName"></result>
+        <result column="COUNT" jdbcType="NUMERIC" property="count"></result>
+    </resultMap>
+    <resultMap id="unAnswerQuestion" type="com.showcal.service.domain.UnAnswerQuestion">
+        <result column="ID" jdbcType="NUMERIC" property="id"></result>
+        <result column="KEYWORD" jdbcType="NUMERIC" property="keywordId"></result>
+        <result column="KEYWORDNAME" jdbcType="VARCHAR" property="keyword"></result>
+        <result column="TAG" jdbcType="NUMERIC" property="tagId"></result>
+        <result column="TAGNAME" jdbcType="VARCHAR" property="tag"></result>
+        <result column="NICK_NAME" jdbcType="VARCHAR" property="nickName"></result>
+        <result column="HEIGHT" jdbcType="NUMERIC" property="height"></result>
+        <result column="WEIGHT" jdbcType="NUMERIC" property="weight"></result>
+        <result column="AGE" jdbcType="NUMERIC" property="age"></result>
+        <result column="SEX" jdbcType="VARCHAR" property="sex"></result>
+        <result column="CREATION_TIME" jdbcType="TIMESTAMP" property="createTime"></result>
+        <result column="CREATED_BY" jdbcType="NUMERIC" property="questionUserId"></result>
+    </resultMap>
+
+</mapper>

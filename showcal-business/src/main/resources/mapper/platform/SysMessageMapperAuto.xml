@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.SysMessageMapper">
+
+    <resultMap  id="sysMessagePO" type="com.showcal.platform.po.SysMessagePO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="BUSINESS_TYPE"  jdbcType="VARCHAR" property="businessType"></result>
+        <result column="BUSINESS_ID"  jdbcType="NUMERIC" property="businessId"></result>
+        <result column="BUSINESS_CATEGORY"  jdbcType="VARCHAR" property="businessCategory"></result>
+        <result column="RECEIPT_ID"  jdbcType="VARCHAR" property="receiptId"></result>
+        <result column="MESSAGE_TITLE"  jdbcType="VARCHAR" property="messageTitle"></result>
+        <result column="MESSAGE_URL"  jdbcType="VARCHAR" property="messageUrl"></result>
+        <result column="MESSAGE_CONTENT"  jdbcType="VARCHAR" property="messageContent"></result>
+        <result column="SENDER_ID"  jdbcType="NUMERIC" property="senderId"></result>
+        <result column="MESSAGE_TIME"  jdbcType="TIMESTAMP" property="messageTime"></result>
+        <result column="SEND_TIME"  jdbcType="TIMESTAMP" property="sendTime"></result>
+        <result column="IS_READED"  jdbcType="TINYINT" property="isReaded"></result>
+        <result column="READ_TIME"  jdbcType="VARCHAR" property="readTime"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`BUSINESS_TYPE`,`BUSINESS_ID`,`BUSINESS_CATEGORY`,`RECEIPT_ID`,`MESSAGE_TITLE`,`MESSAGE_URL`,`MESSAGE_CONTENT`,`SENDER_ID`,`MESSAGE_TIME`,`SEND_TIME`,`IS_READED`,`READ_TIME`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `PL_SYS_MESSAGE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ sysMessage.id },
+        
+        #{ sysMessage.businessType },
+        #{ sysMessage.businessId },
+        #{ sysMessage.businessCategory },
+        #{ sysMessage.receiptId },
+        #{ sysMessage.messageTitle },
+        #{ sysMessage.messageUrl },
+        #{ sysMessage.messageContent },
+        #{ sysMessage.senderId },
+        #{ sysMessage.messageTime },
+        #{ sysMessage.sendTime },
+        #{ sysMessage.isReaded },
+        #{ sysMessage.readTime },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `PL_SYS_MESSAGE`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "sysMessage" index ="index" separator=",">
+            (
+            #{ sysMessage.id },
+            
+            #{ sysMessage.businessType },
+            #{ sysMessage.businessId },
+            #{ sysMessage.businessCategory },
+            #{ sysMessage.receiptId },
+            #{ sysMessage.messageTitle },
+            #{ sysMessage.messageUrl },
+            #{ sysMessage.messageContent },
+            #{ sysMessage.senderId },
+            #{ sysMessage.messageTime },
+            #{ sysMessage.sendTime },
+            #{ sysMessage.isReaded },
+            #{ sysMessage.readTime },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `PL_SYS_MESSAGE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `PL_SYS_MESSAGE`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="sysMessagePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `PL_SYS_MESSAGE`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="sysMessagePO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `PL_SYS_MESSAGE`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="sysMessagePO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `PL_SYS_MESSAGE`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_SYS_MESSAGE`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

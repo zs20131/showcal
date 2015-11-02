@@ -1,0 +1,213 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+            <li><a href="$platformLink.setTarget("food/index")">食物管理</a></li>
+            <li class="active">食物主数据</a></li>
+        </ul>
+    </ul>
+</div>
+<!-- ng-repeat="foodCategory in  createFoodResult" -->
+<div  class="xn-main  auto  xn-width  xn-sys-default clearfix ng-scope" ng-controller="EditFoodIndexController">
+    <form  class="form-horizontal xn-form ng-pristine ng-valid ng-valid-required" name="supplierForm" xn-form-validate=""
+           novalidate="" role="form">
+        <div class="xn-edit xn-edit-favicon clearfix">
+            <div class="xn-edit-favicon-top clearfix"></div>
+            <div class="xn-edit-favicon-img   clearfix">
+                <input type="file" id="pictureFile" name="pictureFile" ng-click="showPicture()" width="114" height="85"
+                       contentEditable="false" style="display:none" accept="image/png,image/gif,image/bmp,image/jpeg,image/jpg"/>
+            ##                <li class=" f-left clearfix "  ng-if="sellLand.picturePath == null" onclick="pictureFile.click()">
+            ##                    <i class="icon icon-add  font-45"></i>
+            ##                    <div class="upload-add-title ng-binding"></div>
+            ##                </li>
+                <img  class="f-left clearfix"ng-if="food.pictureUrl == null" onclick="pictureFile.click()" class="view-img imgFile" id="spanImage" alt="请选择图片"
+                      width="234" height="120" ng-src="{{food.pictureUrl}}"/>
+                <img  class="f-left clearfix"ng-if="food.pictureUrl != null" onclick="pictureFile.click()" class="view-img imgFile" id="spanImage" alt="请选择图片"
+                      width="234" height="120" ng-src="{{food.pictureUrl}}"/>
+            </div>
+            <div class="xn-edit-first">
+                <div class="input-group-lg">
+                    <input class="form-control xn-input-big ng-pristine ng-valid ng-valid-required" type="text" ng-model="food.barCode" name="operatingunitname" maxlength="100" placeholder="食物条码" autofocus="">
+                </div>
+            </div>
+            <div class="edit-content">
+                <div class="clearfix"></div>
+                <div class="xn-input-line  clearfix">
+                    <label class="col-sm-2 control-label"><span class="f-right">大类：</span><i
+                            class="xn-required-i f-right"></i></label>
+                    <div class="xn-input-sm">
+                        <select  id="foodCategoryId"  class="form-control"  name="foodCategoryId" ng-model="food.foodLargeCategory" required="required">
+                            <option value="">-- 请选择 --</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    <div class="tip"> </div>
+                    <label class="xn-label"  >单位食用克数(克)：</label>
+                    <div class="xn-input-sm">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.edubleUnit"   >
+                    </div>
+                </div>
+                <div class="xn-input-line  clearfix">
+                    <label class="xn-label" required="required"><span class="f-right">名称：</span><i
+                            class="xn-required-i f-right"></i></label>
+
+                    <div class="xn-input-sm">
+                        <input class="form-control   ng-pristine ng-valid ng-valid-required" type="text" name="username"
+                               ng-model="food.name" placeholder="" required="required">
+                    </div>
+                    <div class="tip">
+                    </div>
+                    <label class="xn-label"  >单位：</label>
+
+                    <div class="xn-input-sm">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.unit"   >
+                    </div>
+
+                </div>
+
+                <div class="xn-input-line  clearfix">
+                    <label class="xn-label"  ><span class="f-right">重量：</span><i
+                            class="xn-required-i f-right"></i></label>
+
+                    <div class="xn-input-sm">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.weight"   >
+                    </div>
+                    <div class="tip">
+                    </div>
+                    <label class="xn-label"  ><span class="f-right">每单位重量：</span></label>
+
+                    <div class="xn-input-sm">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.unitWeight"   >
+                    </div>
+
+                </div>
+                <div class="xn-input-line  clearfix">
+                    <label class="xn-label"  >热量：</label>
+
+                    <div class="xn-input-sm">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.heat"   >
+                    </div>
+                    <div class="tip">
+                    </div>
+                    <label class="xn-label"  ><span class="f-right">单位热量：</span></label>
+
+                    <div class="xn-input-sm">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.unitheat"   >
+                    </div>
+
+                </div>
+                <div class="xn-input-line  clearfix ng-scope">
+                    <label class="xn-label"  >蛋白质(克)：</label>
+
+                    <div class="xn-input-sm ng-binding">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.protein"   >
+                    </div>
+                    <div class="tip">
+                    </div>
+                    <label class="xn-label"  >脂肪(克)：</label>
+
+                    <div class="xn-input-sm ng-binding">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.fat"   >
+                    </div>
+                </div>
+                <div class="xn-input-line  clearfix ng-scope">
+                    <label class="xn-label"  >碳水化合物(克)：</label>
+
+                    <div class="xn-input-sm ng-binding">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.carbohydrate"   >
+                    </div>
+                    <div class="tip">
+                    </div>
+                    <label class="xn-label"  >膳食纤维(克)：</label>
+
+                    <div class="xn-input-sm ng-binding">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.df"   >
+                    </div>
+                </div>
+                <div class="xn-input-line  clearfix ng-scope">
+                    <label class="xn-label"  >品牌名：</label>
+
+                    <div class="xn-input-sm ng-binding">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.brand"   >
+                    </div>
+                    <div class="tip">
+                    </div>
+                    <label class="xn-label"  >食物交换份克数：</label>
+
+                    <div class="xn-input-sm ng-binding">
+                        <input class="form-control  f-left  ng-pristine ng-valid ng-valid-required" type="text"
+                               name="useraccount" ng-model="food.foodExchange"   >
+                    </div>
+                </div>
+                <div class="xn-input-line  clearfix">
+                    <label class="xn-label" ></label>
+                    <div class="xn-input-lg">
+                        <div class="col-md-3 pl_0">
+                            <label for="isAddMuscleTrue" class="xn-label-checkbox">
+                                #*<i class="xn-checkbox" ></i>
+                                <i class="icon icon-right_3" ng-if="food.isAddMuscle"></i>
+                                <input class="xn-checkbox-input" type="checkbox" name="isAddMuscleTrue" id="isAddMuscleTrue" ng-change="dochange()" ng-model="food.isAddMuscle">*#增肌
+                            </label>
+                            <select class="form-control" name="isAddMuscleTrue" id="isAddMuscleTrue" ng-model="food.isAddMuscle" >
+                                <option value="1">早</option>
+                                <option value="2">中</option>
+                                <option value="3">晚</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 pl_0">
+                            <label for="isLoseTrue" class="xn-label-checkbox">
+                                #*<i class="xn-checkbox" ></i>
+                                <i class="icon icon-right_3" ng-if="food.isLose"></i>
+                                <input class="xn-checkbox-input" type="checkbox" name="isLoseTrue" id="isLoseTrue" ng-change="dochange()"  ng-model="food.isLose">*#减肥
+                            </label>
+                            <select class="form-control" name="isLoseTrue" id="isLoseTrue" ng-model="food.isLose" >
+                                <option value="1">早</option>
+                                <option value="2">中</option>
+                                <option value="3">晚</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 pl_0">
+                            <label for="isCommon" class="xn-label-checkbox">
+                                #*<i class="xn-checkbox" ></i>
+                                <i class="icon icon-right_3" ng-if="food.isCommon"></i>
+                                <input class="xn-checkbox-input" type="checkbox" name="isCommon" id="isCommon" ng-change="dochange()"  ng-model="food.isCommon">*#常见
+                            </label>
+                            <select class="form-control" name="isCommon" id="isCommon" ng-model="food.isCommon" >
+                                <option value="1">早</option>
+                                <option value="2">中</option>
+                                <option value="3">晚</option>
+                            </select>
+                        </div>
+                    #*  <div class="col-md-3 pl_0">
+                        <label for="isSale" class="xn-label-checkbox">
+                            <i class="xn-checkbox" ></i>
+                            <i class="icon icon-right_3" ng-if="operatingUnit.isSale"></i>
+                            <input class="xn-checkbox-input" type="checkbox" name="isSale" id="isSale" ng-change="dochange()"  ng-model="operatingUnit.isSale">推荐
+                        </label>
+                    </div>*#
+                    </div>
+                </div>
+            </div>
+            <div class="btn-class">
+                <button class="btn btn-primary col-md-1 col-md-offset-5" xn-form-submit="doSave()" data-toggle="modal"
+                        data-target="#myModal">保存
+                </button>
+                <a href="$platformLink.setTarget("food/food")" class="btn btn-default col-md-1 col-md-offset-1">返回</a>
+            </div>
+        </div>
+    </form>
+</div>

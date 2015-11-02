@@ -1,0 +1,66 @@
+$page.setTitle("我的积分")
+<div class="discover discover-detail  chooseShowcal aboutme" >
+    <!--header -->
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="index?passportid=$!passport.id" class="pic">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+        <h5 class="am-header-title">我的积分</h5>
+
+        <div class="am-header-right am-header-nav">
+            <a href="#right-link" class="info-ico ">
+
+            </a>
+        </div>
+    </header>
+    <div class="am-cf whitebg bottom-border">
+        <div class="integral-line am-g">
+            <div class="am-u-sm-8 am-text-sm"><img src="$mobileContent.getURI("images/integral.png")" width="20px" height="20px"><span class="am-margin-left-xs">我目前的积分</span>
+            </div>
+            <div class="am-u-sm-4 am-text-right orange">$!integralCount</div>
+        </div>
+
+    </div>
+    <!--列表 -->
+    <div class=" am-cf am-margin-top-sm  whitebg top-border  bottom-border am-padding-bottom-xs" >
+        <div class="am-text-center mt-10 ">积分规则</div>
+        <ul class="am-padding-0 am-text-sm  light-gray-txt am-margin-0">
+            <li class="am-cf mt-10"  >
+                    <div class="am-u-sm-1"><span class="li-label">1</span> </div>
+                    <div class="am-u-sm-11 am-padding-left-xs">使用热控工具，点击一键热控。</div>
+            </li>
+            <li class="am-cf mt-10"  >
+                <div class="am-u-sm-1"><span class="li-label">2</span> </div>
+                <div class="am-u-sm-11 am-padding-left-xs">与瘦咖交流。</div>
+            </li>
+            <li class="am-cf mt-10"  >
+                <div class="am-u-sm-1"><span class="li-label">3</span> </div>
+                <div class="am-u-sm-11 am-padding-left-xs">成功提交评论</div>
+            </li>
+            <li class="am-cf mt-10"  >
+                <div class="am-u-sm-1"><span class="li-label">4</span> </div>
+                <div class="am-u-sm-11 am-padding-left-xs">转发分享到社交平台</div>
+            </li>
+            #*#foreach($!integralRule in $!integralRuleList)
+                <li class="am-cf mt-10"  >
+                    <div class="am-u-sm-1"><span class="li-label">$velocityCount</span> </div>
+                    <div class="am-u-sm-11 am-padding-left-xs">转发分享到社交平台</div>
+                </li>
+            #end*#
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    $(function () {
+
+
+    });
+
+
+
+</script>

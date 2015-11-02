@@ -1,0 +1,121 @@
+//
+//  ${class.name}.h
+//
+//
+//  Created by ${annotation.authorName} on ${annotation.date}
+//  Copyright (c) 2014-2015 –苏州犀牛网络科技有限公司
+//
+
+#import "${class.name}.h"
+@implementation ${class.name}
+
+#pragma mark - 内部定数
+static NSString * const  f_${class.name?uncap_first} = @"${class.name?uncap_first}";
+
+<#if fields??>
+    <#list fields as field>
+#pragma mark - ${field.description}
+    <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*" && (field.name=="baseDomain" || field.name=="baseRequest" || field.name=="baseResponse")>
+@synthesize ${field.name};
+     <#else>
+        <#if field.name=="uuid">
+static NSString * const  f_uuid = @"id";
+        <#else>
+static NSString * const  f_${field.name} = @"${field.name}";
+        </#if>
+        <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">
+@synthesize ${field.name};
+        </#if>
+    </#if>
+    </#list>
+</#if>
+
+#pragma mark - 初始化
+- (instancetype)init {
+    self = [super init];
+    if(self) {
+    _baseDomain = [[BaseDomain alloc]init];
+<#if fields??>
+    <#list fields as field>
+        <#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">
+        ${field.name}=[[${field.iostype} alloc]init];
+        </#if>
+    </#list>
+</#if>
+    }
+    return self;
+}
+
+#pragma mark - 利用自己所属字典的Dic来初始化自己
+-(void)setSelfDic:(NSMutableDictionary *)dic {
+    [_baseDomain.fields setObject:dic forKey:f_${class.name?uncap_first}];
+}
+
+#pragma mark - getter/setter
+<#if fields??>
+    <#list fields as field>
+
+#pragma mark - 判断${field.description}是否存在
+-(BOOL)has${field.name?cap_first} {
+    if ([_baseDomain keyExistInDictionary:_baseDomain.fields key:f_${class.name?uncap_first}] && [_baseDomain keyExistInDictionary:[_baseDomain.fields objectForKey:f_${class.name?uncap_first}] key:f_${field.name}]) {
+        return YES;
+    }
+    return NO;
+}
+
+#pragma mark - ${field.description}
+-(${field.iostype}<#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">*</#if>)${field.name} {
+    <#if field.isDomain>
+        <#if field.iostype=="NSArray*" || field.iostype=="NSDictionary*">
+    return [[_baseDomain.fields objectForKey:f_${class.name?uncap_first}] objectForKey:f_${field.name}];
+        <#elseif field.isEnum>
+    return [[_baseDomain.fields objectForKey:f_${class.name?uncap_first}] objectForKey:f_${field.name}];
+        <#else>
+    ${field.iostype} *temp = [[${field.iostype} alloc]init];
+    if ([_baseDomain keyExistInDictionary:[_baseDomain.fields objectForKey:f_${class.name?uncap_first}] key:f_${field.name}]) {
+        [temp setSelfDic:(NSMutableDictionary *)[[_baseDomain.fields objectForKey:f_${class.name?uncap_first}] objectForKey:f_${field.name}]];
+    }
+    return temp;
+        </#if>
+    <#else >
+        <#if field.iostype=="NSDate*">
+    return (${field.iostype})[[_baseDomain.fields objectForKey:f_${class.name?uncap_first}] objectForKey:f_${field.name}];
+        <#elseif field.iostype=="NSString*">
+    return (NSString*)[[_baseDomain.fields objectForKey:f_${class.name?uncap_first}] objectForKey:f_${field.name}];
+        <#else>
+    return [[[_baseDomain.fields objectForKey:f_${class.name?uncap_first}] objectForKey:f_${field.name}] ${field.iostypeValue}Value];
+        </#if>
+    </#if>
+}
+
+-(void)set${field.name?cap_first}:(${field.iostype}<#if field.isDomain && !field.isEnum && field.iostype!="NSArray*" && field.iostype!="NSDictionary*">*</#if>)${field.name} {
+    <#if field.isDomain>
+        <#if field.isEnum>
+    [_baseDomain setItemObj:${field.name} itemKey:f_${field.name} selfFields:[_baseDomain getDomainDicByKey:f_${class.name?uncap_first}] selfKey:f_${class.name?uncap_first}];
+        <#elseif field.iostype=="NSArray*" || field.iostype=="NSDictionary*">
+    [_baseDomain.fields setObject:${field.name} forKey:f_${field.name}];
+        <#else>
+    [_baseDomain setItemObj:[${field.name}.baseDomain.fields objectForKey:f_${field.name}] itemKey:f_${field.name} selfFields:_baseDomain.fields selfKey:f_${class.name?uncap_first}];
+        </#if>
+    <#else>
+        <#if field.iostype=="NSDate*">
+    [_baseDomain setItemObj:${field.name} itemKey:f_${field.name} selfFields:[_baseDomain getDomainDicByKey:f_${class.name?uncap_first}] selfKey:f_${class.name?uncap_first}];
+        <#elseif field.iostype=="UInt64">
+    [_baseDomain setItemObj:[NSString stringWithFormat:@"%llu",${field.name}] itemKey:f_${field.name} selfFields:[_baseDomain getDomainDicByKey:f_${class.name?uncap_first}] selfKey:f_${class.name?uncap_first}];
+        <#elseif field.iostype=="NSInteger">
+    [_baseDomain setItemObj:[NSString stringWithFormat:@"%ld",${field.name}] itemKey:f_${field.name} selfFields:[_baseDomain getDomainDicByKey:f_${class.name?uncap_first}] selfKey:f_${class.name?uncap_first}];
+        <#elseif field.iostype=="float">
+    [_baseDomain setItemObj:[NSString stringWithFormat:@"%f",${field.name}] itemKey:f_${field.name} selfFields:[_baseDomain getDomainDicByKey:f_${class.name?uncap_first}] selfKey:f_${class.name?uncap_first}];
+        <#elseif field.iostype=="BOOL">
+    [_baseDomain setItemObj:[NSString stringWithFormat:@"%d",${field.name}] itemKey:f_${field.name} selfFields:[_baseDomain getDomainDicByKey:f_${class.name?uncap_first}] selfKey:f_${class.name?uncap_first}];
+         <#elseif field.iostype=="NSString*">
+    [_baseDomain setItemObj:${field.name} itemKey:f_${field.name} selfFields:[_baseDomain getDomainDicByKey:f_${class.name?uncap_first}] selfKey:f_${class.name?uncap_first}];
+        <#else>
+    [_baseDomain setItemObj:[NSString stringWithFormat:@"%lld",${field.name}] itemKey:f_${field.name} selfFields:[_baseDomain getDomainDicByKey:f_${class.name?uncap_first}] selfKey:f_${class.name?uncap_first}];
+        </#if>
+    </#if>
+}
+    </#list>
+</#if>
+
+@end

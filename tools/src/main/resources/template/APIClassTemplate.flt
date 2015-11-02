@@ -1,0 +1,59 @@
+package ${class.packageName};
+
+import com.xiniunet.apiframework.AbstractApiRequest;
+import com.xiniunet.apiframework.annotation.HttpAction;
+import com.xiniunet.apiframework.annotation.NeedInSessionType;
+import com.xiniunet.apiframework.annotation.ServiceMethod;
+import com.xiniunet.apiframework.annotation.ServiceMethodBean;
+import com.xiniunet.apiframework.response.ErrorResponse;
+import com.xiniunet.api.tool.RequestConverter;
+import com.xiniunet.framework.security.Passport;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * <p>
+ * <pre>
+ * ***************************************************************
+ *  Copyright (c) 2014-2015 –${annotation.company}
+ *  Title: ${class.packageName}.${class.name}
+ *  Description:${annotation.description}
+ *  @since ${annotation.version}
+ *  @author ${annotation.authorName}
+ * ***************************************************************
+ * </pre>
+ */
+@ServiceMethodBean
+public class ${serviceName}Api {
+    @Autowired
+    private ${serviceName} ${serviceName?uncap_first};
+    @Autowired
+    private RequestConverter requestConverter;
+<#if methods??>
+    <#list methods as method>
+
+    /**
+     * ${method.description}
+     */
+    @ServiceMethod(title = "${method.description}",method = "${method.apiName}",httpAction = HttpAction.POST,version = "1.0" ${method.needPassport?string("",",needInSession = NeedInSessionType.NO")})
+    public Object ${method.name}(AbstractApiRequest apiRequest){
+        <#if method.needPassport>
+        Passport passport = requestConverter.requestToPassport(apiRequest);
+        </#if>
+        ${method.requestName} ${method.requestName?uncap_first} = requestConverter.converter(${method.requestName}.class,apiRequest);
+        HttpServletRequest request = (HttpServletRequest) apiRequest.getApiRequestContext().getRawRequestObject();
+        ErrorResponse response = requestConverter.doValidate(request, ${method.requestName?uncap_first});
+        if(response != null) {
+           return response;
+        } else {
+        <#if method.needPassport>
+            return ${serviceName?uncap_first}.${method.name}(${method.requestName?uncap_first}, passport);
+        <#else>
+            return ${serviceName?uncap_first}.${method.name}(${method.requestName?uncap_first});
+        </#if>
+        }
+    }
+    </#list>
+}
+</#if>

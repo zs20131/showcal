@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.thermalcontrol.dal.NutritionalGoalMapper">
+
+    <resultMap  id="nutritionalGoalPO" type="com.showcal.thermalcontrol.po.NutritionalGoalPO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="MEALS_ID"  jdbcType="NUMERIC" property="mealsId"></result>
+        <result column="TYPE"  jdbcType="VARCHAR" property="type"></result>
+        <result column="USER_HABIT"  jdbcType="VARCHAR" property="userHabit"></result>
+        <result column="REPAST_TYPE"  jdbcType="VARCHAR" property="repastType"></result>
+        <result column="HEAT"  jdbcType="NUMERIC" property="heat"></result>
+        <result column="PROTEIN"  jdbcType="NUMERIC" property="protein"></result>
+        <result column="FAT"  jdbcType="NUMERIC" property="fat"></result>
+        <result column="CARBOHYDRATE"  jdbcType="NUMERIC" property="carbohydrate"></result>
+        <result column="DF"  jdbcType="NUMERIC" property="df"></result>
+        <result column="IS_ACTIVE"  jdbcType="TINYINT" property="isActive"></result>
+        <result column="ACTIVE_DATE"  jdbcType="DATE" property="activeDate"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`MEALS_ID`,`TYPE`,`USER_HABIT`,`REPAST_TYPE`,`HEAT`,`PROTEIN`,`FAT`,`CARBOHYDRATE`,`DF`,`IS_ACTIVE`,`ACTIVE_DATE`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `TC_NUTRITIONAL_GOAL`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ nutritionalGoal.id },
+        
+        #{ nutritionalGoal.mealsId },
+        #{ nutritionalGoal.type },
+        #{ nutritionalGoal.userHabit },
+        #{ nutritionalGoal.repastType },
+        #{ nutritionalGoal.heat },
+        #{ nutritionalGoal.protein },
+        #{ nutritionalGoal.fat },
+        #{ nutritionalGoal.carbohydrate },
+        #{ nutritionalGoal.df },
+        #{ nutritionalGoal.isActive },
+        #{ nutritionalGoal.activeDate },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `TC_NUTRITIONAL_GOAL`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "nutritionalGoal" index ="index" separator=",">
+            (
+            #{ nutritionalGoal.id },
+            
+            #{ nutritionalGoal.mealsId },
+            #{ nutritionalGoal.type },
+            #{ nutritionalGoal.userHabit },
+            #{ nutritionalGoal.repastType },
+            #{ nutritionalGoal.heat },
+            #{ nutritionalGoal.protein },
+            #{ nutritionalGoal.fat },
+            #{ nutritionalGoal.carbohydrate },
+            #{ nutritionalGoal.df },
+            #{ nutritionalGoal.isActive },
+            #{ nutritionalGoal.activeDate },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `TC_NUTRITIONAL_GOAL`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `TC_NUTRITIONAL_GOAL`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="nutritionalGoalPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `TC_NUTRITIONAL_GOAL`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="nutritionalGoalPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `TC_NUTRITIONAL_GOAL`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="nutritionalGoalPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `TC_NUTRITIONAL_GOAL`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `TC_NUTRITIONAL_GOAL`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

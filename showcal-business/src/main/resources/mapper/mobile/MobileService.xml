@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.mobile.dal.MobileServiceMapper">
+
+    <resultMap id="showcalInfo" type="com.showcal.mobile.domain.ShowCalInfo">
+        <id column="ID" jdbcType="NUMERIC" property="id"/>
+        <result column="ACCOUNT" jdbcType="VARCHAR" property="account"></result>
+        <result column="NAME" jdbcType="VARCHAR" property="name"></result>
+        <result column="PINYIN" jdbcType="VARCHAR" property="pinyin"></result>
+        <result column="PY" jdbcType="VARCHAR" property="py"></result>
+        <result column="NICK_NAME" jdbcType="VARCHAR" property="nickName"></result>
+        <result column="MOBILE_PHONE" jdbcType="VARCHAR" property="mobilePhone"></result>
+        <result column="QQ" jdbcType="VARCHAR" property="qq"></result>
+        <result column="WECHAT" jdbcType="VARCHAR" property="wechat"></result>
+        <result column="SEX" jdbcType="VARCHAR" property="sex"></result>
+        <result column="USER_TYPE" jdbcType="VARCHAR" property="userType"></result>
+        <result column="AVATAR_ID" jdbcType="VARCHAR" property="avatarId"></result>
+        <result column="IS_ACTIVE" jdbcType="TINYINT" property="isActive"></result>
+        <result column="ACTIVE_DATE" jdbcType="DATE" property="activeDate"></result>
+        <result column="IS_BANNED" jdbcType="VARCHAR" property="isBanned"></result>
+        <result column="COUNT_SERVICE" jdbcType="NUMERIC" property="countService"></result>
+        <result column="RESPONSE_TIME" jdbcType="NUMERIC" property="responseTime"></result>
+        <result column="SUCCESS_RATE" jdbcType="NUMERIC" property="successRate"></result>
+        <result column="BANNED_TIME" jdbcType="TIMESTAMP" property="bannedTime"></result>
+        <result column="ROW_VERSION" jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED" jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY" jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME" jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY" jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME" jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <select id="getShowCalInfo" resultMap="showcalInfo">
+        SELECT  su.*,sue.COUNT_SERVICE,sue.RESPONSE_TIME,sue.SUCCESS_RATE FROM pl_sys_user su LEFT JOIN pl_sys_user_extent sue
+        ON   su.`ID` = sue.`ID`
+        WHERE su.`ID`='646918257127067648'
+        AND su.
+        AND su.`USER_TYPE` = 'SHOWCAL'
+    </select>
+
+
+</mapper>

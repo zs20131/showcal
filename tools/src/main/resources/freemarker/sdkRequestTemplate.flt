@@ -1,0 +1,114 @@
+package ${basePackage}.api.request.${moduleName?uncap_first};
+
+import com.xiniunet.api.ApiRuleException;
+import com.xiniunet.api.XiniuRequest;
+import com.xiniunet.api.internal.util.XiniuHashMap;
+import com.xiniunet.api.internal.util.RequestCheckUtils;
+import com.xiniunet.api.domain.${moduleName?uncap_first}.*;
+import java.util.Map;
+import com.xiniunet.api.response.${moduleName?uncap_first}.${method.responseName};
+<#if method.requestImports??>
+    <#list method.requestImports as import>
+import ${import};
+    </#list>
+</#if>
+
+
+/**
+* <p/>
+* <pre>
+ * ***************************************************************
+ *  Copyright (c) 2014 –${company}
+    *  Title: ${basePackage}.${moduleName}.helper.${moduleName ?cap_first}HelperImpl
+    *  Description: ${moduleName} Request
+    *  @since
+    *  @author ${author}
+    * ***************************************************************
+ * </pre>
+*/
+public class ${method.requestName} implements XiniuRequest<${method.responseName}> {
+    private XiniuHashMap udfParams = new XiniuHashMap();
+    /**
+     * 获取API名称
+     */
+    @Override
+    public String getApiMethodName() {
+        return "${moduleName}${method.apiName}";
+    }
+
+<#if method.requestFields??>
+    <#list method.requestFields as field>
+    /**
+     * ${field.description}
+     */
+    private ${field.type} ${field.name};
+    </#list>
+</#if>
+<#if method.requestFields??>
+    <#list method.requestFields as field>
+
+    public ${field.type} get${field.name?cap_first}(){
+        return ${field.name};
+    }
+
+    public void set${field.name?cap_first}(${field.type} ${field.name}){
+        this.${field.name}=${field.name};
+    }
+    </#list>
+
+</#if>
+    @Override
+    public Map<String, String> getTextParams() {
+        XiniuHashMap txtParams = new XiniuHashMap();
+        <#if method.requestFields??>
+            <#list method.requestFields as field>
+            <#if field.type?contains("List")>
+                txtParams.put("${field.name}",JSON.toJSONString(this.${field.name}));
+                <#else >
+                txtParams.put("${field.name}", this.${field.name});
+            </#if>
+            </#list>
+        </#if>
+        if(this.udfParams != null) {
+            txtParams.putAll(this.udfParams);
+        }
+        return txtParams;
+    }
+
+    @Override
+    public Long getTimestamp() {
+    return null;
+    }
+
+    @Override
+    public void setTimestamp(Long timestamp) {
+
+    }
+
+    @Override
+    public Class getResponseClass() {
+        return ${method.responseName}.class;
+    }
+
+    @Override
+    public void check() throws ApiRuleException {
+        <#if method.requestFields??>
+            <#list method.requestFields as field>
+                <#if field.isNotNull || field.isLength>
+                    <#if field.isNotNull>RequestCheckUtils.checkNotEmpty(${field.name},"${field.name}");</#if>
+                    <#if field.isLength>RequestCheckUtils.checkMaxLength(${field.name},${field.maxLength},"${field.name}");</#if>
+                </#if>
+            </#list>
+        </#if>
+    }
+
+    @Override
+    public Map<String, String> getHeaderMap() {
+        return null;
+    }
+
+    @Override
+    public void putOtherTextParam(String key, String value) {
+        this.udfParams.put(key,value);
+    }
+}

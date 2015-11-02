@@ -1,0 +1,138 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix ">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$platformLink.setTarget("index")">首页</a></li>
+        <li><a href="$platformLink.setTarget("setting/index")">设置</a></li>
+        <li class="active">特殊情况</li>
+    </ul>
+</div>
+
+<div class="xn-main  auto  xn-width  xn-sys-default clearfix" ng-controller="DiseaseIndexController">
+  #*  <div class="xn-search Controller clearfix">
+        <form class="col-md-6 col-md-offset-3 clearfix"   name="searchForm" xn-form-validate  novalidate>
+            <div class="input-group">
+                <input type="text" class="form-control  " name="disease"   ng-model="disease.name"  placeholder="请输入要查询的内容"    autofocus>
+                <span class="input-group-addon"   xn-submit-enter="treeSearch()"></span>
+            </div>
+        </form>
+    </div>
+*#
+
+    <div class="xn-width mb_10 pr_10 clearfix">
+        <button class="btn btn-primary btn-sm f-right" ng-click="addTree()" >新建情况</button>
+    ##            <a class="btn btn-link btn-sm f-right mr_10"  href="$hrLink.setTarget("organization/setowner")" >导入组织部门负责人</a>
+    </div>
+
+    <div class="xn-table-wrap">
+        <table  class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="col-md-1">序号</th>
+                <th class="col-md-3">特殊情况名称</th>
+                <th class="col-md-4">备注</th>
+                <th class="col-md-3">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <tr class="tree-header-{{tree.level}} td_{{tree.level}}" ng-repeat="tree in trees"
+                ng-mouseenter="showDetail=true" ng-init="showDetail=false" ng-mouseleave="showDetail=false">
+                <td ng-bind="$index+1" class="xn-text-left">
+
+                </td>
+                <td class="xn-text-left">
+                    {{tree.name}}
+                </td>
+                <td class="xn-text-left">
+                    {{tree.remark}}
+                </td>
+                <td class="xn-text-left">
+                    <div type="text" ><a ng-click="edit(tree)">编辑</a> <a ng-click="delete(tree)">删除</a>
+                        <a class="view-a" ng-click="stop(tree)"}"
+                           ng-if="tree.isActive" target="_blank">停用</a>
+                    <a ng-if="!tree.isActive" ng-click="start(tree)" href="javascript:void(0);">启用</a>
+                    </div>
+                </td>
+            </tr>
+            #* <tr class="tree-header-{{tree.level}} td_{{tree.level}}" ng-repeat="tree in trees" ng-if="tree.visable"
+                 ng-mouseenter="showDetail=true" ng-init="showDetail=false" ng-mouseleave="showDetail=false">
+                 <td class="first_td">
+                     <i ng-if="tree.level==0" class="{{tree.color}}"></i>
+                     <i ng-if="tree.level!=0" class="vertical-line-{{tree.level}}"></i>
+                     <div class="pt_15 f-left tree-{{tree.level}}">
+
+                         <a ng-if="tree.childState && tree.collapsed" class="btn-sm icon-a xn-tree-i"  ng-click="toggle($index)" >
+                             <i  class="icon icon-add"></i>
+                         </a>
+                         <a ng-if="!(tree.childState && tree.collapsed)" class="btn-sm icon-a xn-tree-i"  ng-click="toggle($index)" >
+                             <i  class="icon icon-dash"></i>
+                         </a>
+                         {{tree.name}}
+                     </div>
+                     <span class="f-right xn-text-left mt_7 pr_10" ng-show="showDetail">
+                          <button  class="btn icon-a btn-link " ng-click="addTree(tree)"><i class="icon edit-icon icon-add icon-edit-add"></i></button>
+                          <button  class="btn icon-a btn-link " ng-click="edit(tree)"><i class="icon edit-icon icon-edit"></i></button>
+                          <button  class="btn icon-a btn-link"  ng-click="delete(tree)"><i class="icon edit-icon icon-delete"></i></button>
+                     </span>
+                 </td>
+
+                <td class="xn-text-left">
+                     {{usertag.}}
+                 </td>
+                 <td class="xn-text-left">
+                     {{tree.owner.lastName}}{{tree.owner.firstName}}
+                 </td>
+                 <td class="xn-text-left">
+                     {{tree.description}}
+                 </td>
+             </tr>*#
+            <tr ng-if="trees.length == 0">
+                <td colspan="7" class="xn-center">无法找到相应的记录</td></tr>
+            </tbody>
+        </table>
+
+        <div class="clearfix">
+            <div class="f-left mt_20 mb_10">共{{diseasetags.totalCount}}条</div>
+            <pagination ng-show="diseasetags.totalCount>usertags.pageSize" ng-change="getList()" max-size="maxPageSize"
+                        total-items="diseasetags.totalCount"
+                        ng-model="diseasetags.pageNumber" items-per-page="diseasetags.pageSize" class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                        last-text="&raquo;"></pagination>
+    </div>
+</div>
+</div>
+
+<script type="text/ng-template" id="treeEidt.html">
+    <form  class="form-horizontal xn-form clearfix" role="form"  xn-form-validate novalidate  name="validateForm" >
+        <div class="modal-header" ng-mousedown="mousedown($event)" ng-mousemove="mousemove($event)" ng-mouseup="mouseup()">
+            <h3 class="modal-title"> {{disease.title}}</h3>
+            <div class="xn-close xn-cursor" ng-click="clean()">
+                <i class="icon icon-delete"></i>
+            </div>
+        </div>
+        <div class="modal-body clearfix">
+            <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                <label class="col-sm-5 control-label"><span class="f-right">情况名称：</span><i class="xn-required-i xn-location-required f-right"></i></label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text"  name="organizationname" ng-model="disease.name">
+                </div>
+            </div>
+            <div class="form-group col-sm-10 col-md-offset-1 clearfix">
+                <label class="col-sm-5 control-label">备注：</label>
+                <div class="col-sm-7">
+                    <textarea class="form-control" rows="5"  ng-model="disease.remark"  name="description" ></textarea>
+                </div>
+            </div>
+            <div class="form-group" ng-show="validateForm.$errors.length > 0 ">
+                <div class="col-sm-10">
+                    <div class="alert alert-danger col-sm-offset-4"><i class="glyphicon glyphicon-remove-sign mr_5" ng-click="closeAlert(0,validateForm.$errors)"></i>{{validateForm.$errors[0]}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button  class="btn btn-primary "  xn-form-submit="doSave()">保存</button>
+            <a ng-click="clean()"  class="btn btn-default ">取消</a>
+        </div>
+    </form>
+</script>
+

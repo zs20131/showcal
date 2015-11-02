@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:api="http://www.xiniunet.com/api"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.xiniunet.com/api http://www.xiniunet.com/api/api.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+    <import resource="classpath*:spring/*"/>
+    <!--① 扫描Spring Bean-->
+    <context:component-scan base-package="net.showcal.open.api"/>
+    <context:component-scan base-package="net.showcal.open.tool"/>
+    <!-- 启动api框架 -->
+    <api:api-config
+        id="router"
+        session-manager="apiSessionManager"
+        app-secret-manager="appSecretManager"
+        service-access-controller="serviceAccessController"
+        service-timeout-seconds="30"
+        invoke-times-controller="invokeTimesController"
+        upload-file-max-size="10"
+        upload-file-types="png,gif,jpg"
+        core-pool-size="200"
+        max-pool-size="500"
+        queue-capacity="50"
+        keep-alive-seconds="300" />
+    <bean id="apiSessionManager" class="net.showcal.open.manager.ApiSessionManager" />
+    <bean id="invokeTimesController" class="net.showcal.open.manager.ApiInvokeTimesController"/>
+    <bean id="appSecretManager" class="net.showcal.open.manager.ApiAppSecretManager"/>
+    <bean id="serviceAccessController" class="net.showcal.open.manager.ApiServiceAccessController"/>
+  </beans>

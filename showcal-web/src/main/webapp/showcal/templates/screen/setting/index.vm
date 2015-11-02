@@ -1,0 +1,30 @@
+$page.setTitle("首页")
+<div class="xn-breadcrumb xn-width auto clearfix " ng-init="navShow=6">
+    <ul class="breadcrumb">
+        <li><a class="icon icon-home_page" href="$showcalLink.setTarget("index")">首页</a></li>
+        <li class="active">我的设置</a></li>
+    </ul>
+</div>
+<div class="xn-main xn-setting-list  auto  xn-width  clearfix">
+    <ul class="clearfix">
+        <li class="list-2">
+            <a class="clearfix" href="$showcalLink.setTarget("setting/welcome/index")">
+                <div class="xn-setting-img xn-setting-img-job"></div>
+                <div class="xn-setting-right">
+                    <h3>欢迎语</h3>
+                    <p>可以给我的用户设置个性化的欢迎语... </p>
+                </div>
+            </a>
+        </li>
+        <li class="list-2">
+            <a class="clearfix" href="$showcalLink.setTarget("setting/selfintroduction")">
+                <div class="xn-setting-img xn-setting-img-level"></div>
+                <div class="xn-setting-right">
+                    <h3>我的简介</h3>
+
+                    <p>设置您的简介，让您的用户更加快速的认识你...</p>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>

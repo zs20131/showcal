@@ -1,0 +1,29 @@
+<div class="showcal">
+    <!--header-->
+    <header data-am-widget="header" class="am-header am-no-layout am-header-fixed showcal--mobile-header">
+        <div class="am-header-left am-header-nav">
+##            <a href="create" class="">
+##                <img class="showcal-left-arrow" src="$mobileContent.getURI("images/grayleftarrow.png")"
+##                     width="10" height="24" alt="">
+##            </a>
+        </div>
+        <h1 class="am-header-title">重置密码</h1>
+    </header>
+    <div class="mt-50 xn-text-center">
+        <div>
+            <img src="$mobileContent.getURI('/images/success.png')" width="26" height="26">
+            <span class="ml-10">成功重置密码</span>
+        </div>
+
+        <div class="mt-50 xn-text-center">
+            正在跳转中...
+        </div>
+    </div>
+
+</div>
+<script>
+    setInterval("forword()",1000);
+    function forword(){
+        window.location.href = '../login'
+    }
+</script>

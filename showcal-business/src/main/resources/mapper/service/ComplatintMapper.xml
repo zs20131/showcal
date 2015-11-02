@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.service.dal.ComplatintMapper">
+
+    <sql id="whereForFindList">
+        <if test="request.sourceType!=null"> AND `SOURCE_TYPE`=#{ request.sourceType }</if>
+        <if test="request.sourceId!=null"> AND `SOURCE_ID` =#{ request.sourceId }</if>
+        <if test="request.userId!=null"> AND `CREATED_BY`=#{request.userId}</if>
+        <if test="request.processUserId!=null"> AND `PROCESS_USER_ID` =#{ request.processUserId }</if>
+    order BY ID DESC
+    </sql>
+
+    <sql id="whereForSearchList">
+           (
+           `SOURCE_TYPE` LIKE CONCAT ('%',#{ request.keyword },'%')  OR  
+           `CONTENT` LIKE CONCAT ('%',#{ request.keyword },'%')  OR  
+           )
+    </sql>
+
+    <select id="find" resultMap="complatintPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `SER_COMPLATINT`
+            WHERE
+                `IS_DELETED`=0
+                <include refid="whereForFindList" />
+        ) AS T
+
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="findCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_COMPLATINT`
+        WHERE
+            `IS_DELETED`=0
+            <include refid="whereForFindList" />
+    </select>
+
+    <select id="search" resultMap="complatintPO">
+        SELECT * FROM
+        (
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `SER_COMPLATINT`
+            WHERE
+                `IS_DELETED`=0
+                <if test="request.keyword !=null">
+                      AND <include refid="whereForSearchList" />
+                </if>
+
+        ) AS T
+        <if test="request.pageSize !=0">
+            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+        </if>
+    </select>
+
+    <select id="searchCount"   resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_COMPLATINT`
+        WHERE
+            `IS_DELETED`=0
+            AND <include refid="whereForSearchList" />
+    </select>
+
+    <select id="existByCode" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `SER_COMPLATINT`
+        WHERE
+            `IS_DELETED`=0
+            AND  `ID` != #{id}
+            AND `CODE` = #{code}
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            `SER_COMPLATINT`
+        SET
+        `SOURCE_TYPE`=#{ request.sourceType },
+        `SOURCE_ID`=#{ request.sourceId },
+        `CONTENT`=#{ request.content },
+        `IS_PROCESSED`=#{ request.isProcessed },
+        `PROCESS_USER_ID`=#{ request.processUserId },
+        `PROCESS_USER_NAME`=#{ request.processUserName },
+        `PROCESS_TIME`=#{ request.processTime },
+        `LAST_UPDATED_BY`=#{ passport.userId }
+        ,`LAST_UPDATE_TIME`=SYSDATE()
+        ,`ROW_VERSION`=#{ request.rowVersion }+1
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{ request.id }
+            AND `ROW_VERSION` = #{ request.rowVersion }
+    </update>
+
+
+</mapper>

@@ -1,0 +1,703 @@
+$rundata.setLayout("weightCurve")
+$page.setTitle("腰围记录")
+<div class="workingtask lineform approve">
+    <header data-am-widget="header"
+            class="am-header whitebg am-header-fixed bottom-border">
+        <div class="am-header-left am-header-nav">
+            <a href="index?passportid=$!passport.id" class="color-pink">
+                <i class="am-icon-angle-left am-text-xxl"></i>
+            </a>
+        </div>
+        <h5 class="am-header-title">腰围记录</h5>
+        <div class="am-header-right am-header-nav">
+            <a href="girthControl.vm?passportid=$!passport.id" class="color-pink">
+                腰围日历
+            </a>
+        </div>
+    </header>
+
+    <div class="tabcon  am-text-sm">
+        <div class="am-g pt-10  am-text-center relative">
+            <div id="pre">上周</div>
+            <div id="next">下周</div>
+            <ul class="tabgroup am-center" id="workingtab">
+                <li class="active border-right-link">周</li>
+                <li class="border-right-link">月</li>
+                <li>年</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="am-g clearfix tabcontent ">
+        <div class="am-tab-panel" >
+            <div class="am-g am-g-collapse clearfix">
+                <div id="myChart1" >
+
+                </div>
+
+            </div>
+        </div>
+        <div class="am-tab-panel am-hide" >
+            <div class="am-g am-g-collapse clearfix">
+                <div id="myChart2"  >
+
+                </div>
+
+            </div>
+        </div>
+        <div class="am-tab-panel am-hide" >
+            <div class="am-g am-g-collapse clearfix">
+                <div id="myChart3"  >
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>
+<script src="$mobileContent.getURI('scripts/build/source/echarts.js')"></script>
+#*<script type="text/javascript" src="$mobiledflContent.getURI('dist/scripts/echart.min.js')"></script>*#
+
+<script>
+    $(function () {
+
+        var dataWeek = {};//周全局参数
+        var dataMonth = {};//月全局参数
+        var dataYear = {};//年全局参数
+        var startDate=new Date();
+        var startDate1=new Date(startDate.getTime()-(startDate.getDay()-1)*60*60*1000*24)
+        var year=startDate1.getFullYear();
+        var month=startDate1.getMonth()+1;
+        var date=startDate1.getDate();
+        if(month<10){
+            month="0"+month;
+        }
+        if(date<10){
+            date="0"+date;
+        }
+        dataWeek.startDate=year+"-"+month+"-"+date;
+        //初始化 是周的数据
+        function init(){
+            var weightWeekX = []; // X轴
+            var weightWeekY = [];
+            var temp="";
+            var tempi="";
+            $.ajax({
+                url: "Api.do?method=api.about.me.info.waist.line.get.week.list&passportid=$!passport.id",
+                data: JSON.stringify(dataWeek),
+                contentType:"application/json",
+                type: 'POST',
+                dataType: 'json',
+                success: function (msg) {
+                    console.log("weekList===>" + msg);
+                    if(!msg.result || msg.result.length == 0){
+
+                    }else{
+                        for(var i=0; i<msg.result.length; i++){
+                            weightWeekX.push(msg.result[i].day);
+                            weightWeekY.push(msg.result[i].value);
+                        }
+                        for(var j=0;j<weightWeekY.length;j++){
+                            if(weightWeekY[j]){
+                                temp=weightWeekY[j];
+                                temp=Math.round(temp);
+                                tempi=j;
+                                break;
+                            }
+                        }
+                    }
+                    //折线图
+                    var option1 = {
+                        backgroundColor:{color:"#fff"},
+                        title:{
+                            text:"",
+                            x:"center",
+                            textStyle:{
+                                fontSize: 16,
+                                fontWeight: 'bolder',
+                                color: '#333'
+                            }
+                        },
+                        grid:{
+                            x:50,
+                            y:50,
+                            x2:50,
+                            y2:90,
+                            borderWidth:0
+                        },
+
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data : weightWeekX,
+                                axisLabel:{
+                                    textStyle:{
+                                        color: '#999',
+                                    },
+                                    rotate: 45
+                                },
+                                splitLine:{
+                                    show:false
+                                },
+
+                                axisLine:{
+                                    show:false
+
+                                },
+                                axisTick:{
+                                    show:false
+                                }
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                min:Number(temp)-5,
+                                max:Number(temp)+5,
+                                splitNumber:5,
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}'
+                                },
+                                axisLine:{
+                                    show:false
+                                }
+                            }
+
+                        ],
+                        calculable: true,
+                        series: [
+                            {
+                                name: "",
+                                type: "line",
+                                data: []
+                            }
+                        ]
+                    };
+                    require(
+                            ['echarts',
+                                'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+                            ],
+                            function(ec) {
+                                // 基于准备好的dom，初始化echarts图表
+                                var myChart = ec.init(document.getElementById('myChart1'));
+                                console.log(option1.series[0].data);
+                                for( var i=0;i<weightWeekY.length;i++){
+                                    if(!weightWeekY[i]){
+                                        weightWeekY[i]="-";
+                                    }
+                                    if(i==weightWeekY.length-1||i==tempi){
+                                        option1.series[0].data.push({name:"",value:weightWeekY[i],xAxis:i,yAxis:weightWeekY[i],itemStyle:{normal:{label:{show:true,position:'top'}}}});
+                                    }else{
+                                        option1.series[0].data.push({name:"",value:weightWeekY[i],xAxis:i,yAxis:weightWeekY[i],itemStyle:{normal:{label:{show:false,position:'top'}}}});
+                                    }
+                                }
+                                // 为echarts对象加载数据
+                                myChart.setOption(option1);
+                            }
+                    );
+                }
+            });
+        }
+        init();
+
+        //获取周数据
+        function getWeekData(){
+            var weightWeekX = []; // X轴
+            var weightWeekY = [];
+            var tempi="";
+            var temp="";
+            $.ajax({
+                url: "Api.do?method=api.about.me.info.waist.line.get.week.list&passportid=$!passport.id",
+                data: JSON.stringify(dataWeek),
+                contentType:"application/json",
+                type: 'POST',
+                dataType: 'json',
+                success: function (msg) {
+                    console.log("weekList===>" + msg);
+                    if(!msg.result || msg.result.length == 0){
+
+                    }else{
+                        for(var i=0; i<msg.result.length; i++){
+                            weightWeekX.push(msg.result[i].day);
+                            weightWeekY.push(msg.result[i].value);
+                        }
+                        for(var j=0;j<weightWeekY.length;j++){
+                            if(weightWeekY[j]){
+                                temp=weightWeekY[j];
+                                temp=Math.round(temp);
+                                tempi=j;
+                                break;
+                            }
+                        }
+                    }
+                    //折线图
+                    var option1 = {
+                        backgroundColor:{color:"#fff"},
+                        title:{
+                            text:"",
+                            x:"center",
+                            textStyle:{
+                                fontSize: 16,
+                                fontWeight: 'bolder',
+                                color: '#333'
+                            }
+                        },
+                        grid:{
+                            x:50,
+                            y:50,
+                            x2:50,
+                            y2:90,
+                            borderWidth:0
+                        },
+
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data : weightWeekX,
+                                axisLabel:{
+                                    textStyle:{
+                                        color: '#999',
+                                    },
+                                    rotate: 45
+                                },
+                                splitLine:{
+                                    show:false
+                                },
+
+                                axisLine:{
+                                    show:false
+
+                                },
+                                axisTick:{
+                                    show:false
+                                }
+                            }
+                        ],
+                        yAxis : [
+                            {   min:Number(temp)-5,
+                                max:Number(temp)+5,
+                                splitNumber:5,
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}'
+                                },
+                                axisLine:{
+                                    show:false
+                                }
+                            }
+
+                        ],
+                        calculable: true,
+                        series: [
+                            {
+                                name: "",
+                                type: "line",
+                                data: [],
+                                itemStyle:{
+                                    normal:{
+                                        label:{
+                                            show:true,
+                                            position:'top'
+                                        }
+                                    }
+                                }
+
+                            }
+                        ]
+                    };
+                    require(
+                            ['echarts',
+                                'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+                            ],
+                            function(ec) {
+                                // 基于准备好的dom，初始化echarts图表
+                                var myChart = ec.init(document.getElementById('myChart1'));
+                                // 为echarts对象加载数据
+
+                                for( var i=0;i<weightWeekY.length;i++){
+                                    if(!weightWeekY[i]){
+                                        weightWeekY[i]="-";
+                                    }
+                                    if(i==weightWeekY.length-1||i==tempi){
+                                        option1.series[0].data.push({name:"",value:weightWeekY[i],xAxis:i,yAxis:weightWeekY[i],itemStyle:{normal:{label:{show:true,position:'top'}}}});
+                                    }else{
+                                        option1.series[0].data.push({name:"",value:weightWeekY[i],xAxis:i,yAxis:weightWeekY[i],itemStyle:{normal:{label:{show:false,position:'top'}}}});
+                                    }
+                                }
+                                myChart.setOption(option1);
+                            }
+                    );
+                }
+            });
+        }
+
+        //获取月数据
+        function getMonthData(){
+            var weightMonthX = [];
+            var weightMonthY = [];
+            var tempi="";
+            var temp="";
+            $.ajax({
+                url: "Api.do?method=api.about.me.info.waist.line.get.month.list&passportid=$!passport.id",
+                data: JSON.stringify(dataMonth),
+                contentType:"application/json",
+                type: 'POST',
+                dataType: 'json',
+                success: function (msg) {
+                    console.log("monthList===>" + msg);
+                    if(!msg.result || msg.result.length == 0){
+
+                    }else{
+                        for(var i=0; i<msg.result.length; i++){
+                            weightMonthX.push(msg.result[i].day);
+                            weightMonthY.push(msg.result[i].value);
+                        }
+                        for(var j=0;j<weightMonthY.length;j++){
+                            if(weightMonthY[j]){
+                                temp=weightMonthY[j];
+                                temp=Math.round(temp);
+                                tempi=j;
+                                break;
+                            }
+                        }
+                    }
+
+                    var option2 = {
+                        backgroundColor:{color:"#fff"},
+                        title:{
+                            text:"",
+                            x:"center",
+                            textStyle:{
+                                fontSize: 16,
+                                fontWeight: 'bolder',
+                                color: '#333'
+                            }
+                        },
+                        grid:{
+                            x:50,
+                            y:50,
+                            x2:50,
+                            y2:90,
+                            borderWidth:0
+                        },
+
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data : weightMonthX,
+                                axisLabel:{
+                                    textStyle:{
+                                        color: '#999',
+                                    },
+                                    rotate: 45
+                                },
+                                splitLine:{
+                                    show:false
+                                },
+
+                                axisLine:{
+                                    show:false
+
+                                },
+                                axisTick:{
+                                    show:false
+                                }
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                min:Number(temp)-5,
+                                max:Number(temp)+5,
+                                splitNumber:5,
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}'
+                                },
+                                axisLine:{
+                                    show:false
+                                }
+                            }
+
+                        ],
+                        calculable: true,
+                        series: [
+                            {
+                                name: "",
+                                type: "line",
+                                data: []
+                            }
+                        ]
+                    };
+                    // 使用
+                    require(
+                            ['echarts',
+                                'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+                            ],
+                            function(ec) {
+                                // 基于准备好的dom，初始化echarts图表
+                                var myChart = ec.init(document.getElementById('myChart2'));
+                                // 为echarts对象加载数据
+                                for( var i=0;i<weightMonthY.length;i++){
+                                    if(!weightMonthY[i]){
+                                        weightMonthY[i]="-"
+                                    }
+                                    if(i==weightMonthY.length-1||i==tempi){
+                                        option2.series[0].data.push({name:"",value:weightMonthY[i],xAxis:i,yAxis:weightMonthY[i],itemStyle:{normal:{label:{show:true,position:'top'}}}});
+                                    }else{
+                                        option2.series[0].data.push({name:"",value:weightMonthY[i],xAxis:i,yAxis:weightMonthY[i],itemStyle:{normal:{label:{show:false,position:'top'}}}});
+                                    }
+                                }
+                                myChart.setOption(option2);
+                            }
+                    );
+                }
+            });
+        };
+
+        //获取年数据
+        function getYearData(){
+            var weightYearX = [];
+            var weightYearY = [];
+            var tempi="";
+            var temp="";
+            $.ajax({
+                url: "Api.do?method=api.about.me.info.waist.line.get.year.list&passportid=$!passport.id",
+                data: JSON.stringify(dataYear),
+                contentType:"application/json",
+                type: 'POST',
+                dataType: 'json',
+                success: function (msg) {
+                    console.log("yearList===>" + msg);
+                    if(!msg.result || msg.result.length == 0){
+
+                    }else{
+                        for(var i=0; i<msg.result.length; i++){
+                            weightYearX.push(msg.result[i].month);
+                            weightYearY.push(msg.result[i].avgWeight);
+                        }
+                        for(var j=0;j<weightYearY.length;j++){
+                            if(weightYearY[j]){
+                                temp=weightYearY[j];
+                                temp=Math.round(temp);
+                                tempi=j;
+                                break;
+                            }
+                        }
+                    }
+
+                    var option3 = {
+                        backgroundColor:{color:"#fff"},
+                        title:{
+                            text:"",
+                            x:"center",
+                            textStyle:{
+                                fontSize: 16,
+                                fontWeight: 'bolder',
+                                color: '#333'
+                            }
+
+
+                        },
+                        grid:{
+                            x:50,
+                            y:50,
+                            x2:50,
+                            y2:90,
+                            borderWidth:0
+                        },
+
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data : weightYearX,
+                                axisLabel:{
+                                    textStyle:{
+                                        color: '#999',
+                                    },
+                                    rotate: 45
+                                },
+                                splitLine:{
+                                    show:false
+                                },
+
+                                axisLine:{
+                                    show:false
+
+                                },
+                                axisTick:{
+                                    show:false
+                                }
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                min:Number(temp)-5,
+                                max:Number(temp)+5,
+                                splitNumber:5,
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}'
+                                },
+                                axisLine:{
+                                    show:false
+                                }
+                            }
+
+                        ],
+                        calculable: true,
+                        series: [
+                            {
+                                name: "",
+                                type: "line",
+                                data:
+                                        []
+                            }
+                        ]
+                    };
+                    // 使用
+                    require(
+                            ['echarts',
+                                'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+                            ],
+                            function(ec) {
+                                // 基于准备好的dom，初始化echarts图表
+                                var myChart = ec.init(document.getElementById('myChart3'));
+                                // 为echarts对象加载数据
+                                console.log(option3.series[0].data);
+                                for( var i=0;i<weightYearY.length;i++){
+                                    if(!weightYearY[i]){
+                                        weightYearY[i]="-";
+                                    }
+                                    if(i==weightYearY.length-1||i==tempi){
+                                        option3.series[0].data.push({name:"",value:weightYearY[i],xAxis:i,yAxis:weightYearY[i],itemStyle:{normal:{label:{show:true,position:'top'}}}});
+                                    }else{
+                                        option3.series[0].data.push({name:"",value:weightYearY[i],xAxis:i,yAxis:weightYearY[i],itemStyle:{normal:{label:{show:false,position:'top'}}}});
+                                    }
+                                }
+                                /*   option3.series[0].data.push({name:"",value:temp, xAxis:tempi,yAxis:temp,itemStyle:{normal:{label:{show:true,position:'top'}}}});
+
+                                   for( var i=tempi+1;i<weightYearY.length;i++){
+                                       if(i==weightYearY.length-1){
+                                           option3.series[0].data.push({name:"",value:weightYearY[i],xAxis:weightYearY.length-1,yAxis:weightYearY[i],itemStyle:{normal:{label:{show:true,position:'top'}}}});
+                                       }else{
+                                           option3.series[0].data.push({name:"",value:weightYearY[i],xAxis:i,yAxis:weightYearY[i],itemStyle:{normal:{label:{show:false,position:'top'}}}});
+                                       }
+                                   }*/
+                                myChart.setOption(option3);
+                            }
+                    );
+                }
+            });
+        }
+
+        //点击周 月 年的li样式切换
+        $("#workingtab li").click(function () {
+            var indexLi = $(this).index();
+            console.log("ddd"+indexLi);
+            $(this).addClass("active").siblings().removeClass("active");
+            $(".tabcontent > div").addClass("am-hide").eq(indexLi).removeClass("am-hide");
+            if(indexLi==0){
+                $("#pre").html("上周");
+                $("#next").html("下周");
+            }
+            else if(indexLi==1){
+                $("#pre").html("上月");
+                $("#next").html("下月");
+                // 查询该用户的月体重列表
+                var startMonthDate=new Date();
+                dataMonth.startDate = startMonthDate.getFullYear()+"-"+(startMonthDate.getMonth()+1);
+                getMonthData();
+            }
+            else if(indexLi==2){
+                $("#pre").html("上年");
+                $("#next").html("下年");
+                // 查询该用户的年体重列表
+                var startyearDate=new Date();
+                dataYear.startDate =startyearDate.getFullYear()+"-"+'01-01';
+                console.log(dataYear.startDate);
+                getYearData();
+            }
+        });
+
+        //点击上周 上月 上年与后台交互
+        $("#pre").bind("click",function(){
+            var weightWeekX = []; // X轴
+            var weightWeekY = [];
+            if($(this).context.textContent=="上周"){
+                var oldDateTime =(new Date(dataWeek.startDate)).getTime();
+                var newdateTime= oldDateTime -60*60*1000*24*7;
+                var startDate=new Date(newdateTime)
+                var year=startDate.getFullYear();
+                var month=startDate.getMonth()+1;
+                var date=startDate.getDate();
+                if(month<10){
+                    month="0"+month;
+                }
+                if(date<10){
+                    date="0"+date;
+                }
+                dataWeek.startDate=year+"-"+month+"-"+date;
+                init();
+            }
+            else if($(this).context.textContent=="上月"){
+                dataMonth.startDate =dataMonth.startDate.substr(0,4)+"-"+(dataMonth.startDate.substr(5)-1);
+                if((Number(dataMonth.startDate.substr(5))-1)==-1){
+                    dataMonth.startDate =(Number(dataMonth.startDate.substr(0,4))-1)+"-"+"12";
+                }
+                getMonthData();
+            }
+            else if($(this).context.textContent=="上年"){
+                dataYear.startDate = (dataYear.startDate.substr(0,4)-1)+"-"+'01-01';
+                console.log(dataYear.startDate);
+                getYearData();
+            }
+        });
+
+
+
+        $("#next").bind("click",function(){
+            var weightMonthX = [];
+            var weightMonthY = [];
+            if($(this).context.textContent=="下周"){
+                var oldDateTime =(new Date(dataWeek.startDate)).getTime();
+                var newdateTime= oldDateTime+60*60*1000*24*7;
+                var startDate=new Date(newdateTime)
+                var year=startDate.getFullYear();
+                var month=startDate.getMonth()+1;
+                var date=startDate.getDate();
+                if(month<10){
+                    month="0"+month;
+                }
+                if(date<10){
+                    date="0"+date;
+                }
+                dataWeek.startDate=year+"-"+month+"-"+date;
+                init();
+            }
+            else if($(this).context.textContent=="下月"){
+                dataMonth.startDate =dataMonth.startDate.substr(0,4)+"-"+(Number(dataMonth.startDate.substr(5))+1);
+                if((Number(dataMonth.startDate.substr(5))+1)==14){
+                    dataMonth.startDate =(Number(dataMonth.startDate.substr(0,4))+1)+"-"+"01";
+                }
+                console.log(dataMonth.startDate)
+                getMonthData();
+            }
+            else if($(this).context.textContent=="下年"){
+                dataYear.startDate =( Number(dataYear.startDate.substr(0,4))+1)+"-"+'01-01';
+                console.log(dataYear.startDate);
+                getYearData();
+            }
+        });
+
+        require.config({
+            paths: {
+                echarts: '/mobile/scripts/build/dist'
+            }
+        });
+    })
+
+</script>

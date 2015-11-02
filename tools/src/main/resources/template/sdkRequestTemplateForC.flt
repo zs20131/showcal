@@ -1,0 +1,46 @@
+#pragma once
+#include <string>
+    #include <map>
+    #include "Request.h"
+    using namespace std;
+
+    class ${class.name} :public Request
+    {
+    public:
+    <#if fields??>
+        <#list fields as field>
+            //${field.description}
+              ${field.ctype} PARA_${field.name?upper_case};
+        </#list>
+    </#if>
+
+    ${class.name}::${class.name}()
+    {
+    <#if fields??>
+        <#list fields as field>
+            //${field.description}
+           PARA_${field.name?upper_case}="${field.name}";
+        </#list>
+    </#if>
+    system_param[PARA_METHOD]="${class.apiName}";
+    }
+
+    string getMethodName()
+    {
+    return system_param[PARA_METHOD].asString();
+    }
+
+
+<#if fields??>
+    <#list fields as field>
+        //${field.description}
+        ${field.ctype} get${field.name?cap_first}(){
+         return app_param[PARA_${field.name?upper_case}].${field.astype}()
+        }
+
+         void set${field.name?cap_first}(${field.ctype} ${field.name}){
+            app_param[PARA_${field.name?upper_case}]=${field.name};
+        }
+    </#list>
+</#if>
+    };

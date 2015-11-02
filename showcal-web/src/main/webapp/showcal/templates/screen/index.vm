@@ -1,0 +1,413 @@
+<div class="worktitle-right" ng-controller="IndexController" id="showcalindex">
+    <!--两个按钮-->
+    <div class="btn-box">
+       <a class="btn showcal-index-button-default orangebg" >对话记录</a>
+       <a class="btn  showcal-index-button-default  bluebg" >搜索</a>
+  </div>
+
+    <!--搜索条件-->
+    <div class="mt_20 xn-col-md-24">
+     <div class="xn-col-md-8 ">
+         <label class="f-left l-h-34 ">用户昵称：</label>
+        <select name="paymentTermId" id="paymentTermId" class="form-control xn-input-sm">
+               <option value="">-- 全部 --</option>
+           </select>
+     </div>
+       <div class="xn-col-md-8">
+         <label class="f-left l-h-34">用户标签：</label>
+        <select name="paymentTermId" id="paymentTermId" class="form-control xn-input-sm">
+               <option value="">-- 全部 --</option>
+           </select>
+     </div>
+      <div class="xn-col-md-8">
+         <label class="f-left l-h-34">回答截止时间：</label>
+         <select name="paymentTermId" id="paymentTermId" class="form-control xn-input-sm">
+             <option value="">-- 全部 --</option>
+         </select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <!--虚线-->
+    <div class="line-dashed"></div>
+
+    <!--表格和问答-->
+    <div class="mt_20 xn-col-md-24">
+        <!--表格-->
+        <div class="xn-col-md-6">
+          <table >
+            <tr >
+              <td colspan="2" class="showcal-td">
+                  <span class="f-left pl-50" >新用户</span>
+                  <div class="number-1">
+                      20
+                  </div>
+              </td>
+           </tr>
+              <tr >
+              <td colspan="2" class="showcal-td">
+                  <span class="f-left pl-50" >标签</span>
+                  <div class="number-1">
+                      20
+                  </div>
+              </td>
+           </tr>
+              <tr >
+               <td  rowspan="2"  class="showcal-td">
+                  <span class="f-left">关键字1</span>
+                   <div class="number-1">
+                      20
+                  </div>
+                </td>
+               <td class="showcal-td">
+                  <span class="f-left" >子关键字1</span>
+                   <div class="number-1">
+                      20
+                  </div>
+              </td>
+           </tr>
+              <tr>
+               <td   class="showcal-td">
+                  <span class="f-left">子关键字2</span>
+                   <div class="number-1">
+                      20
+                  </div>
+                </td>
+             </tr>
+              <tr >
+                  <td  rowspan="3"  class="showcal-td">
+                      <span class="f-left">关键字2</span>
+                      <div class="number-1">
+                          20
+                      </div>
+                  </td>
+                  <td class="showcal-td">
+                      <span class="f-left">子关键字2</span>
+                      <div class="number-1">
+                          20
+                      </div>
+                  </td>
+              </tr>
+              <tr>
+                  <td   class="showcal-td">
+                      <span class="f-left">子关键字3</span>
+                      <div class="number-1">
+                          20
+                      </div>
+                  </td>
+              </tr>
+              <tr>
+                  <td   class="showcal-td">
+                      <span class="f-left">子关键字4</span>
+                      <div class="number-1">
+                          20
+                      </div>
+                  </td>
+              </tr>
+              <tr >
+                  <td colspan="2" class="showcal-td">
+                      <span class="f-left pl-50" >标签</span>
+                      <div class="number-1">
+                          20
+                      </div>
+                  </td>
+              </tr>
+              <tr >
+                  <td colspan="2" class="showcal-td">
+                      <span class="f-left pl-50" >标签</span>
+                      <div class="number-1">
+                          20
+                      </div>
+                  </td>
+              </tr>
+              <tr >
+                  <td colspan="2" class="showcal-td">
+                      <span class="f-left pl-50" >标签</span>
+                      <div class="number-1">
+                          20
+                      </div>
+                  </td>
+              </tr>
+          </table>
+        </div>
+        <!--问答-->
+        <div class="xn-col-md-18" >
+            <div class="showcal-question-header clearfix">
+                <label class="xn-cursor l-h-34 mt-20 mb-12 f-left" for="checkbox1">
+                    <input  class="none" type="checkbox"  name="checkbox1" id="checkbox1" >
+                    <div class="showcal-checkbox">
+                        <i class="icon icon-right_3 right-icon"></i>
+                    </div>
+                </label>
+                <div class="showcal-question-total">共有22位客户在此关键词栏目提问</div>
+            </div>
+            <div  class="showcal-question-box clearfix position-relative"   ng-init="open=false;" ng-class="open==true?'showcal-question-box-big':'showcal-question-box'">
+                <div class="f-left clearfix" ng-init="state=true">
+                    <label class="xn-cursor l-h-34 mt-20 mb-12" for="checkbox1" ng-click="state=!state"">
+                    <input  class="none" type="checkbox"  name="checkbox1" id="checkbox1" >
+                    <div class="showcal-checkbox">
+                        <i class="icon icon-right_3 right-icon" ng-show="state==true"></i>
+                    </div>
+                    </label>
+                </div>
+                <div class="ml_20 clearfix">
+                    <span class="showcal-question-account" >账号：会飞的猪</span>
+                    <span class="showcal-question-time">2015-9-24 18:44</span>
+                    <div  class="f-left clearfix">
+                        <span class="showcal-person-information">性别：女</span>
+                        <span class="showcal-person-information">年龄：30</span>
+                        <span class="showcal-person-information">身高：156cm</span>
+                        <span class="showcal-person-information">体重：62kg</span>
+                    </div>
+                </div>
+                <div class="showcal-ask-answer-list clearfix" ng-repeat="line in listquestion">
+                    <div class="showcal-ask-answer" >
+                        {{line.name}}
+                    </div>
+                </div>
+                <a  class="more-ask-answer" ng-show="listquestion.length > 3&&open==false" ng-click="open=!open">点击查看更多</a>
+                <a   class="more-ask-answer" ng-show="open==true" ng-click="open=false">收起</a>
+            </div>
+            <div  class="showcal-question-box clearfix">
+                <div class="f-left clearfix" ng-init="state=true">
+                    <label class="xn-cursor l-h-34 mt-20 mb-12" for="checkbox1" ng-click="state=!state"">
+                    <input  class="none" type="checkbox"  name="checkbox1" id="checkbox1" >
+                    <div class="showcal-checkbox">
+                        <i class="icon icon-right_3 right-icon" ng-show="state==true"></i>
+                    </div>
+                    </label>
+                </div>
+                <div class="ml_20 clearfix">
+                    <span class="showcal-question-account" >账号：会飞的猪</span>
+                    <span class="showcal-question-time">2015-9-24 18:44</span>
+                    <div  class="f-left clearfix">
+                        <span class="showcal-person-information">性别：女</span>
+                        <span class="showcal-person-information">年龄：30</span>
+                        <span class="showcal-person-information">身高：156cm</span>
+                        <span class="showcal-person-information">体重：62kg</span>
+                    </div>
+                </div>
+                <div class="showcal-ask-answer-list clearfix" >
+                    <div class="showcal-ask-answer">
+                        问：怎么能够健康瘦身？
+                    </div>
+                </div>
+                <div class="showcal-ask-answer-list clearfix" >
+                    <div class="showcal-ask-answer">
+                        答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                    </div>
+                </div>
+            </div>
+            <a class="showcal-reply" ng-click="reply()">回复</a>
+            <div  class="showcal-question-box clearfix">
+                <div class="f-left clearfix" ng-init="state=true">
+                    <label class="xn-cursor l-h-34 mt-20 mb-12" for="checkbox1" ng-click="state=!state"">
+                    <input  class="none" type="checkbox"  name="checkbox1" id="checkbox1" >
+                    <div class="showcal-checkbox">
+                        <i class="icon icon-right_3 right-icon" ng-show="state==true"></i>
+                    </div>
+                    </label>
+                </div>
+                <div class="ml_20 clearfix">
+                    <span class="showcal-question-account" >账号：会飞的猪</span>
+                    <span class="showcal-question-time">2015-9-24 18:44</span>
+                    <div  class="f-left clearfix">
+                        <span class="showcal-person-information">性别：女</span>
+                        <span class="showcal-person-information">年龄：30</span>
+                        <span class="showcal-person-information">身高：156cm</span>
+                        <span class="showcal-person-information">体重：62kg</span>
+                    </div>
+                </div>
+                <div class="showcal-ask-answer-list clearfix" >
+                    <div class="showcal-ask-answer">
+                        问：怎么能够健康瘦身？
+                    </div>
+                </div>
+                <div class="showcal-ask-answer-list clearfix" >
+                    <div class="showcal-ask-answer">
+                        答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                    </div>
+                </div>
+            </div>
+            <div  class="showcal-question-box clearfix">
+                <div class="f-left clearfix" ng-init="state=true">
+                    <label class="xn-cursor l-h-34 mt-20 mb-12" for="checkbox1" ng-click="state=!state"">
+                        <input  class="none" type="checkbox"  name="checkbox1" id="checkbox1" >
+                        <div class="showcal-checkbox">
+                            <i class="icon icon-right_3 right-icon" ng-show="state==true"></i>
+                        </div>
+                    </label>
+                </div>
+                <div class="ml_20 clearfix">
+                    <span class="showcal-question-account" >账号：会飞的猪</span>
+                    <span class="showcal-question-time">2015-9-24 18:44</span>
+                    <div  class="f-left clearfix">
+                        <span class="showcal-person-information">性别：女</span>
+                        <span class="showcal-person-information">年龄：30</span>
+                        <span class="showcal-person-information">身高：156cm</span>
+                        <span class="showcal-person-information">体重：62kg</span>
+                    </div>
+                </div>
+                <div class="showcal-ask-answer-list clearfix" >
+                    <div class="showcal-ask-answer">
+                        问：怎么能够健康瘦身？
+                    </div>
+                </div>
+                <div class="showcal-ask-answer-list clearfix" >
+                    <div class="showcal-ask-answer">
+                        答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <!--滑出框-->
+    <div class="showcal-slip-box  {{vm.show}}">
+      <div class="xn-col-md-24 pt_20">
+         <div class="xn-col-md-12 ">
+             <div class="mt_20" name="content"  xn-markdown  ng-model="markdownValue" rows="8"></div>
+             <div class=" f-left mt_20 ">
+                 <a class="btn showcal-index-button-default bluebg" >发送(Alt+Ent)</a>
+                 <a class="btn  showcal-index-button-default greenbg ml_50" >发送并结束(Alt+S)</a>
+             </div>
+         </div>
+         <div class="xn-col-md-12 knowledge-button-box" ng-init="system=true">
+             <a class="knowledge-button"  ng-click="system=true;my=false" ng-class="system==true?'color-green':''" >系统知识库</a>
+             <a class="knowledge-button border-right-none" ng-class="my==true?'color-green':''" ng-click="my=true;system=false">我的知识库</a>
+             <div class="answer-search">
+                 <input class="form-control search-answer-input"  placeholder="搜索" type="text">
+                 <i class="icon icon-search"></i>
+             </div>
+             <div class="f-left" ng-show="system==true">
+                 <div  class="showcal-question-box   clearfix">
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             问：怎么能够健康瘦身？
+                         </div>
+                     </div>
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                         </div>
+                     </div>
+                 </div>
+                 <div  class="showcal-question-box   clearfix">
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             问：怎么能够健康瘦身？
+                         </div>
+                     </div>
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                         </div>
+                     </div>
+                 </div>
+                 <div  class="showcal-question-box   clearfix">
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             问：怎么能够健康瘦身？
+                         </div>
+                     </div>
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                         </div>
+                     </div>
+                 </div>
+                 <div  class="showcal-question-box   clearfix">
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             问：怎么能够健康瘦身？
+                         </div>
+                     </div>
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                         </div>
+                     </div>
+                 </div>
+             </div>
+             <div class="f-left" ng-show="my==true">
+                 <div  class="showcal-question-box   clearfix">
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             问：怎么能够健康瘦身？
+                         </div>
+                     </div>
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                         </div>
+                     </div>
+                 </div>
+                 <div  class="showcal-question-box   clearfix">
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             问：怎么能够健康瘦身？
+                         </div>
+                     </div>
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                         </div>
+                     </div>
+                 </div>
+                 <div  class="showcal-question-box   clearfix">
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             问：怎么能够健康瘦身？
+                         </div>
+                     </div>
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                         </div>
+                     </div>
+                 </div>
+                 <div  class="showcal-question-box   clearfix">
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             问：怎么能够健康瘦身？
+                         </div>
+                     </div>
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                         </div>
+                     </div>
+                 </div>
+                 <div  class="showcal-question-box   clearfix">
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             问：怎么能够健康瘦身？
+                         </div>
+                     </div>
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                         </div>
+                     </div>
+                 </div>
+                 <div  class="showcal-question-box   clearfix">
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             问：怎么能够健康瘦身？
+                         </div>
+                     </div>
+                     <div class="showcal-ask-answer-list clearfix" >
+                         <div class="showcal-ask-answer">
+                             答：多吃水果，多喝水，多运动，保持饮食规律多吃水果
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+         </div>
+     </div>
+      <div class="clearfix"></div>
+    </div>
+</div>
+

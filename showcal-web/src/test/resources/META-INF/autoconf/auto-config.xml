@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <group>
+        <property name="zookeeper.host"
+                  defaultValue="192.168.1.124"
+                  description="注册中心IP地址"/>
+        <property name="zookeeper.port"
+                  defaultValue="2181"
+                  description="注册中心端口号"/>
+        <property name="site.employee.url"
+                  defaultValue="http://employee-dev.xiniunet.com/"
+                  description="Employee域名"/>
+        <property name="site.my.url"
+                  defaultValue="http://my-dev.xiniunet.com/"
+                  description="My域名"/>
+        <property name="site.erp.url"
+                  defaultValue="http://erp-dev.xiniunet.com/"
+                  description="ERP域名"/>
+        <property name="site.distribution.url"
+                  defaultValue="http://distribution-dev.xiniunet.com/"
+                  description="进销存域名"/>
+        <property name="site.marketplace.url"
+                  defaultValue="http://marketplace-dev.xiniunet.com/"
+                  description="市场域名"/>
+        <property name="site.backend.url"
+                  defaultValue="http://backend-dev.xiniunet.com/"
+                  description="后台域名"/>
+        <property name="site.financial.url"
+                  defaultValue="http://financial-dev.xiniunet.com/"
+                  description="财务域名"/>
+        <property name="site.www.url"
+                  defaultValue="http://www-dev.xiniunet.com/"
+                  description="WWW域名"/>
+        <property name="site.auth.url"
+                  defaultValue="http://auth-dev.xiniunet.com/"
+                  description="Auth域名"/>
+        <property name="site.service.url"
+                  defaultValue="http://service-dev.xiniunet.com/"
+                  description="Service域名"/>
+        <property name="site.member.url"
+                  defaultValue="http://member-dev.xiniunet.com/"
+                  description="Member域名"/>
+        <property name="site.open.url"
+                  defaultValue="http://open-dev.xiniunet.com/"
+                  description="Open域名"/>
+        <property name="site.customer.url"
+                  defaultValue="http://customer-dev.xiniunet.com/"
+                  description="Customer域名"/>
+        <property name="site.supplier.url"
+                  defaultValue="http://supplier-dev.xiniunet.com/"
+                  description="Supplier域名"/>
+        <property name="deploy.mode"
+                  defaultValue="development"
+                  description="部署环境模式"/>
+        <property name="verify.mode"
+                  defaultValue="product"
+                  description="验证环境"/>
+        <property name="flume.host"
+                  defaultValue="localhost"
+                  description="flume的agent地址"/>
+        <property name="flume.port"
+                  defaultValue="44444"
+                  description="flume的agent端口号"/>
+        <property name="module.name"
+                  defaultValue="distribution"
+                  description="模块名称"/>
+
+        <property name="aliyun.oss.url"
+                  defaultValue="http://xiniunet-dev.oss-cn-hangzhou.aliyuncs.com/"
+                  description="阿里云存储路径"/>
+        <property name="aliyun.img.url"
+                  defaultValue="http://img-dev.xiniunet.com/"
+                  description="阿里云图片处理服务路径"/>
+
+        <property name="pdf.command.location"
+                  defaultValue="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"
+                  description="PDF转换工具命令路径"/>
+    </group>
+    <script>
+        <generate template="../classes/dubbo.properties"/>
+        <generate template="../classes/config.properties"/>
+    </script>
+</config>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcal.platform.dal.CommentPostMapper">
+
+    <resultMap  id="commentPostPO" type="com.showcal.platform.po.CommentPostPO">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="PARENT_ID"  jdbcType="NUMERIC" property="parentId"></result>
+        <result column="ROOT_ID"  jdbcType="NUMERIC" property="rootId"></result>
+        <result column="CONTENT"  jdbcType="VARCHAR" property="content"></result>
+        <result column="IS_ANONYMOUS"  jdbcType="TINYINT" property="isAnonymous"></result>
+        <result column="USER_ID"  jdbcType="NUMERIC" property="userId"></result>
+        <result column="POST_TIME"  jdbcType="TIMESTAMP" property="postTime"></result>
+        <result column="GRADE"  jdbcType="NUMERIC" property="grade"></result>
+        <result column="THREAD_ID"  jdbcType="NUMERIC" property="threadId"></result>
+        <result column="BUSINESS_TYPE"  jdbcType="VARCHAR" property="businessType"></result>
+        <result column="BUSINESS_ID"  jdbcType="NUMERIC" property="businessId"></result>
+        <result column="BUSINESS_CATEGORY"  jdbcType="VARCHAR" property="businessCategory"></result>
+        <result column="ROW_VERSION"  jdbcType="NUMERIC" property="rowVersion"></result>
+        <result column="IS_DELETED"  jdbcType="TINYINT" property="isDeleted"></result>
+        <result column="CREATED_BY"  jdbcType="NUMERIC" property="createdBy"></result>
+        <result column="CREATION_TIME"  jdbcType="TIMESTAMP" property="creationTime"></result>
+        <result column="LAST_UPDATED_BY"  jdbcType="NUMERIC" property="lastUpdatedBy"></result>
+        <result column="LAST_UPDATE_TIME"  jdbcType="TIMESTAMP" property="lastUpdateTime"></result>
+    </resultMap>
+
+    <sql id="entityColumnList">
+    `ID`,`PARENT_ID`,`ROOT_ID`,`CONTENT`,`IS_ANONYMOUS`,`GRADE`,`USER_ID`,`POST_TIME`,`THREAD_ID`,`BUSINESS_TYPE`,`BUSINESS_ID`,`BUSINESS_CATEGORY`,`ROW_VERSION`,`IS_DELETED`,`CREATED_BY`,`CREATION_TIME`,`LAST_UPDATED_BY`,`LAST_UPDATE_TIME`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            `PL_COMMENT_POST`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        (
+        #{ commentPost.id },
+        
+        #{ commentPost.parentId },
+        #{ commentPost.rootId },
+        #{ commentPost.content },
+        #{ commentPost.isAnonymous },
+        #{ commentPost.grade },
+        #{ commentPost.userId },
+        #{ commentPost.postTime },
+        #{ commentPost.threadId },
+        #{ commentPost.businessType },
+        #{ commentPost.businessId },
+        #{ commentPost.businessCategory },
+        0,0,#{ passport.userId },sysdate(),null,null
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO
+            `PL_COMMENT_POST`
+            (
+            <include refid="entityColumnList" />
+            )
+        VALUES
+        <foreach collection="list" item= "commentPost" index ="index" separator=",">
+            (
+            #{ commentPost.id },
+            
+            #{ commentPost.parentId },
+            #{ commentPost.rootId },
+            #{ commentPost.content },
+            #{ commentPost.isAnonymous },
+            #{ commentPost.grade },
+            #{ commentPost.userId },
+            #{ commentPost.postTime },
+            #{ commentPost.threadId },
+            #{ commentPost.businessType },
+            #{ commentPost.businessId },
+            #{ commentPost.businessCategory },
+            0,0,#{ passport.userId },sysdate(),null,null
+            )
+        </foreach >
+    </insert>
+
+
+    <update id="delete">
+        UPDATE
+            `PL_COMMENT_POST`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` = #{id}
+    </update>
+
+    <update id= "deleteBatch">
+        UPDATE
+            `PL_COMMENT_POST`
+        SET
+            `IS_DELETED` = 1
+            ,`LAST_UPDATED_BY`=#{ passport.userId }
+            ,`LAST_UPDATE_TIME`=SYSDATE()
+        WHERE
+            `IS_DELETED`=0
+            AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+    </update >
+
+
+    <select id="getById" resultMap="commentPostPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `PL_COMMENT_POST`
+        WHERE
+            `IS_DELETED` = 0
+            AND `ID` = #{id}
+    </select>
+
+    <select id="getListByIds" resultMap="commentPostPO">
+        SELECT
+            <include refid="entityColumnList" />
+        FROM
+            `PL_COMMENT_POST`
+        WHERE
+        `IS_DELETED` = 0
+        AND `ID` in
+        <foreach collection="list" item= "id" index ="index" open= "(" close =")" separator=",">
+            #{id}
+        </foreach >
+        
+    </select>
+
+    <select id="getAllList" resultMap="commentPostPO">
+        SELECT
+        <include refid="entityColumnList" />
+        FROM
+            `PL_COMMENT_POST`
+        WHERE
+            `IS_DELETED`=0
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            `PL_COMMENT_POST`
+        WHERE
+            `IS_DELETED`=0
+            AND `ID`=#{id}
+    </select>
+</mapper>

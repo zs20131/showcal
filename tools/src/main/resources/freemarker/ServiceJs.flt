@@ -1,0 +1,16 @@
+(function(){
+    "use strict";
+    angular.module("xn.${moduleName}.service", [])
+    .factory('${moduleName ?cap_first}Service', ['$http', function ($http) {
+    var service = {};
+    var url = "/${moduleName}/api.do";
+<#if methods??>
+    <#list methods as method>
+    service.${method.name} = function (data) {
+        return $http({method: 'POST', url: url, data: data, params: {"method": "api.${moduleName}${method.apiName}"}});
+    };
+    </#list>
+</#if>
+    return service;
+    }]);
+})();
